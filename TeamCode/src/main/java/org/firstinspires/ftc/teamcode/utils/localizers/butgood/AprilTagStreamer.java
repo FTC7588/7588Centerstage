@@ -43,7 +43,7 @@ public class AprilTagStreamer {
                 .addProcessor(tagProcessor)
                 .setCameraResolution(config.getSize())
                 .setStreamFormat(config.getFormat())
-                .enableCameraMonitoring(true)
+                .enableLiveView(true)
                 .setAutoStopLiveView(true)
                 .build();
 

@@ -62,6 +62,7 @@ public class DriveTest extends CommandOpMode {
         gp1(X, 2).whenActive(robotCentric);
         gp1(B, 2).whenActive(fieldCentric);
 
+        robotCentric.schedule();
     }
 
     public void run() {
@@ -72,6 +73,11 @@ public class DriveTest extends CommandOpMode {
         robot.loop(driveSS);
 
         robot.write(driveSS);
+
+        telemetry.addData("Heading", driveSS.getHeading());
+        telemetry.update();
+
+        robot.clearBulkCache();
     }
 
 

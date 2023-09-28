@@ -37,6 +37,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
         drive.write();
     }
 
+    public double getHeading() {
+        return Math.toDegrees(heading);
+    }
+
     public void robotCentricMode(double strafeSpeed, double forwardSpeed, double turnSpeed, boolean pidTurning) {
         if (!pidTurning) {
             drive.driveRobotCentric(
@@ -61,7 +65,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
                     strafeSpeed,
                     forwardSpeed,
                     turnSpeed,
-                    heading
+                    Math.toDegrees(robot.getHeading())
             );
         } else {
             drive.driveFieldCentricPID(

@@ -90,7 +90,7 @@ public class RobotHardware {
     }
 
     public void loop(DrivetrainSubsystem drive) {
-        drive.write();
+        drive.loop();
     }
 
     public void write(DrivetrainSubsystem drive) {
