@@ -1,85 +1,136 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes;
 
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.B;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.X;
-
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
-import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.Subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
-import org.firstinspires.ftc.teamcode.commands.FieldCentric;
-import org.firstinspires.ftc.teamcode.commands.RobotCentric;
+import org.firstinspires.ftc.teamcode.Subsystems.ElevatorSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.GrabberSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.utils.filters.MovingAverage;
 import org.firstinspires.ftc.teamcode.utils.gamepads.GamepadTrigger;
 import org.firstinspires.ftc.teamcode.utils.gamepads.TriggerGamepadEx;
 
+import static org.firstinspires.ftc.teamcode.Constants.*;
 
-@TeleOp
-public class DriveTest extends CommandOpMode {
+public class BaseOpMode extends CommandOpMode {
 
     protected final RobotHardware robot = RobotHardware.getInstance();
 
     protected DrivetrainSubsystem driveSS;
-
-    private RobotCentric robotCentric;
-    private FieldCentric fieldCentric;
+    protected IntakeSubsystem intakeSS;
+    protected ElevatorSubsystem eleSS;
+    protected ArmSubsystem armSS;
+    protected GrabberSubsystem grabSS;
 
     protected GamepadEx driver;
     protected GamepadEx operator;
     protected TriggerGamepadEx driverEx;
     protected TriggerGamepadEx operatorEx;
 
+    protected MultipleTelemetry tele;
+
+    protected double loopTime;
+    protected MovingAverage loopAvg;
+
     @Override
     public void initialize() {
-
+        //init motors and servos
         robot.init(hardwareMap);
 
+        //init subsystems
         driveSS = new DrivetrainSubsystem(robot);
+        intakeSS = new IntakeSubsystem(robot);
+        eleSS = new ElevatorSubsystem(robot);
+        armSS = new ArmSubsystem(robot);
+        grabSS = new GrabberSubsystem(robot);
 
+        //gamepads
         driver = new GamepadEx(gamepad1);
         operator = new GamepadEx(gamepad2);
         driverEx = new TriggerGamepadEx(gamepad1, driver);
         operatorEx = new TriggerGamepadEx(gamepad2, operator);
 
-        robotCentric = new RobotCentric(
-                driveSS,
-                () -> driver.getLeftX(),
-                () -> driver.getLeftY(),
-                () -> driver.getRightX()
-        );
+        tele = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        fieldCentric = new FieldCentric(
-                driveSS,
-                () -> driver.getLeftX(),
-                () -> driver.getLeftY(),
-                () -> driver.getRightX()
-        );
-
-        gp1(X, 2).whenActive(robotCentric);
-        gp1(B, 2).whenActive(fieldCentric);
-
-        robotCentric.schedule();
+        loopAvg = new MovingAverage(50);
     }
 
+    @Override
     public void run() {
-        CommandScheduler.getInstance().run();
+        super.run();
 
-        robot.read(driveSS);
+        if (DEBUG_GENERAL) {
+            tal("=== GENERAL DEBUG INFO ===");
+            tad("Loop Average", loopAvg.getAverage());
+            loopAvg.addNumber(System.currentTimeMillis() - loopTime);
+            loopTime = System.currentTimeMillis();
+            tal();
+        }
 
-        robot.loop(driveSS);
+        if (DEBUG_DRIVE) {
+            tal("=== DRIVE DEBUG INFO ===");
+            tad("Drive Mode", driveSS.getMode());
+            tad("Heading", driveSS.getHeading());
+            tad("Max Speed", driveSS.getMaxSpeed());
+            tad("Heading Lock Enabled", driveSS.getHeadingLock());
+            tad("Heading Lock Target", driveSS.getHeadingLockTarget());
+            tal();
+        }
 
-        robot.write(driveSS);
+        if (DEBUG_INTAKE) {
+            tal("=== INTAKE DEBUG INFO ===");
+            tad("Intake Power", intakeSS.getPower());
+            tad("Intake Position", intakeSS.getPosition());
+        }
 
-        telemetry.addData("Heading", driveSS.getHeading());
-        telemetry.update();
+        if (DEBUG_ELEVATOR) {
+            tal("=== ELEVATOR DEBUG INFO ===");
+            tad("Elevator Power", eleSS.getPower());
+            tad("Elevator Left Position", eleSS.getLeftPosition());
+            tad("Elevator Right Position", eleSS.getRightPosition());
+            tad("Elevator Average Position", eleSS.getPosition());
+            tad("Elevator Target", eleSS.getTarget());
+        }
 
-        robot.clearBulkCache();
+        if (DEBUG_ARM) {
+
+        }
+
+        if (DEBUG_GRABBER) {
+
+        }
+
+        if (DEBUG_VISION) {
+            tal("=== VISION DEBUG INFO ===");
+            tad("Tag Pose", driveSS.getTagLocalizer().getTagPose());
+            tad("Tag Readings", driveSS.getTagLocalizer().getTagReadings());
+            tad("Camera Pose", driveSS.getTagLocalizer().getCameraPose());
+            tad("Robot Pose", driveSS.getRobotPose());
+        }
     }
 
+
+    protected void tau() {
+        tele.update();
+    }
+    protected void tal() {
+        tele.addLine();
+    }
+    protected void tal(String caption) {
+        tele.addLine(caption);
+    }
+    protected void tad(String caption, Object value) {
+        tele.addData(caption, value);
+    }
 
     protected GamepadButton gp1(GamepadKeys.Button button) {
         return driver.getGamepadButton(button);

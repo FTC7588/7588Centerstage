@@ -16,13 +16,15 @@ public class MecanumDrive {
     private final PoofyPIDController xController;
     private final PoofyPIDController yController;
     private final PoofyPIDController thetaController;
-    private double thetaTarget;
     private double maxTurnSpeedPID;
 
     private double turnSpeed;
     private double theta;
 
     private double forwardMax, backMax, leftMax, rightMax;
+
+    private boolean headingLock;
+    private double headingLockTarget;
 
     private Pose2d currentPose;
 
@@ -57,7 +59,7 @@ public class MecanumDrive {
         yController = new PoofyPIDController(yCoeffs);
 
         thetaController = new PoofyPIDController(thetaCoeffs);
-        thetaController.setInputBounds(-Math.PI, Math.PI);
+        thetaController.setInputBounds(-180, 180);
         thetaController.setOutputBounds(-1, 1);
 
         this.maxTurnSpeedPID = maxTurnSpeedPID;
@@ -68,10 +70,6 @@ public class MecanumDrive {
     }
 
 
-
-    public void setMaxSpeed(double maxOutput) {
-        this.maxOutput = maxOutput;
-    }
 
     public void driveRobotCentric(double strafeSpeed, double forwardSpeed, double turnSpeed) {
         double denominator = Math.max(Math.abs(forwardSpeed) + Math.abs(strafeSpeed) + Math.abs(turnSpeed), 1);
@@ -86,20 +84,18 @@ public class MecanumDrive {
         backRightSpeed = backRightPower;
     }
 
+    public void driveRobotCentricLock(double strafeSpeed, double forwardSpeed, double turnSpeed, double gyroAngle) {
+        if (headingLock) {
+            turnSpeed = thetaController.calculate(gyroAngle);
+        }
+        driveRobotCentric(strafeSpeed, forwardSpeed, turnSpeed);
+    }
+
     public void driveRobotCentricPID(double strafeSpeed, double forwardSpeed, double turnSpeed, double gyroAngle) {
-        thetaTarget -= turnSpeed * maxTurnSpeedPID;
-        turnSpeed = -thetaController.calculate(gyroAngle, Math.toRadians(thetaTarget));
+//        thetaTarget -= turnSpeed * maxTurnSpeedPID;
+//        turnSpeed = -thetaController.calculate(gyroAngle, Math.toRadians(thetaTarget));
 
-        double denominator = Math.max(Math.abs(forwardSpeed) + Math.abs(strafeSpeed) + Math.abs(turnSpeed), 1);
-        double frontLeftPower = (forwardSpeed + strafeSpeed + turnSpeed) / denominator;
-        double backLeftPower = (forwardSpeed - strafeSpeed + turnSpeed) / denominator;
-        double frontRightPower = (forwardSpeed - strafeSpeed - turnSpeed) / denominator;
-        double backRightPower = (forwardSpeed + strafeSpeed - turnSpeed) / denominator;
-
-        frontLeftSpeed = frontLeftPower;
-        backLeftSpeed = backLeftPower;
-        frontRightSpeed = frontRightPower;
-        backRightSpeed = backRightPower;
+        driveRobotCentric(strafeSpeed, forwardSpeed, turnSpeed);
     }
 
     public void driveFieldCentric(double strafeSpeed,
@@ -114,9 +110,9 @@ public class MecanumDrive {
 //            input = new Vector2d(Math.min(input.getX(), rightMax), input.getY());
 //        }
 
-        input = input.getX() >= 0 ? new Vector2d(Math.min(input.getX(), rightMax), input.getY()) : new Vector2d(Math.max(input.getX(), leftMax), input.getY());
-
-        input = input.getY() >= 0 ? new Vector2d(input.getX(), Math.min(input.getY(), forwardMax)) : new Vector2d(input.getX(), Math.max(input.getY(), backMax));
+//        input = input.getX() >= 0 ? new Vector2d(Math.min(input.getX(), rightMax), input.getY()) : new Vector2d(Math.max(input.getX(), leftMax), input.getY());
+//
+//        input = input.getY() >= 0 ? new Vector2d(input.getX(), Math.min(input.getY(), forwardMax)) : new Vector2d(input.getX(), Math.max(input.getY(), backMax));
 
         driveRobotCentric(
                 input.getX(),
@@ -198,14 +194,31 @@ public class MecanumDrive {
         return turnSpeed;
     }
 
-    public double getThetaTarget() {
-        return thetaTarget;
+    public double getMaxSpeed() {
+        return maxOutput;
     }
 
-    public void setThetaTarget(double thetaTarget) {
-        this.thetaTarget = thetaTarget;
-
+    public void setMaxSpeed(double maxOutput) {
+        this.maxOutput = maxOutput;
     }
+
+    public void setHeadingLock(boolean enabled) {
+        headingLock = enabled;
+    }
+
+    public void setHeadingLockTarget(double target) {
+        headingLockTarget = target;
+        thetaController.setTargetPosition(target);
+    }
+
+    public boolean getHeadingLock() {
+        return headingLock;
+    }
+
+    public double getHeadingLockTarget() {
+        return headingLockTarget;
+    }
+
 
     public void driveWithMotorPowers(double frontLeftSpeed, double frontRightSpeed,
                                      double backLeftSpeed, double backRightSpeed) {
