@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.commands.grabber;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.Subsystems.GrabberSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.GrabberSubsystem;
 
 public class SetGrabberPosition extends CommandBase {
 

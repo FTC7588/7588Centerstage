@@ -13,11 +13,11 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.Subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.ElevatorSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.utils.geometry.EulerAngles;
+import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.DrivetrainSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.poofyutils.geometry.EulerAngles;
 
 import java.util.List;
 

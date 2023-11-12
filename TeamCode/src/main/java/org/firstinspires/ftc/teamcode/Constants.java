@@ -4,11 +4,11 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.PwmControl;
 
-import org.firstinspires.ftc.teamcode.utils.CameraIntrinsics;
-import org.firstinspires.ftc.teamcode.utils.geometry.Pose3d;
-import org.firstinspires.ftc.teamcode.utils.geometry.Rotation3d;
-import org.firstinspires.ftc.teamcode.utils.geometry.Vector3d;
-import org.firstinspires.ftc.teamcode.utils.pid.PoofyPIDCoefficients;
+import org.firstinspires.ftc.teamcode.poofyutils.CameraIntrinsics;
+import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose3d;
+import org.firstinspires.ftc.teamcode.poofyutils.geometry.Rotation3d;
+import org.firstinspires.ftc.teamcode.poofyutils.geometry.Vector3d;
+import org.firstinspires.ftc.teamcode.poofyutils.pid.PoofyPIDCoefficients;
 
 @Config
 public class Constants {

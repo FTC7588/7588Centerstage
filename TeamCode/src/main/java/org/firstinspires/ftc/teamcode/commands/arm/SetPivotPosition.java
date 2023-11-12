@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.commands.arm;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.Subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 
 public class SetPivotPosition extends CommandBase {
 

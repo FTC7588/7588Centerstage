@@ -8,22 +8,28 @@ import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
+import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.Subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.ElevatorSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.GrabberSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.utils.filters.MovingAverage;
-import org.firstinspires.ftc.teamcode.utils.gamepads.GamepadTrigger;
-import org.firstinspires.ftc.teamcode.utils.gamepads.TriggerGamepadEx;
+import org.firstinspires.ftc.teamcode.rr.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.AutoDrivetrainSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.DrivetrainSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.GrabberSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.poofyutils.filters.MovingAverage;
+import org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadTrigger;
+import org.firstinspires.ftc.teamcode.poofyutils.gamepads.TriggerGamepadEx;
 
 import static org.firstinspires.ftc.teamcode.Constants.*;
 
 public class BaseOpMode extends CommandOpMode {
 
     protected final RobotHardware robot = RobotHardware.getInstance();
+
+    protected AutoDrivetrainSubsystem autoDriveSS;
+    protected SampleMecanumDrive rrDrive;
 
     protected DrivetrainSubsystem driveSS;
     protected IntakeSubsystem intakeSS;
@@ -41,13 +47,21 @@ public class BaseOpMode extends CommandOpMode {
     protected double loopTime;
     protected MovingAverage loopAvg;
 
+    protected boolean auto = false;
+
     @Override
     public void initialize() {
         //init motors and servos
         robot.init(hardwareMap);
 
         //init subsystems
-        driveSS = new DrivetrainSubsystem(robot);
+        if (auto) {
+            rrDrive = new SampleMecanumDrive(hardwareMap);
+            autoDriveSS = new AutoDrivetrainSubsystem(robot, rrDrive, false);
+        } else {
+            driveSS = new DrivetrainSubsystem(robot);
+        }
+
         intakeSS = new IntakeSubsystem(robot);
         eleSS = new ElevatorSubsystem(robot);
         armSS = new ArmSubsystem(robot);

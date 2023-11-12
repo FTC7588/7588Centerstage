@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.commands.drive;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
-import org.firstinspires.ftc.teamcode.utils.geometry.Pose2d;
+import org.firstinspires.ftc.teamcode.subsystems.DrivetrainSubsystem;
+import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 
 public class FollowTag extends CommandBase {
     private final Pose2d followPose;

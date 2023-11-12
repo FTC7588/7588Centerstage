@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.commands.arm;
 
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 
-import org.firstinspires.ftc.teamcode.Subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.Subsystems.ElevatorSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
 
 public class SetEleArmPositions extends SequentialCommandGroup {
 

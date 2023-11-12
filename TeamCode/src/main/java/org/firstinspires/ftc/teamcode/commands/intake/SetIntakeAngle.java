@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.commands.intake;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 
 public class SetIntakeAngle extends CommandBase {
 

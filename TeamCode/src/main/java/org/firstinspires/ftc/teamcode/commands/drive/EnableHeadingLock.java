@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.commands.drive;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.Subsystems.DrivetrainSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.DrivetrainSubsystem;
 
 public class EnableHeadingLock extends CommandBase {
 
