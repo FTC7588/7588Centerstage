@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -30,6 +31,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         this.robot = robot;
 
         controller = new PoofyPIDController(ELE_COEFFS);
+        robot.eleL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.eleR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.eleL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.eleR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
 
@@ -43,7 +48,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void loop() {
-        avgPos = (lPos + rPos) / 2;
+        avgPos = lPos;
         avgCurrent = (lCurrent + rCurrent) / 2;
 
         if (ELE_PID) {
@@ -80,6 +85,15 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void setTarget(double target) {
         this.target = target;
+    }
+
+    public void addTarget(double targetPlus) {
+        target += targetPlus;
+        if (target > ELE_UP) {
+            target = ELE_UP;
+        } else if (target <= 0) {
+            target = 0;
+        }
     }
 
     public void setPower(double power) {

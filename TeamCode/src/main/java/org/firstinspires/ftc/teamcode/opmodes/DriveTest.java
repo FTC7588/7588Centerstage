@@ -11,13 +11,16 @@ import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.RIGHT_BUMPER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.X;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.Y;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commands.ResetIMU;
 import org.firstinspires.ftc.teamcode.commands.arm.IncrementWristPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.SetArmPositions;
+import org.firstinspires.ftc.teamcode.commands.arm.SetEleArmPositions;
 import org.firstinspires.ftc.teamcode.commands.arm.SetPivotPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.SetShoulderPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.SetShoulderTouch;
@@ -28,11 +31,14 @@ import org.firstinspires.ftc.teamcode.commands.drive.FollowTag;
 import org.firstinspires.ftc.teamcode.commands.drive.RobotCentric;
 import org.firstinspires.ftc.teamcode.commands.drive.SetHeadingLock;
 import org.firstinspires.ftc.teamcode.commands.drive.SetMaxSpeed;
+import org.firstinspires.ftc.teamcode.commands.elevator.IncrementElevatorTarget;
 import org.firstinspires.ftc.teamcode.commands.elevator.SetElevatorPower;
 import org.firstinspires.ftc.teamcode.commands.elevator.SetElevatorTarget;
 import org.firstinspires.ftc.teamcode.commands.grabber.SetGrabberPosition;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakePower;
+import org.firstinspires.ftc.teamcode.utils.AprilTagCustomDatabase;
+import org.firstinspires.ftc.teamcode.utils.PoofyDashboardUtil;
 import org.firstinspires.ftc.teamcode.utils.geometry.Pose2d;
 
 import static org.firstinspires.ftc.teamcode.Constants.*;
@@ -75,6 +81,9 @@ public class DriveTest extends BaseOpMode {
     private SetElevatorTarget eleTargetMid;
     private SetElevatorTarget eleTargetDown;
 
+    private IncrementElevatorTarget eleIncUp;
+    private IncrementElevatorTarget eleIncDown;
+
     private SetShoulderPosition shoulderPosDeposit;
     private SetShoulderPosition shoulderPosPoised;
     private SetShoulderPosition shoulderPosGrab;
@@ -95,10 +104,12 @@ public class DriveTest extends BaseOpMode {
 
     private SetShoulderTouch armTouchPad;
 
-    protected SetArmPositions armDeposit;
-    protected SetArmPositions armIdle;
-    protected SetArmPositions armPoised;
-    protected SetArmPositions armGrab;
+    protected SetEleArmPositions armDeposit;
+    protected SetEleArmPositions armIdle;
+    protected SetEleArmPositions armPoised;
+    protected SetEleArmPositions armGrab;
+
+    protected FtcDashboard dashboard = FtcDashboard.getInstance();
 
     @Override
     public void initialize() {
@@ -153,15 +164,18 @@ public class DriveTest extends BaseOpMode {
         eleTargetMid = new SetElevatorTarget(eleSS, ELE_MID);
         eleTargetDown = new SetElevatorTarget(eleSS, ELE_DOWN);
 
+        eleIncUp = new IncrementElevatorTarget(eleSS, ELE_INCREMENT);
+        eleIncDown = new IncrementElevatorTarget(eleSS, -ELE_INCREMENT);
+
         //arm
         shoulderPosDeposit = new SetShoulderPosition(armSS, ARM_SHOULDER_DEPOSIT);
-        shoulderPosPoised = new SetShoulderPosition(armSS, ARM_SHOULDER_POISED);
-        shoulderPosGrab = new SetShoulderPosition(armSS, ARM_SHOULDER_GRAB);
+        shoulderPosPoised = new SetShoulderPosition(armSS, POISED_SHOULDER);
+        shoulderPosGrab = new SetShoulderPosition(armSS, GRAB_SHOULDER);
         shoulderPosIdle = new SetShoulderPosition(armSS, ARM_SHOULDER_IDLE);
 
         wristPosDown = new SetWristPosition(armSS, ARM_WRIST_DEPOSIT);
-        wristPosPoised = new SetWristPosition(armSS, ARM_WRIST_POISED);
-        wristPosGrab = new SetWristPosition(armSS, ARM_WRIST_GRAB);
+        wristPosPoised = new SetWristPosition(armSS, POISED_WRIST);
+        wristPosGrab = new SetWristPosition(armSS, GRAB_WRIST);
         wristPosUp = new SetWristPosition(armSS, ARM_WRIST_IDLE);
         wristIncDown = new IncrementWristPosition(armSS, 0.1);
         wristIncUp = new IncrementWristPosition(armSS, -0.1);
@@ -170,34 +184,42 @@ public class DriveTest extends BaseOpMode {
         pivotPosUp = new SetPivotPosition(armSS, ARM_PIVOT_DOWN);
 
         //grabber
-        grabberClosed = new SetGrabberPosition(grabSS, GRAB_CLOSED);
-        grabberOpen = new SetGrabberPosition(grabSS, GRAB_OPEN);
+        grabberClosed = new SetGrabberPosition(grabSS, GRABBER_CLOSED);
+        grabberOpen = new SetGrabberPosition(grabSS, GRABBER_OPEN);
 
-        armDeposit = new SetArmPositions(
+        armDeposit = new SetEleArmPositions(
+                eleSS,
                 armSS,
+                0,
                 ARM_SHOULDER_DEPOSIT,
                 ARM_WRIST_DEPOSIT,
                 ARM_PIVOT_DOWN
         );
 
-        armIdle = new SetArmPositions(
+        armIdle = new SetEleArmPositions(
+                eleSS,
                 armSS,
-                ARM_SHOULDER_IDLE,
-                ARM_WRIST_IDLE,
+                100,
+                POISED_SHOULDER,
+                0.5,
                 ARM_PIVOT_DOWN
         );
 
-        armPoised = new SetArmPositions(
+        armPoised = new SetEleArmPositions(
+                eleSS,
                 armSS,
-                ARM_SHOULDER_POISED,
-                ARM_WRIST_POISED,
+                POISED_ELE,
+                POISED_SHOULDER,
+                POISED_WRIST,
                 ARM_PIVOT_DOWN
         );
 
-        armGrab = new SetArmPositions(
+        armGrab = new SetEleArmPositions(
+                eleSS,
                 armSS,
-                ARM_SHOULDER_GRAB,
-                ARM_WRIST_GRAB,
+                GRAB_ELE,
+                GRAB_SHOULDER,
+                GRAB_WRIST,
                 ARM_PIVOT_DOWN
         );
 
@@ -247,11 +269,13 @@ public class DriveTest extends BaseOpMode {
         //debug controls
         gp1(DPAD_LEFT, 3).toggleWhenActive(() -> DEBUG_GENERAL = true, () -> DEBUG_GENERAL = false);
         gp1(DPAD_DOWN, 3).toggleWhenActive(() -> DEBUG_DRIVE = true, () -> DEBUG_DRIVE = false);
+        gp1(DPAD_RIGHT, 3).toggleWhenActive(() -> DEBUG_ELEVATOR = true, () -> DEBUG_ELEVATOR = false);
         gp1(DPAD_UP, 3).toggleWhenActive(() -> DEBUG_VISION = true, () -> DEBUG_VISION = false);
 
         //p2 controls
-        gp2(DPAD_UP, 1).whenActive(eleUp).whenInactive(eleIdle);
-        gp2(DPAD_DOWN, 1).whenActive(eleDown).whenInactive(eleIdle);
+        gp2(DPAD_UP, 1).whileActiveContinuous(eleIncUp);
+        gp1(DPAD_LEFT, 1).whenActive(eleTargetUp);
+        gp2(DPAD_DOWN, 1).whileActiveContinuous(eleIncDown);
 
         gp2(Y, 1).whenActive(armDeposit);
         gp2(X, 1).whenActive(armPoised);
@@ -262,6 +286,7 @@ public class DriveTest extends BaseOpMode {
 
 
         robotCentric.schedule();
+        intakeDown.schedule();
 //        shoulderPosDown.schedule();
 //        wristPosDown.schedule();
 //        pivotPosDown.schedule();
@@ -282,6 +307,13 @@ public class DriveTest extends BaseOpMode {
         robot.write(driveSS, intakeSS, eleSS, armSS);
 
         telemetry.addData("tp1_x", gamepad1.touchpad_finger_1_x);
+
+                TelemetryPacket packet = new TelemetryPacket();
+
+        PoofyDashboardUtil.drawTags(packet.fieldOverlay(), AprilTagCustomDatabase.getCenterStageTagLibrary());
+        PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getTagLocalizer().getCameraPose());
+
+        dashboard.sendTelemetryPacket(packet);
 
         telemetry.update();
 

@@ -36,7 +36,7 @@ public class Constants {
 
     //intake constants
     public static PwmControl.PwmRange INTAKE_RANGE = new PwmControl.PwmRange(750, 2250);
-    public static double INTAKE_POWER = 0.6;
+    public static double INTAKE_POWER = 0.65;
 
     public static double INT_DOWN = 0.375;
     public static double INT_UP = 0.25;
@@ -48,28 +48,33 @@ public class Constants {
 
     public static boolean ELE_PID = true;
 
-    public static double ELE_UP = 1000;
+    public static double ELE_UP = 1100;
     public static double ELE_MID = 200;
     public static double ELE_DOWN = 0;
+
+    public static double POISED_ELE = 160;
+    public static double GRAB_ELE = 35;
+
+    public static double ELE_INCREMENT = 10;
 
     //arm constants
         //shoulder constants
     public static double ARM_SHOULDER_IN_ANGLE = 60;
     public static double ARM_SHOULDER_OUT_ANGLE = 320;
 
-    public static double ARM_SHOULDER_DEPOSIT = 0.4;
+    public static double ARM_SHOULDER_DEPOSIT = 0.5;
     public static double ARM_SHOULDER_IDLE = 0.7;
-    public static double ARM_SHOULDER_POISED = 0.91;
-    public static double ARM_SHOULDER_GRAB = 0.95;
+    public static double POISED_SHOULDER = 1;
+    public static double GRAB_SHOULDER = 0.96;
 
         //wrist constants
     public static double ARM_WRIST_IN_ANGLE = -90;
     public static double ARM_WRIST_OUT_ANGLE = 90;
 
-    public static double ARM_WRIST_DEPOSIT = 0.3;
+    public static double ARM_WRIST_DEPOSIT = 0.1;
     public static double ARM_WRIST_IDLE = 0.7;
-    public static double ARM_WRIST_POISED = 0.8;
-    public static double ARM_WRIST_GRAB = 0.85;
+    public static double POISED_WRIST = 0.35;
+    public static double GRAB_WRIST = 0.7;
 
         //pivot constants
     public static double ARM_PIVOT_UP_ANGLE = 0;
@@ -79,8 +84,8 @@ public class Constants {
     public static double ARM_PIVOT_DOWN = 0;
 
     //grabber constants
-    public static double GRAB_CLOSED = 0.825;
-    public static double GRAB_OPEN = 0.53;
+    public static double GRABBER_CLOSED = 0.825;
+    public static double GRABBER_OPEN = 0.53;
 
 
     //vision constants

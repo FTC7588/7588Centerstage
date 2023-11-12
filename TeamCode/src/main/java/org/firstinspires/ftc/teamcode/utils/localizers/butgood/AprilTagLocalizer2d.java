@@ -141,7 +141,7 @@ public class AprilTagLocalizer2d implements Localizer {
         tagPose = new Pose2d(
                 lowestMarginTag.metadata.fieldPosition.get(0),
                 lowestMarginTag.metadata.fieldPosition.get(1),
-                Math.toRadians(MathUtil.quaternionToEuler(lowestMarginTag.metadata.fieldOrientation).yaw)
+                MathUtil.quaternionToEuler(lowestMarginTag.metadata.fieldOrientation).yaw
         );
 
         camToTag = new Transform2d(
