@@ -17,9 +17,9 @@ public class PoofyDashboardUtil {
         AprilTagMetadata[] tags = tagLibrary.getAllTags();
         for (AprilTagMetadata tag : tags) {
             Vector2d tagVector = new Vector2d(tag.fieldPosition.get(0), tag.fieldPosition.get(1));
-            Vector2d left = new Vector2d(tagVector.getX(), tagVector.getY()).add(new Vector2d(0, tag.tagsize/2).rotateBy(MathUtil.quaternionToEuler(tag.fieldOrientation).yaw));
-            Vector2d right = new Vector2d(tagVector.getX(), tagVector.getY()).add(new Vector2d(0, -tag.tagsize/2).rotateBy(MathUtil.quaternionToEuler(tag.fieldOrientation).yaw));
-            Vector2d direction = new Vector2d(tagVector.getX(), tagVector.getY()).add(new Vector2d(tag.tagsize/2, 0).rotateBy(MathUtil.quaternionToEuler(tag.fieldOrientation).yaw));
+            Vector2d left = new Vector2d(tagVector.getX(), tagVector.getY()).add(new Vector2d(0, tag.tagsize).rotateBy(MathUtil.quaternionToEuler(tag.fieldOrientation).yaw + (Math.PI/2)));
+            Vector2d right = new Vector2d(tagVector.getX(), tagVector.getY()).add(new Vector2d(0, -tag.tagsize).rotateBy(MathUtil.quaternionToEuler(tag.fieldOrientation).yaw + (Math.PI/2)));
+            Vector2d direction = new Vector2d(tagVector.getX(), tagVector.getY()).add(new Vector2d(tag.tagsize, 0).rotateBy(MathUtil.quaternionToEuler(tag.fieldOrientation).yaw + (Math.PI/2)));
 
             canvas.setStroke("#ffffff");
             canvas.strokeLine(left.getX(), left.getY(), right.getX(), right.getY());

@@ -18,7 +18,7 @@ public class IncrementShoulderPosition extends CommandBase {
 
     @Override
     public void initialize() {
-        m_armSubsystem.setPivotAngle(m_armSubsystem.getShoulderPosition() + offset);
+        m_armSubsystem.setShoulderPosition(m_armSubsystem.getShoulderPosition() + offset);
     }
 
     @Override

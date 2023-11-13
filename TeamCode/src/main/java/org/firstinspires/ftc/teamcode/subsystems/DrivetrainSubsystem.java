@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.poofyutils.localizers.butgood.AprilTagLoca
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
+import static org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit.AMPS;
 import static org.firstinspires.ftc.teamcode.Constants.*;
 
 import android.util.Size;
@@ -26,6 +27,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     private DriveMode mode;
 
     private double heading;
+
+    private double fLCurrent;
+    private double fRCurrent;
+    private double rLCurrent;
+    private double rRCurrent;
 
     private Pose2d robotPose;
 
@@ -64,6 +70,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
 
     public void read() {
+        if (DEBUG_DRIVE) {
+            fLCurrent = robot.fL.getCurrent(AMPS);
+            fRCurrent = robot.fR.getCurrent(AMPS);
+            rLCurrent = robot.rL.getCurrent(AMPS);
+            rRCurrent = robot.rR.getCurrent(AMPS);
+        }
 
     }
 
@@ -194,4 +206,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
         return drive.getHeadingLockTarget();
     }
 
+    public double getfLCurrent() {
+        return fLCurrent;
+    }
+
+    public double getfRCurrent() {
+        return fRCurrent;
+    }
+
+    public double getrLCurrent() {
+        return rLCurrent;
+    }
+
+    public double getrRCurrent() {
+        return rRCurrent;
+    }
 }

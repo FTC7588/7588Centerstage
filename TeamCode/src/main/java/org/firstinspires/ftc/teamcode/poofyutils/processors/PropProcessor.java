@@ -18,18 +18,19 @@ import java.util.ArrayList;
 public class PropProcessor implements VisionProcessor {
 
     private Mat hsv = new Mat();
-    private Mat thresh = new Mat();
+    private Mat blueThresh = new Mat();
+    private Mat redThresh = new Mat();
     private ArrayList<MatOfPoint> contours = new ArrayList<>();
 
     private Scalar purpleColor = new Scalar(50,50,3);
 
-    public Scalar blueLower = new Scalar(93.5, 31.2, 121.8);
-    public Scalar blueUpper = new Scalar(104.8, 143.1, 225.3);
+    public Scalar blueLower = new Scalar(82.2,60.9,239.4);
+    public Scalar blueUpper = new Scalar(111.9, 208.3, 255.0);
 
     public Scalar redLower = new Scalar(0, 0, 0);
     public Scalar redUpper = new Scalar(0, 0, 0);
 
-    public Rect leftROIBox = new Rect(150,140,25,25);
+    public Rect leftROIBox = new Rect(150,200,25,25);
     public Rect centerROIBox = new Rect(320, 60, 25, 25);
     public Rect rightROIBox = new Rect(490, 100, 25, 25);
 
@@ -51,12 +52,22 @@ public class PropProcessor implements VisionProcessor {
 
         //filter to blue
         Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
-        Core.inRange(hsv, blueLower, blueUpper, thresh);
+        Core.inRange(hsv, blueLower, blueUpper, blueThresh);
 
         //create ROIs
-        leftMat = new Mat(thresh, leftROIBox);
-        centerMat = new Mat(thresh, centerROIBox);
-        rightMat = new Mat(thresh, rightROIBox);
+        leftMat = new Mat(blueThresh, leftROIBox);
+        centerMat = new Mat(blueThresh, centerROIBox);
+        rightMat = new Mat(blueThresh, rightROIBox);
+
+        //TODO: comment above and uncomment below to tune ranges
+//        Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2HSV);
+//        Core.inRange(input, blueLower, blueUpper, input);
+//
+//        //create ROIs
+//        leftMat = new Mat(input, leftROIBox);
+//        centerMat = new Mat(input, centerROIBox);
+//        rightMat = new Mat(input, rightROIBox);
+
 
         //draw ROIs
         Imgproc.rectangle(input, leftROIBox, purpleColor);

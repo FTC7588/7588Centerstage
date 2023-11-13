@@ -38,15 +38,20 @@ import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakePower;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import org.firstinspires.ftc.teamcode.poofyutils.AprilTagCustomDatabase;
+import org.firstinspires.ftc.teamcode.poofyutils.MathUtil;
 import org.firstinspires.ftc.teamcode.poofyutils.PoofyDashboardUtil;
+import org.firstinspires.ftc.teamcode.poofyutils.geometry.EulerAngles;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
+import org.firstinspires.ftc.vision.apriltag.AprilTagMetadata;
 
 import static org.firstinspires.ftc.teamcode.Constants.*;
+
+import android.annotation.SuppressLint;
 
 
 @TeleOp
 @Config
-public class DriveTest extends BaseOpMode {
+public class Drive extends BaseOpMode {
 
 
     private RobotCentric robotCentric;
@@ -295,20 +300,27 @@ public class DriveTest extends BaseOpMode {
 
     }
 
+    @SuppressLint("DefaultLocale")
     public void run() {
         CommandScheduler.getInstance().run();
 
         super.run();
 
-        robot.read(driveSS, intakeSS, eleSS, armSS);
+        robot.read(driveSS, intakeSS, eleSS, armSS, grabSS);
 
-        robot.loop(driveSS, intakeSS, eleSS, armSS);
+        robot.loop(driveSS, intakeSS, eleSS, armSS, grabSS);
 
-        robot.write(driveSS, intakeSS, eleSS, armSS);
+        robot.write(driveSS, intakeSS, eleSS, armSS, grabSS);
 
         telemetry.addData("tp1_x", gamepad1.touchpad_finger_1_x);
 
-                TelemetryPacket packet = new TelemetryPacket();
+        for (AprilTagMetadata tag : AprilTagCustomDatabase.getCenterStageTagLibrary().getAllTags()) {
+            EulerAngles angles = MathUtil.quaternionToEuler(tag.fieldOrientation);
+            telemetry.addData("ID", tag.id);
+            telemetry.addLine(String.format("RPY %f %f %f",Math.toDegrees(angles.roll), Math.toDegrees(angles.pitch), Math.toDegrees(angles.yaw)));
+        }
+
+        TelemetryPacket packet = new TelemetryPacket();
 
         PoofyDashboardUtil.drawTags(packet.fieldOverlay(), AprilTagCustomDatabase.getCenterStageTagLibrary());
         PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getTagLocalizer().getCameraPose());

@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.GrabberSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.EulerAngles;
 
@@ -153,26 +154,29 @@ public class RobotHardware {
         }
     }
 
-    public void read(DrivetrainSubsystem drive, IntakeSubsystem intake, ElevatorSubsystem elevator, ArmSubsystem arm) {
+    public void read(DrivetrainSubsystem drive, IntakeSubsystem intake, ElevatorSubsystem elevator, ArmSubsystem arm, GrabberSubsystem grab) {
         angles.yaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
         drive.read();
         intake.read();
         elevator.read();
         arm.read();
+        grab.read();
     }
 
-    public void loop(DrivetrainSubsystem drive, IntakeSubsystem intake, ElevatorSubsystem elevator, ArmSubsystem arm) {
+    public void loop(DrivetrainSubsystem drive, IntakeSubsystem intake, ElevatorSubsystem elevator, ArmSubsystem arm, GrabberSubsystem grab) {
         drive.loop();
         intake.loop();
         elevator.loop();
         arm.loop();
+        grab.loop();
     }
 
-    public void write(DrivetrainSubsystem drive, IntakeSubsystem intake, ElevatorSubsystem elevator, ArmSubsystem arm) {
+    public void write(DrivetrainSubsystem drive, IntakeSubsystem intake, ElevatorSubsystem elevator, ArmSubsystem arm, GrabberSubsystem grab) {
         drive.write();
         intake.write();
         elevator.write();
         arm.write();
+        grab.write();
     }
 
     public double getHeading() {

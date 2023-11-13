@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.poofyutils.geometry.Vector2d;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Vector3d;
 import org.firstinspires.ftc.teamcode.poofyutils.hardware.CameraConfig;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -42,7 +43,7 @@ public class AprilTagLocalizer2d implements Localizer {
 
     public AprilTagLocalizer2d(CameraConfig... configs) {
         for (CameraConfig config : configs) {
-            streamers.add(new AprilTagStreamer(config, AprilTagCustomDatabase.getCenterStageTagLibrary()));
+            streamers.add(new AprilTagStreamer(config, AprilTagGameDatabase.getCenterStageTagLibrary()));
         }
     }
 
@@ -75,53 +76,7 @@ public class AprilTagLocalizer2d implements Localizer {
         }
     }
 
-    protected Pose2d getRobotToTagPose2dAxes(AprilTagDetection detection, Pose3d robotToCam) {
-        usedTags.add(detection);
-
-        Pose2d tagPose = new Pose2d(
-                detection.metadata.fieldPosition.get(0),
-                detection.metadata.fieldPosition.get(1),
-                MathUtil.quaternionToEuler(detection.metadata.fieldOrientation).yaw + Math.toRadians(90)
-        );
-
-        Transform2d camToTag = new Transform2d(
-                detection.ftcPose.x,
-                detection.ftcPose.y,
-                Math.toRadians(detection.ftcPose.yaw)
-        );
-
-        Pose2d cameraPose = tagPose.transformBy(camToTag.inverse()).transformBy(coordinateFix2d);
-
-        return cameraPose.transformBy(robotToCam.toTransform2d().inverse());
-    }
-
-    protected Pose2d getRobotToTagPose2dAxes(Pose2d tagPose, Transform2d camToTag, Pose3d robotToCam) {
-        cameraPose = tagPose.transformBy(camToTag.inverse()).transformBy(coordinateFix2d);
-
-        return cameraPose.transformBy(robotToCam.toTransform2d().inverse());
-    }
-
-    protected Pose2d getRobotToTagPose2dRangeBearing(AprilTagDetection detection, Pose3d robotToCam) {
-        usedTags.add(detection);
-
-        Pose2d tagPose = new Pose2d(
-                detection.metadata.fieldPosition.get(0),
-                detection.metadata.fieldPosition.get(1),
-                MathUtil.quaternionToEuler(detection.metadata.fieldOrientation).yaw + Math.toRadians(180)
-        );
-
-        Vector2d xy = new Vector2d(detection.ftcPose.range, 0).rotateBy(Math.toRadians(-detection.ftcPose.bearing) );
-
-        Transform2d camToTag = new Transform2d(
-                xy,
-                Math.toRadians(detection.ftcPose.bearing)
-        );
-
-        Pose2d cameraPose = tagPose.transformBy(camToTag.inverse());
-
-        return cameraPose;
-    }
-
+    //strategies
     protected Pose2d lowestDecisionMarginStrategy2d(LinkedHashMap<AprilTagDetection, Pose3d> detections) {
 
         double lowestMargin = -1;
@@ -141,7 +96,7 @@ public class AprilTagLocalizer2d implements Localizer {
         tagPose = new Pose2d(
                 lowestMarginTag.metadata.fieldPosition.get(0),
                 lowestMarginTag.metadata.fieldPosition.get(1),
-                MathUtil.quaternionToEuler(lowestMarginTag.metadata.fieldOrientation).yaw
+                MathUtil.quaternionToEuler(lowestMarginTag.metadata.fieldOrientation).yaw + Math.toRadians(90)
         );
 
         camToTag = new Transform2d(
@@ -157,6 +112,13 @@ public class AprilTagLocalizer2d implements Localizer {
 
         return new Pose2d(1, 1, 1);
 
+    }
+
+    //convert camera pose to robot pose
+    protected Pose2d getRobotToTagPose2dAxes(Pose2d tagPose, Transform2d camToTag, Pose3d robotToCam) {
+        cameraPose = tagPose.transformBy(camToTag.inverse()).transformBy(coordinateFix2d);
+
+        return cameraPose.transformBy(robotToCam.toTransform2d().inverse());
     }
 
     public Pose2d getPoseEstimate() {

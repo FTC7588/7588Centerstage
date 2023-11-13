@@ -8,7 +8,6 @@ import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
-import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.rr.drive.SampleMecanumDrive;
@@ -97,6 +96,10 @@ public class BaseOpMode extends CommandOpMode {
             tad("Max Speed", driveSS.getMaxSpeed());
             tad("Heading Lock Enabled", driveSS.getHeadingLock());
             tad("Heading Lock Target", driveSS.getHeadingLockTarget());
+            tad("Front Left Current", driveSS.getfLCurrent());
+            tad("Front Right Current", driveSS.getfRCurrent());
+            tad("Rear Left Current", driveSS.getrLCurrent());
+            tad("Rear Right Current", driveSS.getrRCurrent());
             tal();
         }
 
@@ -104,23 +107,33 @@ public class BaseOpMode extends CommandOpMode {
             tal("=== INTAKE DEBUG INFO ===");
             tad("Intake Power", intakeSS.getPower());
             tad("Intake Position", intakeSS.getPosition());
+            tad("Intake Left Motor Current", intakeSS.getlCurrent());
+            tad("Intake Right Motor Current", intakeSS.getrCurrent());
+            tal();
         }
 
         if (DEBUG_ELEVATOR) {
             tal("=== ELEVATOR DEBUG INFO ===");
             tad("Elevator Power", eleSS.getPower());
-            tad("Elevator Left Position", eleSS.getLeftPosition());
-            tad("Elevator Right Position", eleSS.getRightPosition());
-            tad("Elevator Average Position", eleSS.getPosition());
+            tad("Elevator Position", eleSS.getPosition());
+            tad("Elevator Left Current", eleSS.getLeftCurrent());
+            tad("Elevator Right Current", eleSS.getRightCurrent());
             tad("Elevator Target", eleSS.getTarget());
+            tal();
         }
 
         if (DEBUG_ARM) {
-
+            tal("=== ARM DEBUG INFO ===");
+            tad("Arm Shoulder Position", armSS.getShoulderPosition());
+            tad("Arm Wrist Position", armSS.getWristPosition());
+            tad("Arm Pivot Position", armSS.getPivotPosition());
+            tal();
         }
 
         if (DEBUG_GRABBER) {
-
+            tal("=== GRABBER DEBUG INFO");
+            tad("Grabber Position", grabSS.getPos());
+            tal();
         }
 
         if (DEBUG_VISION) {

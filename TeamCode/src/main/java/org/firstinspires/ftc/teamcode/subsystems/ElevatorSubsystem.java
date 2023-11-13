@@ -15,13 +15,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private double power;
 
-    private double lPos;
-    private double rPos;
-    private double avgPos;
+    private double pos;
 
     private double lCurrent;
     private double rCurrent;
-    private double avgCurrent;
 
     private double target;
 
@@ -39,8 +36,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
 
     public void read() {
-        lPos = robot.eleL.getCurrentPosition();
-        rPos = robot.eleR.getCurrentPosition();
+        pos = robot.eleL.getCurrentPosition();
         if (DEBUG_ELEVATOR) {
             lCurrent = robot.eleL.getCurrent(CurrentUnit.AMPS);
             rCurrent = robot.eleR.getCurrent(CurrentUnit.AMPS);
@@ -48,12 +44,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void loop() {
-        avgPos = lPos;
-        avgCurrent = (lCurrent + rCurrent) / 2;
-
         if (ELE_PID) {
             controller.setTargetPosition(target);
-            power = controller.calculate(avgPos);
+            power = controller.calculate(pos);
         }
     }
 
@@ -63,16 +56,16 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
 
-    public double getLeftPosition() {
-        return lPos;
-    }
-
-    public double getRightPosition() {
-        return rPos;
-    }
-
     public double getPosition() {
-        return avgPos;
+        return pos;
+    }
+
+    public double getLeftCurrent() {
+        return lCurrent;
+    }
+
+    public double getRightCurrent() {
+        return rCurrent;
     }
 
     public double getTarget() {
