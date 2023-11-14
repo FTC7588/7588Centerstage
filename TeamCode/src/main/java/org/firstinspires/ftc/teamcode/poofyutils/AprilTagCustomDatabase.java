@@ -96,16 +96,16 @@ public class AprilTagCustomDatabase {
                         new Quaternion(0.683f,-0.183f,0.183f,0.683f,0))
                 .addTag(7, "RedAudienceWallLarge",
                         5, new VectorF(-70.25f,-40.625f,5.5f), DistanceUnit.INCH,
-                        new Quaternion(0.7071f,0,0,-7.071f,0))
+                        new Quaternion(0.7071f,0,0,-0.7071f,0))
                 .addTag(8, "RedAudienceWallSmall",
                         2, new VectorF(-70.25f,-35.125f,4f), DistanceUnit.INCH,
-                        new Quaternion(0.7071f,0,0,-7.071f,0))
+                        new Quaternion(0.7071f,0,0,-0.7071f,0))
                 .addTag(9, "BlueAudienceWallSmall",
                         2, new VectorF(-70.25f,35.125f,4f), DistanceUnit.INCH,
-                        new Quaternion(0.7071f,0,0,-7.071f,0))
+                        new Quaternion(0.7071f,0,0,-0.7071f,0))
                 .addTag(10, "BlueAudienceWallLarge",
                         5, new VectorF(-70.25f,40.625f,5.5f), DistanceUnit.INCH,
-                        new Quaternion(0.7071f,0,0,-7.071f,0))
+                        new Quaternion(0.7071f,0,0,-0.7071f,0))
                 .build();
     }
 

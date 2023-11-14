@@ -43,7 +43,7 @@ public class AprilTagLocalizer2d implements Localizer {
 
     public AprilTagLocalizer2d(CameraConfig... configs) {
         for (CameraConfig config : configs) {
-            streamers.add(new AprilTagStreamer(config, AprilTagGameDatabase.getCenterStageTagLibrary()));
+            streamers.add(new AprilTagStreamer(config, AprilTagCustomDatabase.getCenterStageTagLibrary()));
         }
     }
 
@@ -102,7 +102,7 @@ public class AprilTagLocalizer2d implements Localizer {
         camToTag = new Transform2d(
                 lowestMarginTag.ftcPose.x,
                 lowestMarginTag.ftcPose.y,
-                Math.toRadians(lowestMarginTag.ftcPose.yaw)
+                Math.toRadians(lowestMarginTag.ftcPose.yaw - 90)
         );
 
         return getRobotToTagPose2dAxes(tagPose, camToTag, lowestMarginCamPose);

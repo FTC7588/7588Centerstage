@@ -24,15 +24,15 @@ public class PropProcessor implements VisionProcessor {
 
     private Scalar purpleColor = new Scalar(50,50,3);
 
-    public Scalar blueLower = new Scalar(82.2,60.9,239.4);
+    public Scalar blueLower = new Scalar(82.2,60.9,133.2);
     public Scalar blueUpper = new Scalar(111.9, 208.3, 255.0);
 
     public Scalar redLower = new Scalar(0, 0, 0);
     public Scalar redUpper = new Scalar(0, 0, 0);
 
-    public Rect leftROIBox = new Rect(150,200,25,25);
-    public Rect centerROIBox = new Rect(320, 60, 25, 25);
-    public Rect rightROIBox = new Rect(490, 100, 25, 25);
+    public Rect leftROIBox = new Rect(50,265,25,25);
+    public Rect centerROIBox = new Rect(275, 265, 25, 25);
+    public Rect rightROIBox = new Rect(510, 265, 25, 25);
 
     public Mat leftMat = new Mat();
     public Mat centerMat = new Mat();
@@ -40,7 +40,7 @@ public class PropProcessor implements VisionProcessor {
 
     public ArrayList<Mat> ROIs;
 
-    public int spike = 0;
+    public int spike;
 
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
@@ -96,11 +96,9 @@ public class PropProcessor implements VisionProcessor {
                     new Scalar(240,240,240),
                     2
             );
-        }
-        Imgproc.putText(input, Integer.toString(contours.size()), new Point(leftROIBox.x,400), Imgproc.FONT_HERSHEY_COMPLEX, 1, new Scalar(255,255,255));
-        if (contours.size() > 0) {
             spike = 1;
         }
+        Imgproc.putText(input, Integer.toString(contours.size()), new Point(leftROIBox.x,400), Imgproc.FONT_HERSHEY_COMPLEX, 1, new Scalar(255,255,255));
         contours.clear();
 
 
@@ -126,11 +124,9 @@ public class PropProcessor implements VisionProcessor {
                     new Scalar(240,240,240),
                     2
             );
-        }
-        Imgproc.putText(input, Integer.toString(contours.size()), new Point(centerROIBox.x,400), Imgproc.FONT_HERSHEY_COMPLEX, 1, new Scalar(255,255,255));
-        if (contours.size() > 0) {
             spike = 2;
         }
+        Imgproc.putText(input, Integer.toString(contours.size()), new Point(centerROIBox.x,400), Imgproc.FONT_HERSHEY_COMPLEX, 1, new Scalar(255,255,255));
         contours.clear();
 
 
@@ -156,11 +152,9 @@ public class PropProcessor implements VisionProcessor {
                     new Scalar(240,240,240),
                     2
             );
-        }
-        Imgproc.putText(input, Integer.toString(contours.size()), new Point(rightROIBox.x,400), Imgproc.FONT_HERSHEY_COMPLEX, 1, new Scalar(255,255,255));
-        if (contours.size() > 0) {
             spike = 3;
         }
+        Imgproc.putText(input, Integer.toString(contours.size()), new Point(rightROIBox.x,400), Imgproc.FONT_HERSHEY_COMPLEX, 1, new Scalar(255,255,255));
         contours.clear();
 
         //clear the ROI mats

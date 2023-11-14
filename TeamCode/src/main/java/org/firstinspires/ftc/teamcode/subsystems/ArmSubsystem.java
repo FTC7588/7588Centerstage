@@ -11,7 +11,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     private final RobotHardware robot;
 
-    private double shoulderPos;
+    private double shoulderPos = POISED_SHOULDER;
     private double wristPos;
     private double pivotPos;
 
