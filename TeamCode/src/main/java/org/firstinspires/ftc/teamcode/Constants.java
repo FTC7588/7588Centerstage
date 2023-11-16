@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.PwmControl;
 
@@ -52,6 +53,7 @@ public class Constants {
     public static double ELE_MID = 200;
     public static double ELE_DOWN = 0;
 
+    public static double FLOOR_ELE = 100;
     public static double POISED_ELE = 160;
     public static double GRAB_ELE = 35;
 
@@ -64,6 +66,7 @@ public class Constants {
 
     public static double ARM_SHOULDER_DEPOSIT = 0.5;
     public static double ARM_SHOULDER_IDLE = 0.7;
+    public static double FLOOR_SHOULDER = 0.25;
     public static double POISED_SHOULDER = 1;
     public static double GRAB_SHOULDER = 0.96;
 
@@ -73,6 +76,7 @@ public class Constants {
 
     public static double ARM_WRIST_DEPOSIT = 0.1;
     public static double ARM_WRIST_IDLE = 0.7;
+    public static double FLOOR_WRIST = 0.1;
     public static double POISED_WRIST = 0.35;
     public static double GRAB_WRIST = 0.7;
 
