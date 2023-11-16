@@ -195,7 +195,7 @@ public class Drive extends BaseOpMode {
         armDeposit = new SetEleArmPositions(
                 eleSS,
                 armSS,
-                0,
+                200,
                 ARM_SHOULDER_DEPOSIT,
                 ARM_WRIST_DEPOSIT,
                 ARM_PIVOT_DOWN
@@ -292,6 +292,7 @@ public class Drive extends BaseOpMode {
 
         robotCentric.schedule();
         intakeDown.schedule();
+        armPoised.schedule();
 //        shoulderPosDown.schedule();
 //        wristPosDown.schedule();
 //        pivotPosDown.schedule();
