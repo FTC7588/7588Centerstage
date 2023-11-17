@@ -127,10 +127,10 @@ public class MeepMeepTesting {
                 );
 
         Image img = null;
-        try {img = ImageIO.read(new File("D:/mario/Documents/Robotics/CenterStage.png")); }
-        catch (IOException ignored) {}
+//        try {img = ImageIO.read(new File("D:/mario/Documents/Robotics/CenterStage.png")); }
+//        catch (IOException ignored) {}
 
-        meepMeep.setBackground(img)
+        meepMeep
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
                 .addEntity(one)

@@ -80,7 +80,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
 
     public void loop() {
-        heading = robot.getHeading();
+        //heading = robot.getHeading();
         tagLocalizer.update();
         robotPose = tagLocalizer.getPoseEstimate();
     }
@@ -124,7 +124,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
                     strafeSpeed,
                     forwardSpeed,
                     turnSpeed,
-                    getHeading()
+                    0
             );
         } else {
             mode = DriveMode.ROBOT_CENTRIC_PID;
@@ -145,7 +145,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
                     strafeSpeed,
                     forwardSpeed,
                     turnSpeed,
-                    robot.getHeading()
+                    robot.headingOffset
             );
         } else {
             mode = DriveMode.FIELD_CENTRIC_PID;

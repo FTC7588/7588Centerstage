@@ -73,7 +73,7 @@ public class RobotHardware {
         }
 
         //hardware
-        imu = hwMap.get(IMU.class, "imu");
+//        imu = hwMap.get(IMU.class, "imu");
 
         fL = hwMap.get(DcMotorEx.class, "fL");
         fR = hwMap.get(DcMotorEx.class, "fR");
@@ -99,9 +99,9 @@ public class RobotHardware {
         C920 = hwMap.get(WebcamName.class, "Webcam 1");
 
         //imu
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP));
-        imu.initialize(parameters);
+//        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+//                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP));
+//        imu.initialize(parameters);
 
         //drive
         fL.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -141,11 +141,11 @@ public class RobotHardware {
         //grabber
         grab2.setDirection(Servo.Direction.REVERSE);
 
-        angles = new EulerAngles(
-                imu.getRobotYawPitchRollAngles().getRoll(AngleUnit.RADIANS),
-                imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.RADIANS),
-                imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)
-        );
+//        angles = new EulerAngles(
+//                imu.getRobotYawPitchRollAngles().getRoll(AngleUnit.RADIANS),
+//                imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.RADIANS),
+//                imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)
+//        );
     }
 
     public void clearBulkCache() {
@@ -155,7 +155,7 @@ public class RobotHardware {
     }
 
     public void read(DrivetrainSubsystem drive, IntakeSubsystem intake, ElevatorSubsystem elevator, ArmSubsystem arm, GrabberSubsystem grab) {
-        angles.yaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        //angles.yaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
         drive.read();
         intake.read();
         elevator.read();
@@ -179,15 +179,37 @@ public class RobotHardware {
         grab.write();
     }
 
-    public double getHeading() {
-        return angles.yaw - headingOffset;
+    public void read(IntakeSubsystem intake, ElevatorSubsystem elevator, ArmSubsystem arm, GrabberSubsystem grab) {
+        //angles.yaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        intake.read();
+        elevator.read();
+        arm.read();
+        grab.read();
     }
 
-    public void resetIMU() {
-        rollOffset = angles.roll;
-        pitchOffset = angles.pitch;
-        headingOffset = angles.yaw;
+    public void loop(IntakeSubsystem intake, ElevatorSubsystem elevator, ArmSubsystem arm, GrabberSubsystem grab) {
+        intake.loop();
+        elevator.loop();
+        arm.loop();
+        grab.loop();
     }
+
+    public void write(IntakeSubsystem intake, ElevatorSubsystem elevator, ArmSubsystem arm, GrabberSubsystem grab) {
+        intake.write();
+        elevator.write();
+        arm.write();
+        grab.write();
+    }
+
+//    public double getHeading() {
+//        return angles.yaw - headingOffset;
+//    }
+//
+//    public void resetIMU() {
+//        rollOffset = angles.roll;
+//        pitchOffset = angles.pitch;
+//        headingOffset = angles.yaw;
+//    }
 
 
 

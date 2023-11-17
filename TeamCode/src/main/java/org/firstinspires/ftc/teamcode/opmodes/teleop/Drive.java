@@ -17,7 +17,6 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.commands.ResetIMU;
 import org.firstinspires.ftc.teamcode.commands.arm.IncrementWristPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.SetEleArmPositions;
 import org.firstinspires.ftc.teamcode.commands.arm.SetPivotPosition;
@@ -58,7 +57,7 @@ public class Drive extends BaseOpMode {
     private FieldCentric fieldCentric;
     private FollowTag followTag;
 
-    private ResetIMU resetIMU;
+    //private ResetIMU resetIMU;
 
     protected SetMaxSpeed lowSpeed;
     protected SetMaxSpeed highSpeed;
@@ -114,6 +113,8 @@ public class Drive extends BaseOpMode {
     protected SetEleArmPositions armPoised;
     protected SetEleArmPositions armGrab;
 
+    protected SetEleArmPositions armBack;
+
     protected FtcDashboard dashboard = FtcDashboard.getInstance();
 
     @Override
@@ -139,7 +140,7 @@ public class Drive extends BaseOpMode {
 
         //armTouchPad = new SetShoulderTouch(armSS, () -> driver.gamepad.touchpad_finger_1_x);
 
-        resetIMU = new ResetIMU(robot);
+        //resetIMU = new ResetIMU(robot);
 
         lowSpeed = new SetMaxSpeed(driveSS, LOW_SPEED);
         highSpeed = new SetMaxSpeed(driveSS, HIGH_SPEED);
@@ -228,10 +229,19 @@ public class Drive extends BaseOpMode {
                 ARM_PIVOT_DOWN
         );
 
+        armBack = new SetEleArmPositions(
+                eleSS,
+                armSS,
+                FLOOR_ELE,
+                FLOOR_SHOULDER,
+                FLOOR_WRIST,
+                ARM_PIVOT_DOWN
+        );
+
         //controls
-        gp1(A, 2).whenActive(robot::resetIMU);
+        //gp1(A, 2).whenActive(robot::resetIMU);
         gp1(X, 2).toggleWhenActive(robotCentric, fieldCentric);
-        gp1(Y, 2).whenActive(resetIMU);
+        //gp1(Y, 2).whenActive(resetIMU);
 
         gp1(LEFT_BUMPER, 1).whenActive(lowSpeed).whenInactive(highSpeed);
 
@@ -270,6 +280,7 @@ public class Drive extends BaseOpMode {
 
         gp1(LEFT_BUMPER, 3).whenActive(armPoised);
         gp1(RIGHT_BUMPER, 3).whenActive(armGrab);
+        gp1(A, 3).whenActive(armBack);
 
         //debug controls
         gp1(DPAD_LEFT, 3).toggleWhenActive(() -> DEBUG_GENERAL = true, () -> DEBUG_GENERAL = false);
@@ -297,7 +308,7 @@ public class Drive extends BaseOpMode {
 //        wristPosDown.schedule();
 //        pivotPosDown.schedule();
 //        armTouchPad.schedule();
-        resetIMU.schedule();
+        //resetIMU.schedule();
 
     }
 

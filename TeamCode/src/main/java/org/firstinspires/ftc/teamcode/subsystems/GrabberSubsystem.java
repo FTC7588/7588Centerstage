@@ -8,7 +8,8 @@ public class GrabberSubsystem extends SubsystemBase {
 
     private final RobotHardware robot;
 
-    private double pos;
+    private double leftPos;
+    private double rightPos;
 
     public GrabberSubsystem(RobotHardware robot) {
         this.robot = robot;
@@ -23,15 +24,24 @@ public class GrabberSubsystem extends SubsystemBase {
     }
 
     public void write() {
-        robot.grab1.setPosition(pos);
-        robot.grab2.setPosition(pos);
+        robot.grab1.setPosition(leftPos);
+        robot.grab2.setPosition(rightPos);
     }
 
     public void setGrabberPosition(double pos) {
-        this.pos = pos;
+        leftPos = pos;
+        rightPos = pos;
     }
 
-    public double getPos() {
-        return pos;
+    public void setLeftGrabberPosition(double pos) {
+        leftPos = pos;
+    }
+
+    public void setRightGrabberPosition(double pos) {
+        rightPos = pos;
+    }
+
+    public double getLeftPos() {
+        return leftPos;
     }
 }
