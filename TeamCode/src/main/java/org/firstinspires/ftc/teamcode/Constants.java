@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.PwmControl;
 
 import org.firstinspires.ftc.teamcode.poofyutils.CameraIntrinsics;
+import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose3d;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Rotation3d;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Vector3d;
@@ -28,9 +28,9 @@ public class Constants {
     public static boolean DEBUG_VISION      = false;
 
     //drive constants
-    public static PoofyPIDCoefficients X_COEFFS = new PoofyPIDCoefficients(0, 0, 0);
-    public static PoofyPIDCoefficients Y_COEFFS = new PoofyPIDCoefficients(0, 0, 0);
-    public static PoofyPIDCoefficients THETA_COEFFS = new PoofyPIDCoefficients(0.005, 0, 0);
+    public static PoofyPIDCoefficients X_COEFFS = new PoofyPIDCoefficients(0.1, 0, 0);
+    public static PoofyPIDCoefficients Y_COEFFS = new PoofyPIDCoefficients(0.1, 0, 0);
+    public static PoofyPIDCoefficients THETA_COEFFS = new PoofyPIDCoefficients(50, 0, 0);
 
     public static double LOW_SPEED = 0.4;
     public static double HIGH_SPEED = 1;
@@ -98,5 +98,7 @@ public class Constants {
             new Vector3d(3.125, -7.125, 3.5),
             new Rotation3d(0, 0, Math.toRadians(0))
     );
+
+    public static org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d FOLLOW_POSE = new Pose2d(50, 44, Math.toRadians(360));
 
 }

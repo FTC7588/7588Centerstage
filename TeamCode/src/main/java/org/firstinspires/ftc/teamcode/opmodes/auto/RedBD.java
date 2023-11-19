@@ -1,19 +1,27 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto;
 
+import static org.firstinspires.ftc.teamcode.Constants.ARM_PIVOT_DOWN;
+import static org.firstinspires.ftc.teamcode.Constants.ARM_SHOULDER_DEPOSIT;
+import static org.firstinspires.ftc.teamcode.Constants.ARM_WRIST_DEPOSIT;
+import static org.firstinspires.ftc.teamcode.Constants.FLOOR_ELE;
+import static org.firstinspires.ftc.teamcode.Constants.FLOOR_SHOULDER;
+import static org.firstinspires.ftc.teamcode.Constants.FLOOR_WRIST;
+import static org.firstinspires.ftc.teamcode.Constants.GRABBER_CLOSED;
+import static org.firstinspires.ftc.teamcode.Constants.GRABBER_OPEN;
+import static org.firstinspires.ftc.teamcode.Constants.GRAB_SHOULDER;
+import static org.firstinspires.ftc.teamcode.Constants.GRAB_WRIST;
+import static org.firstinspires.ftc.teamcode.Constants.INT_DOWN;
+
 import android.util.Size;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.ParallelCommandGroup;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectoryAsyncCommand;
 import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectorySequenceAsync;
-import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectorySequenceCommand;
 import org.firstinspires.ftc.teamcode.commands.arm.SetArmPositions;
 import org.firstinspires.ftc.teamcode.commands.arm.SetEleArmPositions;
 import org.firstinspires.ftc.teamcode.commands.grabber.SetGrabberPosition;
@@ -21,36 +29,33 @@ import org.firstinspires.ftc.teamcode.commands.grabber.SetLeftGrabberPosition;
 import org.firstinspires.ftc.teamcode.commands.grabber.SetRightGrabberPosition;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.PropProcessor;
 import org.firstinspires.ftc.teamcode.rr.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-import static org.firstinspires.ftc.teamcode.Constants.*;
-
 @Autonomous
 @Config
-public class BlueBD extends BaseOpMode {
+public class RedBD extends BaseOpMode {
 
     public boolean runOnce = false;
 
-    public static Pose2d START_POSE = new Pose2d(60, -12, Math.toRadians(0));
+    public static Pose2d START_POSE = new Pose2d(-60, -12, Math.toRadians(180));
 
     private PropProcessor propProcessor;
 
     private VisionPortal visionPortal;
 
-    public static Pose2d spike1 =       new Pose2d(37, -33, Math.toRadians(-90));
-    public static Pose2d spike2 =       new Pose2d(36, -9, Math.toRadians(0));
-    public static Pose2d spike3 =       new Pose2d(36, -12, Math.toRadians(-90));
-    public static Pose2d backdrop1 =    new Pose2d(44, -52, Math.toRadians(90));
-    public static Pose2d backdrop2 =    new Pose2d(37, -52, Math.toRadians(90));
-    public static Pose2d backdrop3 =    new Pose2d(32, -52, Math.toRadians(90));
-    public static Pose2d push1 =        new Pose2d(44, -56, Math.toRadians(90));
-    public static Pose2d push2 =        new Pose2d(37, -56, Math.toRadians(90));
-    public static Pose2d push3 =        new Pose2d(32, -56, Math.toRadians(90));
+    public static Pose2d spike3 =       new Pose2d(-34.5, -31, Math.toRadians(-90));
+    public static Pose2d spike2 =       new Pose2d(-36, -16, Math.toRadians(180));
+    public static Pose2d spike1 =       new Pose2d(-35, -9, Math.toRadians(-90));
+    public static Pose2d backdrop3 =    new Pose2d(-42, -50, Math.toRadians(90));
+    public static Pose2d backdrop2 =    new Pose2d(-35, -50, Math.toRadians(90));
+    public static Pose2d backdrop1 =    new Pose2d(-30, -50, Math.toRadians(90));
+    public static Pose2d push3 =        new Pose2d(-42, -53, Math.toRadians(90));
+    public static Pose2d push2 =        new Pose2d(-35, -53, Math.toRadians(90));
+    public static Pose2d push1 =        new Pose2d(-30, -53, Math.toRadians(90));
 
-    public static Pose2d parkall =      new Pose2d(60, -46, Math.toRadians(90));
+    public static Pose2d parkall =      new Pose2d(-60, -46, Math.toRadians(90));
 
     public static TrajectorySequence moveToSpike;
     public static TrajectorySequence moveToBackdrop;
@@ -94,12 +99,12 @@ public class BlueBD extends BaseOpMode {
         );
 
         armBack = new SetEleArmPositions(
-            eleSS,
-            armSS,
-            FLOOR_ELE,
-            FLOOR_SHOULDER,
-            FLOOR_WRIST,
-            ARM_PIVOT_DOWN
+                eleSS,
+                armSS,
+                FLOOR_ELE,
+                FLOOR_SHOULDER,
+                FLOOR_WRIST,
+                ARM_PIVOT_DOWN
         );
 
         armDeposit = new SetEleArmPositions(
@@ -150,8 +155,6 @@ public class BlueBD extends BaseOpMode {
             telemetry.addData("spike pos", proppos);
             telemetry.update();
         }
-
-
     }
 
     @Override

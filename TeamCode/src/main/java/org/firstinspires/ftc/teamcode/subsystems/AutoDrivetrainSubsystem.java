@@ -28,23 +28,23 @@ public class AutoDrivetrainSubsystem extends SubsystemBase {
     private final SampleMecanumDrive drive;
     private final boolean fieldCentric;
 
-    private final AprilTagLocalizer2d tagLocalizer;
+//    private final AprilTagLocalizer2d tagLocalizer;
 
     public AutoDrivetrainSubsystem(RobotHardware robot, SampleMecanumDrive drive, boolean isFieldCentric) {
         this.drive = drive;
         fieldCentric = isFieldCentric;
 
-        tagLocalizer = new AprilTagLocalizer2d(
-                new CameraConfig(
-                        robot.C920,
-                        C920_POSE,
-                        C920_INTRINSICS,
-                        12,
-                        255,
-                        new Size(640, 480),
-                        VisionPortal.StreamFormat.MJPEG
-                )
-        );
+//        tagLocalizer = new AprilTagLocalizer2d(
+//                new CameraConfig(
+//                        robot.C920,
+//                        C920_POSE,
+//                        C920_INTRINSICS,
+//                        12,
+//                        255,
+//                        new Size(640, 480),
+//                        VisionPortal.StreamFormat.MJPEG
+//                )
+//        );
     }
 
     public void setPoseEstimate(Pose2d pose) {

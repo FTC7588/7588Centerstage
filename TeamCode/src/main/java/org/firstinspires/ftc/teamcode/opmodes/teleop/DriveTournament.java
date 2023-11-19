@@ -10,6 +10,42 @@ import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.LEFT_BUMPER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.RIGHT_BUMPER;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.X;
 import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.Y;
+import static org.firstinspires.ftc.teamcode.Constants.ARM_PIVOT_DOWN;
+import static org.firstinspires.ftc.teamcode.Constants.ARM_SHOULDER_DEPOSIT;
+import static org.firstinspires.ftc.teamcode.Constants.ARM_SHOULDER_IDLE;
+import static org.firstinspires.ftc.teamcode.Constants.ARM_WRIST_DEPOSIT;
+import static org.firstinspires.ftc.teamcode.Constants.ARM_WRIST_IDLE;
+import static org.firstinspires.ftc.teamcode.Constants.DEBUG_ARM;
+import static org.firstinspires.ftc.teamcode.Constants.DEBUG_DRIVE;
+import static org.firstinspires.ftc.teamcode.Constants.DEBUG_ELEVATOR;
+import static org.firstinspires.ftc.teamcode.Constants.DEBUG_GENERAL;
+import static org.firstinspires.ftc.teamcode.Constants.DEBUG_GRABBER;
+import static org.firstinspires.ftc.teamcode.Constants.DEBUG_INTAKE;
+import static org.firstinspires.ftc.teamcode.Constants.DEBUG_VISION;
+import static org.firstinspires.ftc.teamcode.Constants.ELE_DOWN;
+import static org.firstinspires.ftc.teamcode.Constants.ELE_INCREMENT;
+import static org.firstinspires.ftc.teamcode.Constants.ELE_MID;
+import static org.firstinspires.ftc.teamcode.Constants.ELE_POWER;
+import static org.firstinspires.ftc.teamcode.Constants.ELE_UP;
+import static org.firstinspires.ftc.teamcode.Constants.FLOOR_ELE;
+import static org.firstinspires.ftc.teamcode.Constants.FLOOR_SHOULDER;
+import static org.firstinspires.ftc.teamcode.Constants.FLOOR_WRIST;
+import static org.firstinspires.ftc.teamcode.Constants.FOLLOW_POSE;
+import static org.firstinspires.ftc.teamcode.Constants.GRABBER_CLOSED;
+import static org.firstinspires.ftc.teamcode.Constants.GRABBER_OPEN;
+import static org.firstinspires.ftc.teamcode.Constants.GRAB_ELE;
+import static org.firstinspires.ftc.teamcode.Constants.GRAB_SHOULDER;
+import static org.firstinspires.ftc.teamcode.Constants.GRAB_WRIST;
+import static org.firstinspires.ftc.teamcode.Constants.HIGH_SPEED;
+import static org.firstinspires.ftc.teamcode.Constants.INTAKE_POWER;
+import static org.firstinspires.ftc.teamcode.Constants.INT_DOWN;
+import static org.firstinspires.ftc.teamcode.Constants.INT_UP;
+import static org.firstinspires.ftc.teamcode.Constants.LOW_SPEED;
+import static org.firstinspires.ftc.teamcode.Constants.POISED_ELE;
+import static org.firstinspires.ftc.teamcode.Constants.POISED_SHOULDER;
+import static org.firstinspires.ftc.teamcode.Constants.POISED_WRIST;
+
+import android.annotation.SuppressLint;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -40,24 +76,17 @@ import org.firstinspires.ftc.teamcode.poofyutils.AprilTagCustomDatabase;
 import org.firstinspires.ftc.teamcode.poofyutils.MathUtil;
 import org.firstinspires.ftc.teamcode.poofyutils.PoofyDashboardUtil;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.EulerAngles;
-import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 import org.firstinspires.ftc.vision.apriltag.AprilTagMetadata;
-
-import static org.firstinspires.ftc.teamcode.Constants.*;
-
-import android.annotation.SuppressLint;
 
 
 @TeleOp
 @Config
-public class Drive extends BaseOpMode {
+public class DriveTournament extends BaseOpMode {
 
 
     private RobotCentric robotCentric;
     private FieldCentric fieldCentric;
     private FollowTag followTag;
-
-    //private ResetIMU resetIMU;
 
     protected SetMaxSpeed lowSpeed;
     protected SetMaxSpeed highSpeed;
@@ -238,51 +267,33 @@ public class Drive extends BaseOpMode {
                 ARM_PIVOT_DOWN
         );
 
-        //controls
-        //gp1(A, 2).whenActive(robot::resetIMU);
-        gp1(X, 2).toggleWhenActive(robotCentric, fieldCentric);
-        //gp1(Y, 2).whenActive(resetIMU);
-
+        //p1 layer 1 controls
         gp1(LEFT_BUMPER, 1).whenActive(lowSpeed).whenInactive(highSpeed);
+        gp1(RIGHT_BUMPER, 1).toggleWhenActive(followTag, robotCentric);
 
         gp1(B, 1).toggleWhenActive(intakeIn, intakeIdle);
         gp1(X, 1).toggleWhenActive(intakeOut, intakeIdle);
-
         gp1(A, 1).whenActive(intakeDown);
         gp1(Y, 1).whenActive(intakeUp);
 
-//        gp1(DPAD_UP, 1).whenActive(eleUp).whenInactive(eleIdle);
-//        gp1(DPAD_DOWN, 1).whenActive(eleDown).whenInactive(eleIdle);
+        gp1(DPAD_UP, 1).whileActiveContinuous(eleIncUp);
+        gp1(DPAD_DOWN, 1).whileActiveContinuous(eleIncDown);
 
-        gp1(DPAD_UP, 1).whenActive(eleTargetUp);
-        gp1(DPAD_LEFT, 1).whenActive(eleTargetMid);
-        gp1(DPAD_DOWN, 1).whenActive(eleTargetDown);
-        gp1(DPAD_RIGHT, 1).whenActive(followTag);
-
+        //p1 layer 2 controls
+        gp1(DPAD_UP, 2).whenActive(shoulderPosIdle);
+        gp1(DPAD_LEFT, 2).whenActive(shoulderPosDeposit);
+        gp1(DPAD_RIGHT, 2).whenActive(shoulderPosPoised);
         gp1(DPAD_DOWN, 2).whenActive(shoulderPosGrab);
-        gp1(DPAD_LEFT, 2).whenActive(shoulderPosPoised);
-        gp1(DPAD_UP, 2).whenActive(shoulderPosDeposit);
 
-        gp1(X, 3).whenActive(wristPosDown);
-        gp1(B, 3).whenActive(wristPosUp);
-        gp1(A, 3).whenActive(wristIncDown);
-        gp1(Y, 3).whenActive(wristIncUp);
+        gp1(A, 2).whenActive(wristIncUp);
+        gp1(Y, 2).whenActive(wristIncDown);
+        gp1(X, 2).toggleWhenActive(pivotPosDown, pivotPosUp);
+        gp1(B, 2).toggleWhenActive(grabberOpen, grabberClosed);
 
-        gp1(LEFT_BUMPER, 2).whenActive(pivotPosDown);
-        gp1(RIGHT_BUMPER, 2).whenActive(pivotPosUp);
+        gp1(LEFT_BUMPER, 2).whenActive(armPoised);
+        gp1(RIGHT_BUMPER, 2).whenActive(armGrab);
 
-        gp1(B, 2).toggleWhenActive(grabberClosed, grabberOpen);
-
-//        gp1(Y, 3).whenActive(forwardLock);
-//        gp1(X, 3).whenActive(leftLock);
-//        gp1(A, 3).whenActive(backLock);
-//        gp1(B, 3).whenActive(rightLock);
-
-        gp1(LEFT_BUMPER, 3).whenActive(armPoised);
-        gp1(RIGHT_BUMPER, 3).whenActive(armGrab);
-        gp1(A, 3).whenActive(armBack);
-
-        //debug controls
+        //p1 layer 3 controls
         gp1(DPAD_LEFT, 3).toggleWhenActive(() -> DEBUG_GENERAL = true, () -> DEBUG_GENERAL = false);
         gp1(DPAD_DOWN, 3).toggleWhenActive(() -> DEBUG_DRIVE = true, () -> DEBUG_DRIVE = false);
         gp1(DPAD_RIGHT, 3).toggleWhenActive(() -> DEBUG_INTAKE = true, () -> DEBUG_INTAKE = false);
@@ -293,7 +304,7 @@ public class Drive extends BaseOpMode {
 
         //p2 controls
         gp2(DPAD_UP, 1).whileActiveContinuous(eleIncUp);
-        gp1(DPAD_LEFT, 1).whenActive(eleTargetUp);
+        gp2(DPAD_LEFT, 1).whenActive(eleTargetUp);
         gp2(DPAD_DOWN, 1).whileActiveContinuous(eleIncDown);
 
         gp2(Y, 1).whenActive(armDeposit);
@@ -303,7 +314,6 @@ public class Drive extends BaseOpMode {
 
         gp2(LEFT_BUMPER, 1).toggleWhenActive(grabberOpen, grabberClosed);
         gp2(RIGHT_BUMPER, 1).toggleWhenActive(pivotPosUp, pivotPosDown);
-
 
         robotCentric.schedule();
         intakeDown.schedule();
@@ -328,18 +338,11 @@ public class Drive extends BaseOpMode {
 
         robot.write(driveSS, intakeSS, eleSS, armSS, grabSS);
 
-        telemetry.addData("tp1_x", gamepad1.touchpad_finger_1_x);
-
-        for (AprilTagMetadata tag : AprilTagCustomDatabase.getCenterStageTagLibrary().getAllTags()) {
-            EulerAngles angles = MathUtil.quaternionToEuler(tag.fieldOrientation);
-            telemetry.addData("ID", tag.id);
-            telemetry.addLine(String.format("RPY %f %f %f",Math.toDegrees(angles.roll), Math.toDegrees(angles.pitch), Math.toDegrees(angles.yaw)));
-        }
-
         TelemetryPacket packet = new TelemetryPacket();
 
         PoofyDashboardUtil.drawTags(packet.fieldOverlay(), AprilTagCustomDatabase.getCenterStageTagLibrary());
-        PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getTagLocalizer().getCameraPose());
+        PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getRobotPose());
+        PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), FOLLOW_POSE);
 
         dashboard.sendTelemetryPacket(packet);
 
@@ -347,8 +350,5 @@ public class Drive extends BaseOpMode {
 
         robot.clearBulkCache();
     }
-
-
-
 
 }

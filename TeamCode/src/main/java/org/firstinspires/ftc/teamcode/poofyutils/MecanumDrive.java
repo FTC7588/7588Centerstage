@@ -169,17 +169,17 @@ public class MecanumDrive {
     public void driveFollowTag(Pose2d tagPose,
                                Pose2d targetFollowingPose
     ) {
-        xController.setTargetPosition(targetFollowingPose.getX());
-        double strafeSpeed = xController.calculate(tagPose.getX());
+        xController.setTargetPosition(targetFollowingPose.getY());
+        double strafeSpeed = xController.calculate(tagPose.getY());
 
-        yController.setTargetPosition(targetFollowingPose.getY());
-        double forwardSpeed = yController.calculate(tagPose.getY());
+        yController.setTargetPosition(targetFollowingPose.getX());
+        double forwardSpeed = yController.calculate(tagPose.getX());
 
         double turnSpeed = thetaController.calculate(Math.toRadians(targetFollowingPose.getTheta()), Math.toRadians(tagPose.getTheta()));
 
         driveRobotCentric(
                 strafeSpeed,
-                forwardSpeed,
+                -forwardSpeed,
                 turnSpeed
         );
     }

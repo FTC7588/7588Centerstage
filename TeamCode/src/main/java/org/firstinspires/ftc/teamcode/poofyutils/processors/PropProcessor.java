@@ -30,9 +30,9 @@ public class PropProcessor implements VisionProcessor {
     public Scalar redLower = new Scalar(0, 0, 0);
     public Scalar redUpper = new Scalar(0, 0, 0);
 
-    public Rect leftROIBox = new Rect(50,265,25,25);
-    public Rect centerROIBox = new Rect(275, 265, 25, 25);
-    public Rect rightROIBox = new Rect(510, 265, 25, 25);
+    public Rect leftROIBox = new Rect(90,265,25,25);
+    public Rect centerROIBox = new Rect(315, 265, 25, 25);
+    public Rect rightROIBox = new Rect(570, 265, 25, 25);
 
     public Mat leftMat = new Mat();
     public Mat centerMat = new Mat();

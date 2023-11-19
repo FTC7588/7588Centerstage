@@ -57,8 +57,10 @@ public class BaseOpMode extends CommandOpMode {
         if (auto) {
             rrDrive = new SampleMecanumDrive(hardwareMap);
             autoDriveSS = new AutoDrivetrainSubsystem(robot, rrDrive, false);
+        } else {
+            driveSS = new DrivetrainSubsystem(robot);
         }
-        //driveSS = new DrivetrainSubsystem(robot);
+
 
         intakeSS = new IntakeSubsystem(robot);
         eleSS = new ElevatorSubsystem(robot);
