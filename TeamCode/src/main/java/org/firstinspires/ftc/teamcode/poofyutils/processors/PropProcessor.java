@@ -42,6 +42,16 @@ public class PropProcessor implements VisionProcessor {
 
     public int spike;
 
+    public Alliance alliance;
+
+    public boolean tuneBlue = false;
+    public boolean tuneRed = false;
+
+    public PropProcessor(Alliance alliance) {
+        this.alliance = Alliance.BLUE;
+    }
+
+
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
         ROIs = new ArrayList<>();
@@ -50,24 +60,41 @@ public class PropProcessor implements VisionProcessor {
     @Override
     public Object processFrame(Mat input, long captureTimeNanos) {
 
-        //filter to blue
-        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
-        Core.inRange(hsv, blueLower, blueUpper, blueThresh);
+        if (tuneBlue) {
+            Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2HSV);
+            Core.inRange(input, blueLower, blueUpper, input);
 
-        //create ROIs
-        leftMat = new Mat(blueThresh, leftROIBox);
-        centerMat = new Mat(blueThresh, centerROIBox);
-        rightMat = new Mat(blueThresh, rightROIBox);
+            //create ROIs
+            leftMat = new Mat(input, leftROIBox);
+            centerMat = new Mat(input, centerROIBox);
+            rightMat = new Mat(input, rightROIBox);
+        } else if (tuneRed) {
+            Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2HSV);
+            Core.inRange(input, blueLower, blueUpper, input);
 
-        //TODO: comment above and uncomment below to tune ranges
-//        Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2HSV);
-//        Core.inRange(input, blueLower, blueUpper, input);
-//
-//        //create ROIs
-//        leftMat = new Mat(input, leftROIBox);
-//        centerMat = new Mat(input, centerROIBox);
-//        rightMat = new Mat(input, rightROIBox);
+            //create ROIs
+            leftMat = new Mat(input, leftROIBox);
+            centerMat = new Mat(input, centerROIBox);
+            rightMat = new Mat(input, rightROIBox);
+        } else if (alliance == Alliance.BLUE) {
+            //filter to blue
+            Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
+            Core.inRange(hsv, blueLower, blueUpper, blueThresh);
 
+            //create ROIs
+            leftMat = new Mat(blueThresh, leftROIBox);
+            centerMat = new Mat(blueThresh, centerROIBox);
+            rightMat = new Mat(blueThresh, rightROIBox);
+        } else if (alliance == Alliance.RED) {
+            //filter to red
+            Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
+            Core.inRange(hsv, redLower, redUpper, redThresh);
+
+            //create ROIs
+            leftMat = new Mat(redThresh, leftROIBox);
+            centerMat = new Mat(redThresh, centerROIBox);
+            rightMat = new Mat(redThresh, rightROIBox);
+        }
 
         //draw ROIs
         Imgproc.rectangle(input, leftROIBox, purpleColor);
@@ -180,5 +207,11 @@ public class PropProcessor implements VisionProcessor {
 
     public int getSpike() {
         return spike;
+    }
+
+
+    public enum Alliance{
+        BLUE,
+        RED
     }
 }

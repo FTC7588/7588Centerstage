@@ -36,29 +36,35 @@ import java.util.Locale;
 
 @Autonomous
 @Config
-public class RedBD extends BaseOpMode {
+public class BlueStacks extends BaseOpMode {
 
     public boolean runOnce = false;
 
-    public static Pose2d START_POSE = new Pose2d(-60, -12, Math.toRadians(180));
+    public static Pose2d START_POSE = new Pose2d(60, -12, Math.toRadians(0));
 
     private PropProcessor propProcessor;
 
     private VisionPortal visionPortal;
 
-    public static Pose2d spike3 =       new Pose2d(-34.5, -31, Math.toRadians(-90));
-    public static Pose2d spike2 =       new Pose2d(-36, -16, Math.toRadians(180));
-    public static Pose2d spike1 =       new Pose2d(-35, -9, Math.toRadians(-90));
-    public static Pose2d backdrop3 =    new Pose2d(-42, -50, Math.toRadians(90));
-    public static Pose2d backdrop2 =    new Pose2d(-35, -50, Math.toRadians(90));
-    public static Pose2d backdrop1 =    new Pose2d(-30, -50, Math.toRadians(90));
-    public static Pose2d push3 =        new Pose2d(-42, -53, Math.toRadians(90));
-    public static Pose2d push2 =        new Pose2d(-35, -53, Math.toRadians(90));
-    public static Pose2d push1 =        new Pose2d(-30, -53, Math.toRadians(90));
+    public static Pose2d spike1 =       new Pose2d(37, 36, Math.toRadians(-90));
+    public static Pose2d spike2 =       new Pose2d(36, 39, Math.toRadians(0));
+    public static Pose2d spike3 =       new Pose2d(36, 36, Math.toRadians(-90));
 
-    public static Pose2d parkAll =      new Pose2d(-60, -46, Math.toRadians(90));
+    public static Pose2d side =         new Pose2d(12, 36, Math.toRadians(90));
+    public static Pose2d forward =      new Pose2d(12, -36, Math.toRadians(90));
+
+    public static Pose2d backdrop1 =    new Pose2d(44, -52, Math.toRadians(90));
+    public static Pose2d backdrop2 =    new Pose2d(37, -52, Math.toRadians(90));
+    public static Pose2d backdrop3 =    new Pose2d(32, -52, Math.toRadians(90));
+    public static Pose2d push1 =        new Pose2d(44, -56, Math.toRadians(90));
+    public static Pose2d push2 =        new Pose2d(37, -56, Math.toRadians(90));
+    public static Pose2d push3 =        new Pose2d(32, -56, Math.toRadians(90));
+
+    public static Pose2d parkAll =      new Pose2d(12, -46, Math.toRadians(90));
 
     public static TrajectorySequence moveToSpike;
+    public static TrajectorySequence moveToSide;
+    public static TrajectorySequence moveAcrossField;
     public static TrajectorySequence moveToBackdrop;
     public static TrajectorySequence pushAgainstBackdrop;
     public static TrajectorySequence park;
@@ -75,14 +81,14 @@ public class RedBD extends BaseOpMode {
 
     public int proppos;
 
-    public boolean pastX;
+    public boolean pastX = false;
 
     @Override
     public void initialize() {
         auto = true;
         super.initialize();
 
-        propProcessor = new PropProcessor(PropProcessor.Alliance.RED);
+        propProcessor = new PropProcessor(PropProcessor.Alliance.BLUE);
 
         visionPortal = new VisionPortal.Builder()
                 .setCamera(robot.C920)
@@ -163,6 +169,7 @@ public class RedBD extends BaseOpMode {
             telemetry.addData("spike pos", proppos);
             telemetry.update();
         }
+
     }
 
     @Override
@@ -175,7 +182,15 @@ public class RedBD extends BaseOpMode {
                         .lineToLinearHeading(spike1)
                         .build();
 
-                moveToBackdrop = autoDriveSS.trajectorySequenceBuilder(moveToSpike.end())
+                moveToSide = autoDriveSS.trajectorySequenceBuilder(moveToSpike.end())
+                        .lineToLinearHeading(side)
+                        .build();
+
+                moveAcrossField = autoDriveSS.trajectorySequenceBuilder(moveToSide.end())
+                        .lineToLinearHeading(forward)
+                        .build();
+
+                moveToBackdrop = autoDriveSS.trajectorySequenceBuilder(moveAcrossField.end())
                         .lineToLinearHeading(backdrop1)
                         .build();
 
@@ -191,7 +206,15 @@ public class RedBD extends BaseOpMode {
                         .lineToLinearHeading(spike2)
                         .build();
 
-                moveToBackdrop = autoDriveSS.trajectorySequenceBuilder(moveToSpike.end())
+                moveToSide = autoDriveSS.trajectorySequenceBuilder(moveToSpike.end())
+                        .lineToLinearHeading(side)
+                        .build();
+
+                moveAcrossField = autoDriveSS.trajectorySequenceBuilder(moveToSide.end())
+                        .lineToLinearHeading(forward)
+                        .build();
+
+                moveToBackdrop = autoDriveSS.trajectorySequenceBuilder(moveAcrossField.end())
                         .lineToLinearHeading(backdrop2)
                         .build();
 
@@ -207,7 +230,15 @@ public class RedBD extends BaseOpMode {
                         .lineToLinearHeading(spike3)
                         .build();
 
-                moveToBackdrop = autoDriveSS.trajectorySequenceBuilder(moveToSpike.end())
+                moveToSide = autoDriveSS.trajectorySequenceBuilder(moveToSpike.end())
+                        .lineToLinearHeading(side)
+                        .build();
+
+                moveAcrossField = autoDriveSS.trajectorySequenceBuilder(moveToSide.end())
+                        .lineToLinearHeading(forward)
+                        .build();
+
+                moveToBackdrop = autoDriveSS.trajectorySequenceBuilder(moveAcrossField.end())
                         .lineToLinearHeading(backdrop3)
                         .build();
 
@@ -219,6 +250,9 @@ public class RedBD extends BaseOpMode {
                         .lineToLinearHeading(backdrop3)
                         .build();
             }
+
+
+
             park = autoDriveSS.trajectorySequenceBuilder(back.end())
                     .lineToLinearHeading(parkAll)
                     .build();
@@ -252,8 +286,16 @@ public class RedBD extends BaseOpMode {
                         openLeft,
                         new WaitCommand(800),
 
-                        //go to backdrop
+                        //move to side
                         armIdle,
+                        new FollowTrajectorySequenceAsync(autoDriveSS, moveToSide),
+                        new WaitCommand(400),
+
+                        //cross field
+                        new FollowTrajectorySequenceAsync(autoDriveSS, moveAcrossField),
+                        new WaitCommand(400),
+
+                        //go to backdrop
                         new FollowTrajectorySequenceAsync(autoDriveSS, moveToBackdrop),
                         armDeposit,
                         new WaitCommand(800),

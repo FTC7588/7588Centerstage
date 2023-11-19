@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import android.util.Size;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -10,12 +11,13 @@ import org.firstinspires.ftc.teamcode.poofyutils.processors.PropProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 @TeleOp
+@Disabled
 public class VisionTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        PropProcessor propProcessor = new PropProcessor();
+        PropProcessor propProcessor = new PropProcessor(PropProcessor.Alliance.BLUE);
 
         VisionPortal visionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))

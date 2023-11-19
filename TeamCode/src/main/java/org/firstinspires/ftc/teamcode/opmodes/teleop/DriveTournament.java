@@ -318,11 +318,6 @@ public class DriveTournament extends BaseOpMode {
         robotCentric.schedule();
         intakeDown.schedule();
         armPoised.schedule();
-//        shoulderPosDown.schedule();
-//        wristPosDown.schedule();
-//        pivotPosDown.schedule();
-//        armTouchPad.schedule();
-        //resetIMU.schedule();
 
     }
 

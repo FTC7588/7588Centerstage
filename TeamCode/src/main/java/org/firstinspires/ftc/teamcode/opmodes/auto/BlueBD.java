@@ -1,19 +1,26 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto;
 
+import static org.firstinspires.ftc.teamcode.Constants.ARM_PIVOT_DOWN;
+import static org.firstinspires.ftc.teamcode.Constants.ARM_SHOULDER_DEPOSIT;
+import static org.firstinspires.ftc.teamcode.Constants.ARM_WRIST_DEPOSIT;
+import static org.firstinspires.ftc.teamcode.Constants.FLOOR_ELE;
+import static org.firstinspires.ftc.teamcode.Constants.FLOOR_SHOULDER;
+import static org.firstinspires.ftc.teamcode.Constants.FLOOR_WRIST;
+import static org.firstinspires.ftc.teamcode.Constants.GRABBER_CLOSED;
+import static org.firstinspires.ftc.teamcode.Constants.GRABBER_OPEN;
+import static org.firstinspires.ftc.teamcode.Constants.GRAB_SHOULDER;
+import static org.firstinspires.ftc.teamcode.Constants.GRAB_WRIST;
+import static org.firstinspires.ftc.teamcode.Constants.INT_DOWN;
+
 import android.util.Size;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.ParallelCommandGroup;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectoryAsyncCommand;
 import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectorySequenceAsync;
-import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectorySequenceCommand;
 import org.firstinspires.ftc.teamcode.commands.arm.SetArmPositions;
 import org.firstinspires.ftc.teamcode.commands.arm.SetEleArmPositions;
 import org.firstinspires.ftc.teamcode.commands.grabber.SetGrabberPosition;
@@ -21,12 +28,11 @@ import org.firstinspires.ftc.teamcode.commands.grabber.SetLeftGrabberPosition;
 import org.firstinspires.ftc.teamcode.commands.grabber.SetRightGrabberPosition;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.PropProcessor;
 import org.firstinspires.ftc.teamcode.rr.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-import static org.firstinspires.ftc.teamcode.Constants.*;
+import java.util.Locale;
 
 @Autonomous
 @Config
@@ -50,7 +56,7 @@ public class BlueBD extends BaseOpMode {
     public static Pose2d push2 =        new Pose2d(37, -56, Math.toRadians(90));
     public static Pose2d push3 =        new Pose2d(32, -56, Math.toRadians(90));
 
-    public static Pose2d parkall =      new Pose2d(60, -46, Math.toRadians(90));
+    public static Pose2d parkAll =      new Pose2d(60, -46, Math.toRadians(90));
 
     public static TrajectorySequence moveToSpike;
     public static TrajectorySequence moveToBackdrop;
@@ -69,12 +75,14 @@ public class BlueBD extends BaseOpMode {
 
     public int proppos;
 
+    public boolean pastX;
+
     @Override
     public void initialize() {
         auto = true;
         super.initialize();
 
-        propProcessor = new PropProcessor();
+        propProcessor = new PropProcessor(PropProcessor.Alliance.BLUE);
 
         visionPortal = new VisionPortal.Builder()
                 .setCamera(robot.C920)
@@ -147,10 +155,14 @@ public class BlueBD extends BaseOpMode {
 
             proppos = propProcessor.getSpike();
 
+            if (gamepad1.x && !pastX) {
+                visionPortal.saveNextFrameRaw(String.format(Locale.US, "CameraFrameCapture-%06d", 1));
+            }
+            pastX = gamepad1.x;
+
             telemetry.addData("spike pos", proppos);
             telemetry.update();
         }
-
 
     }
 
@@ -209,7 +221,7 @@ public class BlueBD extends BaseOpMode {
                         .build();
             }
             park = autoDriveSS.trajectorySequenceBuilder(back.end())
-                    .lineToLinearHeading(parkall)
+                    .lineToLinearHeading(parkAll)
                     .build();
 
             pathSchedule();

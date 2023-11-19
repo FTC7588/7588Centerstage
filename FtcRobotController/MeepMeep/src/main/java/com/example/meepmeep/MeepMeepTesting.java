@@ -81,15 +81,27 @@ public class MeepMeepTesting {
                                 .build()
                 );
 
+        Pose2d startPose = new Pose2d(60, 36, Math.toRadians(0));
+
+        Pose2d park = new Pose2d(60, -46, Math.toRadians(90));
+
         RoadRunnerBotEntity one = new DefaultBotBuilder(meepMeep)
                 .setConstraints(70, 70, Math.toRadians(300), Math.toRadians(280), 14)
                 .setColorScheme(new ColorSchemeBlueLight())
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(60,-12, Math.toRadians(0)))
-                                .lineToLinearHeading(new Pose2d(32, -34, Math.toRadians(-90)))
-                                .lineToLinearHeading(new Pose2d(40, -48, Math.toRadians(90)))
-                                .lineToLinearHeading(new Pose2d(40, -50, Math.toRadians(90)))
-                                .lineToLinearHeading(new Pose2d(54, -46, Math.toRadians(90)))
+                        drive.trajectorySequenceBuilder(startPose)
+                                //spike
+                                .lineToLinearHeading(new Pose2d(37, 36, Math.toRadians(90)))
+                                //side
+                                .lineToLinearHeading(new Pose2d(12, 36, Math.toRadians(90)))
+                                //forward
+                                .lineToLinearHeading(new Pose2d(12, -36, Math.toRadians(90)))
+                                //backdrop
+                                .lineToLinearHeading(new Pose2d(44, -52, Math.toRadians(90)))
+                                //slow backdrop
+                                .lineToLinearHeading(new Pose2d(44, -56, Math.toRadians(90)))
+                                //park
+                                .lineToLinearHeading(park)
                                 .build()
                 );
 
@@ -97,16 +109,19 @@ public class MeepMeepTesting {
                 .setConstraints(70, 70, Math.toRadians(300), Math.toRadians(300), 14)
                 .setColorScheme(new ColorSchemeBlueDark())
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(60, -12, Math.toRadians(0)))
+                        drive.trajectorySequenceBuilder(startPose)
                                 //spike
-                                .lineToLinearHeading(new Pose2d(36, -12, Math.toRadians(0)))
+                                .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(0)))
+                                //side
+                                .lineToLinearHeading(new Pose2d(12, 36, Math.toRadians(90)))
+                                //forward
+                                .lineToLinearHeading(new Pose2d(12, -36, Math.toRadians(90)))
                                 //backdrop
-                                .lineToLinearHeading(new Pose2d(35, -48, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(37, -52, Math.toRadians(90)))
                                 //slow backdrop
-                                .back(2)
-//                                .lineToLinearHeading(new Pose2d(35, -50, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(37, -56, Math.toRadians(90)))
                                 //park
-                                .lineToLinearHeading(new Pose2d(54, -46, Math.toRadians(90)))
+                                .lineToLinearHeading(park)
                         .build()
                 );
 
@@ -114,23 +129,28 @@ public class MeepMeepTesting {
                 .setConstraints(70, 70, Math.toRadians(300), Math.toRadians(300), 14)
                 .setColorScheme(new ColorSchemeRedDark())
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(60, -12, Math.toRadians(0)))
+                        drive.trajectorySequenceBuilder(startPose)
                                 //spike
-                                .lineToLinearHeading(new Pose2d(36, -12, Math.toRadians(-90)))
+                                .lineToLinearHeading(new Pose2d(36, 36, Math.toRadians(-90)))
+                                //side
+                                .lineToLinearHeading(new Pose2d(12, 36, Math.toRadians(90)))
+                                //forward
+                                .lineToLinearHeading(new Pose2d(12, -36, Math.toRadians(90)))
                                 //backdrop
-                                .lineToLinearHeading(new Pose2d(30, -48, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(32, -56, Math.toRadians(90)))
                                 //slow backdrop
-                                .lineToLinearHeading(new Pose2d(30, -50, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(32, -56, Math.toRadians(90)))
                                 //park
-                                .lineToLinearHeading(new Pose2d(54, -46, Math.toRadians(90)))
+                                .lineToLinearHeading(park)
                                 .build()
                 );
 
         Image img = null;
-//        try {img = ImageIO.read(new File("D:/mario/Documents/Robotics/CenterStage.png")); }
-//        catch (IOException ignored) {}
+        try {img = ImageIO.read(new File("D:/mario/Documents/Robotics/CenterStage.png")); }
+        catch (IOException ignored) {}
 
-        meepMeep
+        assert img != null;
+        meepMeep.setBackground(img)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
                 .addEntity(one)
