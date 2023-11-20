@@ -47,10 +47,10 @@ public class BlueBD extends BaseOpMode {
     private VisionPortal visionPortal;
 
     public static Pose2d spike1 =       new Pose2d(37, -33, Math.toRadians(-90));
-    public static Pose2d spike2 =       new Pose2d(36, -9, Math.toRadians(0));
+    public static Pose2d spike2 =       new Pose2d(34, -9, Math.toRadians(0));
     public static Pose2d spike3 =       new Pose2d(36, -12, Math.toRadians(-90));
     public static Pose2d backdrop1 =    new Pose2d(44, -52, Math.toRadians(90));
-    public static Pose2d backdrop2 =    new Pose2d(37, -52, Math.toRadians(90));
+    public static Pose2d backdrop2 =    new Pose2d(36, -52, Math.toRadians(90));
     public static Pose2d backdrop3 =    new Pose2d(32, -52, Math.toRadians(90));
     public static Pose2d push1 =        new Pose2d(44, -56, Math.toRadians(90));
     public static Pose2d push2 =        new Pose2d(37, -56, Math.toRadians(90));

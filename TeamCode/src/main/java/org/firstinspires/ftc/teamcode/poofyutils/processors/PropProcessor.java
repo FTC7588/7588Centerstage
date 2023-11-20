@@ -27,12 +27,12 @@ public class PropProcessor implements VisionProcessor {
     public Scalar blueLower = new Scalar(82.2,60.9,133.2);
     public Scalar blueUpper = new Scalar(111.9, 208.3, 255.0);
 
-    public Scalar redLower = new Scalar(0, 0, 0);
-    public Scalar redUpper = new Scalar(0, 0, 0);
+    public Scalar redLower = new Scalar(153, 140.3, 87.8);
+    public Scalar redUpper = new Scalar(208.3, 229.5, 255);
 
-    public Rect leftROIBox = new Rect(90,265,25,25);
-    public Rect centerROIBox = new Rect(315, 265, 25, 25);
-    public Rect rightROIBox = new Rect(570, 265, 25, 25);
+    public Rect leftROIBox = new Rect(110,265,30,25);
+    public Rect centerROIBox = new Rect(335, 265, 30, 25);
+    public Rect rightROIBox = new Rect(585, 265, 30, 25);
 
     public Mat leftMat = new Mat();
     public Mat centerMat = new Mat();
@@ -48,8 +48,12 @@ public class PropProcessor implements VisionProcessor {
     public boolean tuneRed = false;
 
     public PropProcessor(Alliance alliance) {
-        this.alliance = Alliance.BLUE;
+        this.alliance = alliance;
     }
+
+//    public PropProcessor() {
+//        this.alliance = Alliance.RED;
+//    }
 
 
     @Override
@@ -70,7 +74,7 @@ public class PropProcessor implements VisionProcessor {
             rightMat = new Mat(input, rightROIBox);
         } else if (tuneRed) {
             Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2HSV);
-            Core.inRange(input, blueLower, blueUpper, input);
+            Core.inRange(input, redLower, redUpper, input);
 
             //create ROIs
             leftMat = new Mat(input, leftROIBox);

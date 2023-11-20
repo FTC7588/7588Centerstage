@@ -73,8 +73,10 @@ public class BaseOpMode extends CommandOpMode {
         driverEx = new TriggerGamepadEx(gamepad1, driver);
         operatorEx = new TriggerGamepadEx(gamepad2, operator);
 
+        //telemetry
         tele = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
+        //loops
         loopAvg = new MovingAverage(50);
     }
 

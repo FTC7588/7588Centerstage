@@ -46,12 +46,12 @@ public class RedBD extends BaseOpMode {
 
     private VisionPortal visionPortal;
 
-    public static Pose2d spike3 =       new Pose2d(-34.5, -31, Math.toRadians(-90));
-    public static Pose2d spike2 =       new Pose2d(-36, -16, Math.toRadians(180));
+    public static Pose2d spike3 =       new Pose2d(-33, -32.5, Math.toRadians(-90));
+    public static Pose2d spike2 =       new Pose2d(-34, -16, Math.toRadians(180));
     public static Pose2d spike1 =       new Pose2d(-35, -9, Math.toRadians(-90));
     public static Pose2d backdrop3 =    new Pose2d(-42, -50, Math.toRadians(90));
-    public static Pose2d backdrop2 =    new Pose2d(-35, -50, Math.toRadians(90));
-    public static Pose2d backdrop1 =    new Pose2d(-30, -50, Math.toRadians(90));
+    public static Pose2d backdrop2 =    new Pose2d(-36, -50, Math.toRadians(90));
+    public static Pose2d backdrop1 =    new Pose2d(-28, -50, Math.toRadians(90));
     public static Pose2d push3 =        new Pose2d(-42, -53, Math.toRadians(90));
     public static Pose2d push2 =        new Pose2d(-35, -53, Math.toRadians(90));
     public static Pose2d push1 =        new Pose2d(-30, -53, Math.toRadians(90));

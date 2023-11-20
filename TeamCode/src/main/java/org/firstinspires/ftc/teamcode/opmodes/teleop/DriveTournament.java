@@ -23,6 +23,7 @@ import static org.firstinspires.ftc.teamcode.Constants.DEBUG_GRABBER;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_INTAKE;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_VISION;
 import static org.firstinspires.ftc.teamcode.Constants.ELE_DOWN;
+import static org.firstinspires.ftc.teamcode.Constants.ELE_HANG;
 import static org.firstinspires.ftc.teamcode.Constants.ELE_INCREMENT;
 import static org.firstinspires.ftc.teamcode.Constants.ELE_MID;
 import static org.firstinspires.ftc.teamcode.Constants.ELE_POWER;
@@ -69,6 +70,8 @@ import org.firstinspires.ftc.teamcode.commands.elevator.IncrementElevatorTarget;
 import org.firstinspires.ftc.teamcode.commands.elevator.SetElevatorPower;
 import org.firstinspires.ftc.teamcode.commands.elevator.SetElevatorTarget;
 import org.firstinspires.ftc.teamcode.commands.grabber.SetGrabberPosition;
+import org.firstinspires.ftc.teamcode.commands.grabber.SetLeftGrabberPosition;
+import org.firstinspires.ftc.teamcode.commands.grabber.SetRightGrabberPosition;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakePower;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
@@ -113,6 +116,7 @@ public class DriveTournament extends BaseOpMode {
     private SetElevatorTarget eleTargetUp;
     private SetElevatorTarget eleTargetMid;
     private SetElevatorTarget eleTargetDown;
+    private SetElevatorTarget eleTargetHang;
 
     private IncrementElevatorTarget eleIncUp;
     private IncrementElevatorTarget eleIncDown;
@@ -134,6 +138,11 @@ public class DriveTournament extends BaseOpMode {
 
     private SetGrabberPosition grabberClosed;
     private SetGrabberPosition grabberOpen;
+
+    private SetLeftGrabberPosition grabberLeftClose;
+    private SetLeftGrabberPosition grabberLeftOpen;
+    private SetRightGrabberPosition grabberRightClose;
+    private SetRightGrabberPosition grabberRightOpen;
 
     private SetShoulderTouch armTouchPad;
 
@@ -198,6 +207,7 @@ public class DriveTournament extends BaseOpMode {
         eleTargetUp = new SetElevatorTarget(eleSS, ELE_UP);
         eleTargetMid = new SetElevatorTarget(eleSS, ELE_MID);
         eleTargetDown = new SetElevatorTarget(eleSS, ELE_DOWN);
+        eleTargetHang = new SetElevatorTarget(eleSS, ELE_HANG);
 
         eleIncUp = new IncrementElevatorTarget(eleSS, ELE_INCREMENT);
         eleIncDown = new IncrementElevatorTarget(eleSS, -ELE_INCREMENT);
@@ -221,6 +231,11 @@ public class DriveTournament extends BaseOpMode {
         //grabber
         grabberClosed = new SetGrabberPosition(grabSS, GRABBER_CLOSED);
         grabberOpen = new SetGrabberPosition(grabSS, GRABBER_OPEN);
+
+        grabberLeftClose = new SetLeftGrabberPosition(grabSS, GRABBER_CLOSED);
+        grabberLeftOpen = new SetLeftGrabberPosition(grabSS, GRABBER_OPEN);
+        grabberRightClose = new SetRightGrabberPosition(grabSS, GRABBER_CLOSED);
+        grabberRightOpen = new SetRightGrabberPosition(grabSS, GRABBER_OPEN);
 
         armDeposit = new SetEleArmPositions(
                 eleSS,
@@ -304,7 +319,8 @@ public class DriveTournament extends BaseOpMode {
 
         //p2 controls
         gp2(DPAD_UP, 1).whileActiveContinuous(eleIncUp);
-        gp2(DPAD_LEFT, 1).whenActive(eleTargetUp);
+//        gp2(DPAD_LEFT, 1).whenActive(eleTargetUp);
+        gp2(DPAD_RIGHT, 1).whenActive(eleTargetHang);
         gp2(DPAD_DOWN, 1).whileActiveContinuous(eleIncDown);
 
         gp2(Y, 1).whenActive(armDeposit);
@@ -312,8 +328,8 @@ public class DriveTournament extends BaseOpMode {
         gp2(B, 1).whenActive(armIdle);
         gp2(A, 1).whenActive(armGrab);
 
-        gp2(LEFT_BUMPER, 1).toggleWhenActive(grabberOpen, grabberClosed);
-        gp2(RIGHT_BUMPER, 1).toggleWhenActive(pivotPosUp, pivotPosDown);
+        gp2(LEFT_BUMPER, 1).toggleWhenActive(grabberLeftOpen, grabberLeftClose);
+        gp2(RIGHT_BUMPER, 1).toggleWhenActive(grabberRightOpen, grabberRightClose);
 
         robotCentric.schedule();
         intakeDown.schedule();
@@ -324,6 +340,12 @@ public class DriveTournament extends BaseOpMode {
     @SuppressLint("DefaultLocale")
     public void run() {
         CommandScheduler.getInstance().run();
+
+//        if (grabSS.getLeftPos() == GRABBER_CLOSED) {
+//            gamepad2.rumble(50);
+//        } else if (grabSS.getRightPos() == GRABBER_CLOSED) {
+//            gamepad2.rumble(50);
+//        }
 
         super.run();
 

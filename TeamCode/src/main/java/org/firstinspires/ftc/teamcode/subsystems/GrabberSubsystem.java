@@ -44,4 +44,8 @@ public class GrabberSubsystem extends SubsystemBase {
     public double getLeftPos() {
         return leftPos;
     }
+
+    public double getRightPos() {
+        return rightPos;
+    }
 }

@@ -53,6 +53,8 @@ public class Constants {
     public static double ELE_MID = 200;
     public static double ELE_DOWN = 0;
 
+    public static double ELE_HANG = 1025;
+
     public static double FLOOR_ELE = 200;
     public static double POISED_ELE = 160;
     public static double GRAB_ELE = 35;

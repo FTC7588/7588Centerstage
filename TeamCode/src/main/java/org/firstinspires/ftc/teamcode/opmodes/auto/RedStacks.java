@@ -40,15 +40,15 @@ public class RedStacks extends BaseOpMode {
 
     public boolean runOnce = false;
 
-    public static Pose2d START_POSE = new Pose2d(-60, -12, Math.toRadians(180));
+    public static Pose2d START_POSE = new Pose2d(-60, 36, Math.toRadians(180));
 
     private PropProcessor propProcessor;
 
     private VisionPortal visionPortal;
 
-    public static Pose2d spike3 =       new Pose2d(-34.5, -36, Math.toRadians(-90));
-    public static Pose2d spike2 =       new Pose2d(-36, -32, Math.toRadians(180));
-    public static Pose2d spike1 =       new Pose2d(-35, -39, Math.toRadians(-90));
+    public static Pose2d spike3 =       new Pose2d(-34.5, 36, Math.toRadians(-90));
+    public static Pose2d spike2 =       new Pose2d(-36, 32, Math.toRadians(180));
+    public static Pose2d spike1 =       new Pose2d(-35, 39, Math.toRadians(-90));
 
     public static Pose2d side =         new Pose2d(-12, 36, Math.toRadians(90));
     public static Pose2d forward =      new Pose2d(-12, -36, Math.toRadians(90));

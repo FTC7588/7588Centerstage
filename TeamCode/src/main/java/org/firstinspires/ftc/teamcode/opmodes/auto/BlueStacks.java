@@ -40,7 +40,7 @@ public class BlueStacks extends BaseOpMode {
 
     public boolean runOnce = false;
 
-    public static Pose2d START_POSE = new Pose2d(60, -12, Math.toRadians(0));
+    public static Pose2d START_POSE = new Pose2d(60, 36, Math.toRadians(0));
 
     private PropProcessor propProcessor;
 
