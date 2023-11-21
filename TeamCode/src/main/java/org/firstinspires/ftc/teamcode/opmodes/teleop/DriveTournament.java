@@ -86,201 +86,9 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagMetadata;
 @Config
 public class DriveTournament extends BaseOpMode {
 
-
-    private RobotCentric robotCentric;
-    private FieldCentric fieldCentric;
-    private FollowTag followTag;
-
-    protected SetMaxSpeed lowSpeed;
-    protected SetMaxSpeed highSpeed;
-
-    protected EnableHeadingLock enabledHeadingLock;
-    protected EnableHeadingLock disableHeadingLock;
-
-    protected SetHeadingLock forwardLock;
-    protected SetHeadingLock leftLock;
-    protected SetHeadingLock backLock;
-    protected SetHeadingLock rightLock;
-
-    private SetIntakePower intakeIn;
-    private SetIntakePower intakeIdle;
-    private SetIntakePower intakeOut;
-
-    private SetIntakeAngle intakeUp;
-    private SetIntakeAngle intakeDown;
-
-    private SetElevatorPower eleUp;
-    private SetElevatorPower eleIdle;
-    private SetElevatorPower eleDown;
-
-    private SetElevatorTarget eleTargetUp;
-    private SetElevatorTarget eleTargetMid;
-    private SetElevatorTarget eleTargetDown;
-    private SetElevatorTarget eleTargetHang;
-
-    private IncrementElevatorTarget eleIncUp;
-    private IncrementElevatorTarget eleIncDown;
-
-    private SetShoulderPosition shoulderPosDeposit;
-    private SetShoulderPosition shoulderPosPoised;
-    private SetShoulderPosition shoulderPosGrab;
-    private SetShoulderPosition shoulderPosIdle;
-
-    private SetWristPosition wristPosDown;
-    private SetWristPosition wristPosPoised;
-    private SetWristPosition wristPosGrab;
-    private SetWristPosition wristPosUp;
-    private IncrementWristPosition wristIncDown;
-    private IncrementWristPosition wristIncUp;
-
-    private SetPivotPosition pivotPosDown;
-    private SetPivotPosition pivotPosUp;
-
-    private SetGrabberPosition grabberClosed;
-    private SetGrabberPosition grabberOpen;
-
-    private SetLeftGrabberPosition grabberLeftClose;
-    private SetLeftGrabberPosition grabberLeftOpen;
-    private SetRightGrabberPosition grabberRightClose;
-    private SetRightGrabberPosition grabberRightOpen;
-
-    private SetShoulderTouch armTouchPad;
-
-    protected SetEleArmPositions armDeposit;
-    protected SetEleArmPositions armIdle;
-    protected SetEleArmPositions armPoised;
-    protected SetEleArmPositions armGrab;
-
-    protected SetEleArmPositions armBack;
-
-    protected FtcDashboard dashboard = FtcDashboard.getInstance();
-
     @Override
     public void initialize() {
         super.initialize();
-
-        //drive
-        robotCentric = new RobotCentric(
-                driveSS,
-                () -> driver.getLeftX(),
-                () -> driver.getLeftY(),
-                () -> driver.getRightX()
-        );
-
-        fieldCentric = new FieldCentric(
-                driveSS,
-                () -> driver.getLeftX(),
-                () -> driver.getLeftY(),
-                () -> driver.getRightX()
-        );
-
-        followTag = new FollowTag(driveSS, FOLLOW_POSE);
-
-        //armTouchPad = new SetShoulderTouch(armSS, () -> driver.gamepad.touchpad_finger_1_x);
-
-        //resetIMU = new ResetIMU(robot);
-
-        lowSpeed = new SetMaxSpeed(driveSS, LOW_SPEED);
-        highSpeed = new SetMaxSpeed(driveSS, HIGH_SPEED);
-
-        enabledHeadingLock = new EnableHeadingLock(driveSS, true);
-        disableHeadingLock = new EnableHeadingLock(driveSS, false);
-
-        forwardLock = new SetHeadingLock(driveSS, 90);
-        leftLock = new SetHeadingLock(driveSS, 180);
-        backLock = new SetHeadingLock(driveSS, -90);
-        rightLock = new SetHeadingLock(driveSS, 0);
-
-        //intake
-        intakeIn = new SetIntakePower(intakeSS, INTAKE_POWER);
-        intakeIdle = new SetIntakePower(intakeSS, 0);
-        intakeOut = new SetIntakePower(intakeSS, -INTAKE_POWER);
-
-        intakeUp = new SetIntakeAngle(intakeSS, INT_UP);
-        intakeDown = new SetIntakeAngle(intakeSS, INT_DOWN);
-
-        //elevator
-        eleUp = new SetElevatorPower(eleSS, ELE_POWER);
-        eleIdle = new SetElevatorPower(eleSS, 0);
-        eleDown = new SetElevatorPower(eleSS, -ELE_POWER);
-
-        eleTargetUp = new SetElevatorTarget(eleSS, ELE_UP);
-        eleTargetMid = new SetElevatorTarget(eleSS, ELE_MID);
-        eleTargetDown = new SetElevatorTarget(eleSS, ELE_DOWN);
-        eleTargetHang = new SetElevatorTarget(eleSS, ELE_HANG);
-
-        eleIncUp = new IncrementElevatorTarget(eleSS, ELE_INCREMENT);
-        eleIncDown = new IncrementElevatorTarget(eleSS, -ELE_INCREMENT);
-
-        //arm
-        shoulderPosDeposit = new SetShoulderPosition(armSS, ARM_SHOULDER_DEPOSIT);
-        shoulderPosPoised = new SetShoulderPosition(armSS, POISED_SHOULDER);
-        shoulderPosGrab = new SetShoulderPosition(armSS, GRAB_SHOULDER);
-        shoulderPosIdle = new SetShoulderPosition(armSS, ARM_SHOULDER_IDLE);
-
-        wristPosDown = new SetWristPosition(armSS, ARM_WRIST_DEPOSIT);
-        wristPosPoised = new SetWristPosition(armSS, POISED_WRIST);
-        wristPosGrab = new SetWristPosition(armSS, GRAB_WRIST);
-        wristPosUp = new SetWristPosition(armSS, ARM_WRIST_IDLE);
-        wristIncDown = new IncrementWristPosition(armSS, 0.1);
-        wristIncUp = new IncrementWristPosition(armSS, -0.1);
-
-        pivotPosDown = new SetPivotPosition(armSS, ARM_PIVOT_DOWN);
-        pivotPosUp = new SetPivotPosition(armSS, ARM_PIVOT_DOWN);
-
-        //grabber
-        grabberClosed = new SetGrabberPosition(grabSS, GRABBER_CLOSED);
-        grabberOpen = new SetGrabberPosition(grabSS, GRABBER_OPEN);
-
-        grabberLeftClose = new SetLeftGrabberPosition(grabSS, GRABBER_CLOSED);
-        grabberLeftOpen = new SetLeftGrabberPosition(grabSS, GRABBER_OPEN);
-        grabberRightClose = new SetRightGrabberPosition(grabSS, GRABBER_CLOSED);
-        grabberRightOpen = new SetRightGrabberPosition(grabSS, GRABBER_OPEN);
-
-        armDeposit = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                200,
-                ARM_SHOULDER_DEPOSIT,
-                ARM_WRIST_DEPOSIT,
-                ARM_PIVOT_DOWN
-        );
-
-        armIdle = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                100,
-                POISED_SHOULDER,
-                0.5,
-                ARM_PIVOT_DOWN
-        );
-
-        armPoised = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                POISED_ELE,
-                POISED_SHOULDER,
-                POISED_WRIST,
-                ARM_PIVOT_DOWN
-        );
-
-        armGrab = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                GRAB_ELE,
-                GRAB_SHOULDER,
-                GRAB_WRIST,
-                ARM_PIVOT_DOWN
-        );
-
-        armBack = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                FLOOR_ELE,
-                FLOOR_SHOULDER,
-                FLOOR_WRIST,
-                ARM_PIVOT_DOWN
-        );
 
         //p1 layer 1 controls
         gp1(LEFT_BUMPER, 1).whenActive(lowSpeed).whenInactive(highSpeed);
@@ -319,7 +127,6 @@ public class DriveTournament extends BaseOpMode {
 
         //p2 controls
         gp2(DPAD_UP, 1).whileActiveContinuous(eleIncUp);
-//        gp2(DPAD_LEFT, 1).whenActive(eleTargetUp);
         gp2(DPAD_RIGHT, 1).whenActive(eleTargetHang);
         gp2(DPAD_DOWN, 1).whileActiveContinuous(eleIncDown);
 
@@ -334,7 +141,6 @@ public class DriveTournament extends BaseOpMode {
         robotCentric.schedule();
         intakeDown.schedule();
         armPoised.schedule();
-
     }
 
     @SuppressLint("DefaultLocale")
@@ -349,12 +155,6 @@ public class DriveTournament extends BaseOpMode {
 
         super.run();
 
-        robot.read(driveSS, intakeSS, eleSS, armSS, grabSS);
-
-        robot.loop(driveSS, intakeSS, eleSS, armSS, grabSS);
-
-        robot.write(driveSS, intakeSS, eleSS, armSS, grabSS);
-
         TelemetryPacket packet = new TelemetryPacket();
 
         PoofyDashboardUtil.drawTags(packet.fieldOverlay(), AprilTagCustomDatabase.getCenterStageTagLibrary());
@@ -363,7 +163,7 @@ public class DriveTournament extends BaseOpMode {
 
         dashboard.sendTelemetryPacket(packet);
 
-        telemetry.update();
+        tele.update();
 
         robot.clearBulkCache();
     }

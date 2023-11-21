@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -10,6 +12,26 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.commands.arm.IncrementWristPosition;
+import org.firstinspires.ftc.teamcode.commands.arm.SetEleArmPositions;
+import org.firstinspires.ftc.teamcode.commands.arm.SetPivotPosition;
+import org.firstinspires.ftc.teamcode.commands.arm.SetShoulderPosition;
+import org.firstinspires.ftc.teamcode.commands.arm.SetShoulderTouch;
+import org.firstinspires.ftc.teamcode.commands.arm.SetWristPosition;
+import org.firstinspires.ftc.teamcode.commands.drive.EnableHeadingLock;
+import org.firstinspires.ftc.teamcode.commands.drive.FieldCentric;
+import org.firstinspires.ftc.teamcode.commands.drive.FollowTag;
+import org.firstinspires.ftc.teamcode.commands.drive.RobotCentric;
+import org.firstinspires.ftc.teamcode.commands.drive.SetHeadingLock;
+import org.firstinspires.ftc.teamcode.commands.drive.SetMaxSpeed;
+import org.firstinspires.ftc.teamcode.commands.elevator.IncrementElevatorTarget;
+import org.firstinspires.ftc.teamcode.commands.elevator.SetElevatorPower;
+import org.firstinspires.ftc.teamcode.commands.elevator.SetElevatorTarget;
+import org.firstinspires.ftc.teamcode.commands.grabber.SetGrabberPosition;
+import org.firstinspires.ftc.teamcode.commands.grabber.SetLeftGrabberPosition;
+import org.firstinspires.ftc.teamcode.commands.grabber.SetRightGrabberPosition;
+import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
+import org.firstinspires.ftc.teamcode.commands.intake.SetIntakePower;
 import org.firstinspires.ftc.teamcode.rr.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.AutoDrivetrainSubsystem;
@@ -25,16 +47,85 @@ import static org.firstinspires.ftc.teamcode.Constants.*;
 
 public class BaseOpMode extends CommandOpMode {
 
+    //singletons
     protected final RobotHardware robot = RobotHardware.getInstance();
+    protected FtcDashboard dashboard = FtcDashboard.getInstance();
 
+    //subsystems
     protected AutoDrivetrainSubsystem autoDriveSS;
     protected SampleMecanumDrive rrDrive;
-
     protected DrivetrainSubsystem driveSS;
     protected IntakeSubsystem intakeSS;
     protected ElevatorSubsystem eleSS;
     protected ArmSubsystem armSS;
     protected GrabberSubsystem grabSS;
+
+    //commands
+    protected RobotCentric robotCentric;
+    protected FieldCentric fieldCentric;
+    protected FollowTag followTag;
+
+    protected SetMaxSpeed lowSpeed;
+    protected SetMaxSpeed highSpeed;
+
+    protected EnableHeadingLock enabledHeadingLock;
+    protected EnableHeadingLock disableHeadingLock;
+
+    protected SetHeadingLock forwardLock;
+    protected SetHeadingLock leftLock;
+    protected SetHeadingLock backLock;
+    protected SetHeadingLock rightLock;
+
+    protected SetIntakePower intakeIn;
+    protected SetIntakePower intakeIdle;
+    protected SetIntakePower intakeOut;
+
+    protected SetIntakeAngle intakeUp;
+    protected SetIntakeAngle intakeDown;
+
+    protected SetElevatorPower eleUp;
+    protected SetElevatorPower eleIdle;
+    protected SetElevatorPower eleDown;
+
+    protected SetElevatorTarget eleTargetUp;
+    protected SetElevatorTarget eleTargetMid;
+    protected SetElevatorTarget eleTargetDown;
+    protected SetElevatorTarget eleTargetHang;
+
+    protected IncrementElevatorTarget eleIncUp;
+    protected IncrementElevatorTarget eleIncDown;
+
+    protected SetShoulderPosition shoulderPosDeposit;
+    protected SetShoulderPosition shoulderPosPoised;
+    protected SetShoulderPosition shoulderPosGrab;
+    protected SetShoulderPosition shoulderPosIdle;
+
+    protected SetWristPosition wristPosDown;
+    protected SetWristPosition wristPosPoised;
+    protected SetWristPosition wristPosGrab;
+    protected SetWristPosition wristPosUp;
+    protected IncrementWristPosition wristIncDown;
+    protected IncrementWristPosition wristIncUp;
+
+    protected SetPivotPosition pivotPosDown;
+    protected SetPivotPosition pivotPosUp;
+
+    protected SetGrabberPosition grabberClosed;
+    protected SetGrabberPosition grabberOpen;
+
+    protected SetLeftGrabberPosition grabberLeftClose;
+    protected SetLeftGrabberPosition grabberLeftOpen;
+    protected SetRightGrabberPosition grabberRightClose;
+    protected SetRightGrabberPosition grabberRightOpen;
+
+    protected SetShoulderTouch armTouchPad;
+
+    protected SetEleArmPositions armDown;
+    protected SetEleArmPositions armDeposit;
+    protected SetEleArmPositions armIdle;
+    protected SetEleArmPositions armPoised;
+    protected SetEleArmPositions armGrab;
+    protected SetEleArmPositions armBack;
 
     protected GamepadEx driver;
     protected GamepadEx operator;
@@ -61,11 +152,139 @@ public class BaseOpMode extends CommandOpMode {
             driveSS = new DrivetrainSubsystem(robot);
         }
 
-
         intakeSS = new IntakeSubsystem(robot);
         eleSS = new ElevatorSubsystem(robot);
         armSS = new ArmSubsystem(robot);
         grabSS = new GrabberSubsystem(robot);
+
+        //drive commands
+        robotCentric = new RobotCentric(
+                driveSS,
+                () -> driver.getLeftX(),
+                () -> driver.getLeftY(),
+                () -> driver.getRightX()
+        );
+
+        fieldCentric = new FieldCentric(
+                driveSS,
+                () -> driver.getLeftX(),
+                () -> driver.getLeftY(),
+                () -> driver.getRightX()
+        );
+
+        followTag = new FollowTag(driveSS, FOLLOW_POSE);
+
+        lowSpeed = new SetMaxSpeed(driveSS, LOW_SPEED);
+        highSpeed = new SetMaxSpeed(driveSS, HIGH_SPEED);
+
+        enabledHeadingLock = new EnableHeadingLock(driveSS, true);
+        disableHeadingLock = new EnableHeadingLock(driveSS, false);
+
+        forwardLock = new SetHeadingLock(driveSS, 90);
+        leftLock = new SetHeadingLock(driveSS, 180);
+        backLock = new SetHeadingLock(driveSS, -90);
+        rightLock = new SetHeadingLock(driveSS, 0);
+
+        //intake
+        intakeIn = new SetIntakePower(intakeSS, INTAKE_POWER);
+        intakeIdle = new SetIntakePower(intakeSS, 0);
+        intakeOut = new SetIntakePower(intakeSS, -INTAKE_POWER);
+
+        intakeUp = new SetIntakeAngle(intakeSS, INT_UP);
+        intakeDown = new SetIntakeAngle(intakeSS, INT_DOWN);
+
+        //elevator
+        eleUp = new SetElevatorPower(eleSS, ELE_POWER);
+        eleIdle = new SetElevatorPower(eleSS, 0);
+        eleDown = new SetElevatorPower(eleSS, -ELE_POWER);
+
+        eleTargetUp = new SetElevatorTarget(eleSS, ELE_UP);
+        eleTargetMid = new SetElevatorTarget(eleSS, ELE_MID);
+        eleTargetDown = new SetElevatorTarget(eleSS, ELE_DOWN);
+        eleTargetHang = new SetElevatorTarget(eleSS, ELE_HANG);
+
+        eleIncUp = new IncrementElevatorTarget(eleSS, ELE_INCREMENT);
+        eleIncDown = new IncrementElevatorTarget(eleSS, -ELE_INCREMENT);
+
+        //arm
+        shoulderPosDeposit = new SetShoulderPosition(armSS, ARM_SHOULDER_DEPOSIT);
+        shoulderPosPoised = new SetShoulderPosition(armSS, POISED_SHOULDER);
+        shoulderPosGrab = new SetShoulderPosition(armSS, GRAB_SHOULDER);
+        shoulderPosIdle = new SetShoulderPosition(armSS, ARM_SHOULDER_IDLE);
+
+        wristPosDown = new SetWristPosition(armSS, ARM_WRIST_DEPOSIT);
+        wristPosPoised = new SetWristPosition(armSS, POISED_WRIST);
+        wristPosGrab = new SetWristPosition(armSS, GRAB_WRIST);
+        wristPosUp = new SetWristPosition(armSS, ARM_WRIST_IDLE);
+        wristIncDown = new IncrementWristPosition(armSS, 0.1);
+        wristIncUp = new IncrementWristPosition(armSS, -0.1);
+
+        pivotPosDown = new SetPivotPosition(armSS, ARM_PIVOT_DOWN);
+        pivotPosUp = new SetPivotPosition(armSS, ARM_PIVOT_DOWN);
+
+        //grabber
+        grabberClosed = new SetGrabberPosition(grabSS, GRABBER_CLOSED);
+        grabberOpen = new SetGrabberPosition(grabSS, GRABBER_OPEN);
+
+        grabberLeftClose = new SetLeftGrabberPosition(grabSS, GRABBER_CLOSED);
+        grabberLeftOpen = new SetLeftGrabberPosition(grabSS, GRABBER_OPEN);
+        grabberRightClose = new SetRightGrabberPosition(grabSS, GRABBER_CLOSED);
+        grabberRightOpen = new SetRightGrabberPosition(grabSS, GRABBER_OPEN);
+
+        //macros
+        armDeposit = new SetEleArmPositions(
+                eleSS,
+                armSS,
+                200,
+                ARM_SHOULDER_DEPOSIT,
+                ARM_WRIST_DEPOSIT,
+                ARM_PIVOT_DOWN
+        );
+
+        armIdle = new SetEleArmPositions(
+                eleSS,
+                armSS,
+                200,
+                GRAB_SHOULDER,
+                GRAB_WRIST,
+                ARM_PIVOT_DOWN
+        );
+
+        armPoised = new SetEleArmPositions(
+                eleSS,
+                armSS,
+                POISED_ELE,
+                POISED_SHOULDER,
+                POISED_WRIST,
+                ARM_PIVOT_DOWN
+        );
+
+        armGrab = new SetEleArmPositions(
+                eleSS,
+                armSS,
+                GRAB_ELE,
+                GRAB_SHOULDER,
+                GRAB_WRIST,
+                ARM_PIVOT_DOWN
+        );
+
+        armBack = new SetEleArmPositions(
+                eleSS,
+                armSS,
+                FLOOR_ELE,
+                FLOOR_SHOULDER,
+                FLOOR_WRIST,
+                ARM_PIVOT_DOWN
+        );
+
+        armDown = new SetEleArmPositions(
+                eleSS,
+                armSS,
+                0,
+                GRAB_SHOULDER,
+                GRAB_WRIST,
+                ARM_PIVOT_DOWN
+        );
 
         //gamepads
         driver = new GamepadEx(gamepad1);
@@ -146,6 +365,12 @@ public class BaseOpMode extends CommandOpMode {
             tad("Camera Pose", driveSS.getTagLocalizer().getCameraPose());
             tad("Robot Pose", driveSS.getRobotPose());
         }
+
+        robot.read(driveSS, intakeSS, eleSS, armSS, grabSS);
+
+        robot.loop(driveSS, intakeSS, eleSS, armSS, grabSS);
+
+        robot.write(driveSS, intakeSS, eleSS, armSS, grabSS);
     }
 
 

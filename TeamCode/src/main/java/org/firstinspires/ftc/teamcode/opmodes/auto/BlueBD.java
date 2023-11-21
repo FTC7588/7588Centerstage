@@ -101,42 +101,6 @@ public class BlueBD extends BaseOpMode {
                 armSS, GRAB_SHOULDER, GRAB_WRIST, ARM_PIVOT_DOWN
         );
 
-        armBack = new SetEleArmPositions(
-            eleSS,
-            armSS,
-            FLOOR_ELE,
-            FLOOR_SHOULDER,
-            FLOOR_WRIST,
-            ARM_PIVOT_DOWN
-        );
-
-        armDeposit = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                125,
-                ARM_SHOULDER_DEPOSIT,
-                ARM_WRIST_DEPOSIT,
-                ARM_PIVOT_DOWN
-        );
-
-        armIn = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                0,
-                GRAB_SHOULDER,
-                GRAB_WRIST,
-                ARM_PIVOT_DOWN
-        );
-
-        armIdle = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                200,
-                GRAB_SHOULDER,
-                GRAB_WRIST,
-                ARM_PIVOT_DOWN
-        );
-
         closeBoth = new SetGrabberPosition(grabSS, GRABBER_CLOSED);
 
         openLeft = new SetLeftGrabberPosition(grabSS, GRABBER_OPEN);
