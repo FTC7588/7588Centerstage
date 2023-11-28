@@ -28,6 +28,7 @@ import org.firstinspires.ftc.teamcode.commands.grabber.SetLeftGrabberPosition;
 import org.firstinspires.ftc.teamcode.commands.grabber.SetRightGrabberPosition;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
+import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.PropProcessor;
 import org.firstinspires.ftc.teamcode.rr.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -43,8 +44,6 @@ public class RedBD extends BaseOpMode {
     public static Pose2d START_POSE = new Pose2d(-60, -12, Math.toRadians(180));
 
     private PropProcessor propProcessor;
-
-    private VisionPortal visionPortal;
 
     public static Pose2d spike3 =       new Pose2d(-33, -32.5, Math.toRadians(-90));
     public static Pose2d spike2 =       new Pose2d(-34, -16, Math.toRadians(180));
@@ -64,15 +63,6 @@ public class RedBD extends BaseOpMode {
     public static TrajectorySequence park;
     public static TrajectorySequence back;
 
-    public SetEleArmPositions armBack;
-    public SetEleArmPositions armDeposit;
-    public SetEleArmPositions armIn;
-    public SetEleArmPositions armIdle;
-
-    public SetGrabberPosition closeBoth;
-    public SetLeftGrabberPosition openLeft;
-    public SetRightGrabberPosition openRight;
-
     public int proppos;
 
     public boolean pastX;
@@ -82,9 +72,9 @@ public class RedBD extends BaseOpMode {
         auto = true;
         super.initialize();
 
-        propProcessor = new PropProcessor(PropProcessor.Alliance.RED);
+        propProcessor = new PropProcessor(Alliance.RED);
 
-        visionPortal = new VisionPortal.Builder()
+        VisionPortal visionPortal = new VisionPortal.Builder()
                 .setCamera(robot.C920)
                 .addProcessor(propProcessor)
                 .setCameraResolution(new Size(640, 480))
@@ -95,58 +85,10 @@ public class RedBD extends BaseOpMode {
 
         autoDriveSS.setPoseEstimate(START_POSE);
 
-        SetIntakeAngle intake = new SetIntakeAngle(intakeSS, INT_DOWN);
-
-        SetArmPositions arm = new SetArmPositions(
-                armSS, GRAB_SHOULDER, GRAB_WRIST, ARM_PIVOT_DOWN
-        );
-
-        armBack = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                FLOOR_ELE,
-                FLOOR_SHOULDER,
-                FLOOR_WRIST,
-                ARM_PIVOT_DOWN
-        );
-
-        armDeposit = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                125,
-                ARM_SHOULDER_DEPOSIT,
-                ARM_WRIST_DEPOSIT,
-                ARM_PIVOT_DOWN
-        );
-
-        armIn = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                0,
-                GRAB_SHOULDER,
-                GRAB_WRIST,
-                ARM_PIVOT_DOWN
-        );
-
-        armIdle = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                200,
-                GRAB_SHOULDER,
-                GRAB_WRIST,
-                ARM_PIVOT_DOWN
-        );
-
-        closeBoth = new SetGrabberPosition(grabSS, GRABBER_CLOSED);
-
-        openLeft = new SetLeftGrabberPosition(grabSS, GRABBER_OPEN);
-
-        openRight = new SetRightGrabberPosition(grabSS, GRABBER_OPEN);
-
         while (!isStarted() && !isStopRequested()) {
-            arm.schedule();
-            closeBoth.schedule();
-            intake.schedule();
+            armInit.schedule();
+            grabbersClosed.schedule();
+            intakeDown.schedule();
             robot.read(intakeSS, eleSS, armSS, grabSS);
 
             robot.loop(intakeSS, eleSS, armSS, grabSS);
@@ -249,7 +191,7 @@ public class RedBD extends BaseOpMode {
                         new WaitCommand(800),
 
                         //drop pixel
-                        openLeft,
+                        grabberLeftOpen,
                         new WaitCommand(800),
 
                         //go to backdrop
@@ -260,13 +202,13 @@ public class RedBD extends BaseOpMode {
 
                         //push against backdrop
                         new FollowTrajectorySequenceAsync(autoDriveSS, pushAgainstBackdrop),
-                        openRight,
+                        grabberRightOpen,
                         new WaitCommand(200),
                         new FollowTrajectorySequenceAsync(autoDriveSS, back),
                         new WaitCommand(400),
 
                         //park
-                        armIn,
+                        armDown,
                         new FollowTrajectorySequenceAsync(autoDriveSS, park),
                         new WaitCommand(800)
                 )

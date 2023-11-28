@@ -23,7 +23,7 @@ public class TriggerGamepadEx {
         gamepadTriggers = new HashMap<>();
         for (GamepadKeys.Trigger trigger : triggers) {
             triggerReaders.put(trigger, new TriggerReader(ex, trigger));
-            gamepadTriggers.put(trigger, new GamepadTrigger(ex, trigger));
+            //gamepadTriggers.put(trigger, new GamepadTrigger(ex, trigger));
         }
     }
 

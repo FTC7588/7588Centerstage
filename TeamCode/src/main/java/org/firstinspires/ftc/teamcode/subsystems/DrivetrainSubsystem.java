@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.util.InterpLUT;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.poofyutils.MecanumDrive;
+import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.enums.DriveMode;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 import org.firstinspires.ftc.teamcode.poofyutils.hardware.CameraConfig;
@@ -34,6 +36,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     private double rRCurrent;
 
     private Pose2d robotPose;
+
+    private final InterpLUT blueBackdropLUT;
+    private final InterpLUT redBackdropLUT;
 
     private final AprilTagLocalizer2d tagLocalizer;
 
@@ -66,6 +71,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
         );
 
         robotPose = new Pose2d(0, 0, 0);
+
+        blueBackdropLUT = new InterpLUT();
+        blueBackdropLUT.add(-1, BLUE_BACKDROP_LEFT);
+        blueBackdropLUT.add(1, BLUE_BACKDROP_RIGHT);
+        blueBackdropLUT.createLUT();
+
+        redBackdropLUT = new InterpLUT();
+        redBackdropLUT.add(-1, RED_BACKDROP_LEFT);
+        redBackdropLUT.add(1, RED_BACKDROP_RIGHT);
+        redBackdropLUT.createLUT();
 
     }
 
@@ -170,6 +185,17 @@ public class DrivetrainSubsystem extends SubsystemBase {
         }
 
         mode = DriveMode.FOLLOW_TAG;
+    }
+
+    public void followBackdropMode(double range, Alliance alliance) {
+        Pose2d followPose = new Pose2d(0, 0, 0);
+        if (alliance == Alliance.RED) {
+            followPose = new Pose2d(RED_BACKDROP.getX(), redBackdropLUT.get(range), RED_BACKDROP.getTheta());
+        } else if (alliance == Alliance.BLUE) {
+            followPose = new Pose2d(BLUE_BACKDROP.getX(), blueBackdropLUT.get(range), BLUE_BACKDROP.getTheta());
+        }
+
+        followTagMode(followPose);
     }
 
     //setters

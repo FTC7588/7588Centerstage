@@ -2,22 +2,19 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandOpMode;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.command.button.Trigger;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.commands.arm.IncrementWristPosition;
+import org.firstinspires.ftc.teamcode.commands.arm.SetArmPositions;
 import org.firstinspires.ftc.teamcode.commands.arm.SetEleArmPositions;
 import org.firstinspires.ftc.teamcode.commands.arm.SetPivotPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.SetShoulderPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.SetShoulderTouch;
 import org.firstinspires.ftc.teamcode.commands.arm.SetWristPosition;
+import org.firstinspires.ftc.teamcode.commands.drive.BackdropTagSlide;
 import org.firstinspires.ftc.teamcode.commands.drive.EnableHeadingLock;
 import org.firstinspires.ftc.teamcode.commands.drive.FieldCentric;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowTag;
@@ -32,6 +29,10 @@ import org.firstinspires.ftc.teamcode.commands.grabber.SetLeftGrabberPosition;
 import org.firstinspires.ftc.teamcode.commands.grabber.SetRightGrabberPosition;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakePower;
+import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
+import org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys;
+import org.firstinspires.ftc.teamcode.poofyutils.gamepads.PoofyGamepadEx;
+import org.firstinspires.ftc.teamcode.poofyutils.gamepads.readers.GamepadButton;
 import org.firstinspires.ftc.teamcode.rr.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.AutoDrivetrainSubsystem;
@@ -41,7 +42,6 @@ import org.firstinspires.ftc.teamcode.subsystems.GrabberSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.poofyutils.filters.MovingAverage;
 import org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadTrigger;
-import org.firstinspires.ftc.teamcode.poofyutils.gamepads.TriggerGamepadEx;
 
 import static org.firstinspires.ftc.teamcode.Constants.*;
 
@@ -64,6 +64,7 @@ public class BaseOpMode extends CommandOpMode {
     protected RobotCentric robotCentric;
     protected FieldCentric fieldCentric;
     protected FollowTag followTag;
+    protected BackdropTagSlide followBackdrop;
 
     protected SetMaxSpeed lowSpeed;
     protected SetMaxSpeed highSpeed;
@@ -110,16 +111,15 @@ public class BaseOpMode extends CommandOpMode {
     protected SetPivotPosition pivotPosDown;
     protected SetPivotPosition pivotPosUp;
 
-    protected SetGrabberPosition grabberClosed;
-    protected SetGrabberPosition grabberOpen;
+    protected SetGrabberPosition grabbersClosed;
+    protected SetGrabberPosition grabbersOpen;
 
     protected SetLeftGrabberPosition grabberLeftClose;
     protected SetLeftGrabberPosition grabberLeftOpen;
     protected SetRightGrabberPosition grabberRightClose;
     protected SetRightGrabberPosition grabberRightOpen;
 
-    protected SetShoulderTouch armTouchPad;
-
+    protected SetArmPositions armInit;
     protected SetEleArmPositions armDown;
     protected SetEleArmPositions armDeposit;
     protected SetEleArmPositions armIdle;
@@ -127,10 +127,8 @@ public class BaseOpMode extends CommandOpMode {
     protected SetEleArmPositions armGrab;
     protected SetEleArmPositions armBack;
 
-    protected GamepadEx driver;
-    protected GamepadEx operator;
-    protected TriggerGamepadEx driverEx;
-    protected TriggerGamepadEx operatorEx;
+    protected PoofyGamepadEx driver;
+    protected PoofyGamepadEx operator;
 
     protected MultipleTelemetry tele;
 
@@ -138,6 +136,7 @@ public class BaseOpMode extends CommandOpMode {
     protected MovingAverage loopAvg;
 
     protected boolean auto = false;
+    protected Alliance alliance;
 
     @Override
     public void initialize() {
@@ -172,7 +171,16 @@ public class BaseOpMode extends CommandOpMode {
                 () -> driver.getRightX()
         );
 
-        followTag = new FollowTag(driveSS, FOLLOW_POSE);
+        followTag = new FollowTag(
+                driveSS,
+                FOLLOW_POSE
+        );
+
+        followBackdrop = new BackdropTagSlide(
+                driveSS,
+                () -> driver.getTouchX(),
+                alliance
+        );
 
         lowSpeed = new SetMaxSpeed(driveSS, LOW_SPEED);
         highSpeed = new SetMaxSpeed(driveSS, HIGH_SPEED);
@@ -223,8 +231,8 @@ public class BaseOpMode extends CommandOpMode {
         pivotPosUp = new SetPivotPosition(armSS, ARM_PIVOT_DOWN);
 
         //grabber
-        grabberClosed = new SetGrabberPosition(grabSS, GRABBER_CLOSED);
-        grabberOpen = new SetGrabberPosition(grabSS, GRABBER_OPEN);
+        grabbersClosed = new SetGrabberPosition(grabSS, GRABBER_CLOSED);
+        grabbersOpen = new SetGrabberPosition(grabSS, GRABBER_OPEN);
 
         grabberLeftClose = new SetLeftGrabberPosition(grabSS, GRABBER_CLOSED);
         grabberLeftOpen = new SetLeftGrabberPosition(grabSS, GRABBER_OPEN);
@@ -232,6 +240,13 @@ public class BaseOpMode extends CommandOpMode {
         grabberRightOpen = new SetRightGrabberPosition(grabSS, GRABBER_OPEN);
 
         //macros
+        armInit = new SetArmPositions(
+                armSS,
+                GRAB_SHOULDER,
+                GRAB_WRIST,
+                ARM_PIVOT_DOWN
+        );
+
         armDeposit = new SetEleArmPositions(
                 eleSS,
                 armSS,
@@ -287,10 +302,8 @@ public class BaseOpMode extends CommandOpMode {
         );
 
         //gamepads
-        driver = new GamepadEx(gamepad1);
-        operator = new GamepadEx(gamepad2);
-        driverEx = new TriggerGamepadEx(gamepad1, driver);
-        operatorEx = new TriggerGamepadEx(gamepad2, operator);
+        driver = new PoofyGamepadEx(gamepad1);
+        operator = new PoofyGamepadEx(gamepad2);
 
         //telemetry
         tele = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -375,24 +388,25 @@ public class BaseOpMode extends CommandOpMode {
 
 
     protected void tau() {
-        tele.update();
+        telemetry.update();
     }
     protected void tal() {
-        tele.addLine();
+        telemetry.addLine();
     }
     protected void tal(String caption) {
-        tele.addLine(caption);
+        telemetry.addLine(caption);
     }
     protected void tad(String caption, Object value) {
-        tele.addData(caption, value);
+        telemetry.addData(caption, value);
     }
+
 
     protected GamepadButton gp1(GamepadKeys.Button button) {
         return driver.getGamepadButton(button);
     }
 
     protected GamepadTrigger gp1(GamepadKeys.Trigger trigger) {
-        return driverEx.getGamepadTrigger(trigger);
+        return driver.getGamepadTrigger(trigger);
     }
 
     protected Trigger gp1(GamepadKeys.Button button, int layer) {
@@ -415,19 +429,19 @@ public class BaseOpMode extends CommandOpMode {
 
     protected Trigger gp1(GamepadKeys.Trigger trigger, int layer) {
         if (layer == 1) {
-            return driverEx.getGamepadTrigger(trigger)
+            return driver.getGamepadTrigger(trigger)
                     .and(gp1(Constants.CONTROL_LAYER_2).negate())
                     .and(gp1(Constants.CONTROL_LAYER_3).negate());
         } else if (layer == 2) {
-            return driverEx.getGamepadTrigger(trigger)
+            return driver.getGamepadTrigger(trigger)
                     .and(gp1(Constants.CONTROL_LAYER_2))
                     .and(gp1(Constants.CONTROL_LAYER_3).negate());
         } else if (layer == 3) {
-            return driverEx.getGamepadTrigger(trigger)
+            return driver.getGamepadTrigger(trigger)
                     .and(gp1(Constants.CONTROL_LAYER_2).negate())
                     .and(gp1(Constants.CONTROL_LAYER_3));
         } else {
-            return driverEx.getGamepadTrigger(trigger);
+            return driver.getGamepadTrigger(trigger);
         }
     }
 
@@ -438,7 +452,7 @@ public class BaseOpMode extends CommandOpMode {
     }
 
     protected GamepadTrigger gp2(GamepadKeys.Trigger trigger) {
-        return operatorEx.getGamepadTrigger(trigger);
+        return operator.getGamepadTrigger(trigger);
     }
 
     protected Trigger gp2(GamepadKeys.Button button, int layer) {
@@ -461,19 +475,19 @@ public class BaseOpMode extends CommandOpMode {
 
     protected Trigger gp2(GamepadKeys.Trigger trigger, int layer) {
         if (layer == 1) {
-            return operatorEx.getGamepadTrigger(trigger)
+            return operator.getGamepadTrigger(trigger)
                     .and(gp1(Constants.CONTROL_LAYER_2).negate())
                     .and(gp1(Constants.CONTROL_LAYER_3).negate());
         } else if (layer == 2) {
-            return operatorEx.getGamepadTrigger(trigger)
+            return operator.getGamepadTrigger(trigger)
                     .and(gp1(Constants.CONTROL_LAYER_2))
                     .and(gp1(Constants.CONTROL_LAYER_3).negate());
         } else if (layer == 3) {
-            return operatorEx.getGamepadTrigger(trigger)
+            return operator.getGamepadTrigger(trigger)
                     .and(gp1(Constants.CONTROL_LAYER_2).negate())
                     .and(gp1(Constants.CONTROL_LAYER_3));
         } else {
-            return operatorEx.getGamepadTrigger(trigger);
+            return operator.getGamepadTrigger(trigger);
         }
     }
 }

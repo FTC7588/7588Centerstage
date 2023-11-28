@@ -28,6 +28,7 @@ import org.firstinspires.ftc.teamcode.commands.grabber.SetLeftGrabberPosition;
 import org.firstinspires.ftc.teamcode.commands.grabber.SetRightGrabberPosition;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
+import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.PropProcessor;
 import org.firstinspires.ftc.teamcode.rr.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -88,7 +89,7 @@ public class RedStacks extends BaseOpMode {
         auto = true;
         super.initialize();
 
-        propProcessor = new PropProcessor(PropProcessor.Alliance.RED);
+        propProcessor = new PropProcessor(Alliance.RED);
 
         visionPortal = new VisionPortal.Builder()
                 .setCamera(robot.C920)

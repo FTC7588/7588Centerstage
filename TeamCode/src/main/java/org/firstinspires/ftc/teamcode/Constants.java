@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.PwmControl;
 
 import org.firstinspires.ftc.teamcode.poofyutils.CameraIntrinsics;
+import org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose3d;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Rotation3d;
@@ -97,10 +97,19 @@ public class Constants {
     //vision constants
     public static CameraIntrinsics C920_INTRINSICS = new CameraIntrinsics(504.041, 504.041, 307.462, 234.687);
     public static Pose3d C920_POSE = new Pose3d(
-            new Vector3d(3.125, -7.125, 3.5),
+            new Vector3d(7.125, 3.125, 3.5),
             new Rotation3d(0, 0, Math.toRadians(0))
     );
 
-    public static org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d FOLLOW_POSE = new Pose2d(50, 44, Math.toRadians(360));
+    //backdrop positions
+    public static double BLUE_BACKDROP_LEFT = 28;
+    public static Pose2d BLUE_BACKDROP = new Pose2d(42, 36, Math.toRadians(360));
+    public static double BLUE_BACKDROP_RIGHT = 44;
+
+    public static double RED_BACKDROP_LEFT = -28;
+    public static Pose2d RED_BACKDROP = new Pose2d(-42, 36, Math.toRadians(360));
+    public static double RED_BACKDROP_RIGHT = -44;
+
+    public static org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d FOLLOW_POSE = new Pose2d(42, 36, Math.toRadians(360));
 
 }

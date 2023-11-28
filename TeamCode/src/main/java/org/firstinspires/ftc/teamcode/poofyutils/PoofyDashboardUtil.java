@@ -36,6 +36,12 @@ public class PoofyDashboardUtil {
         resetStroke(canvas);
     }
 
+    public static void drawPoint(Canvas canvas, Pose2d point) {
+        canvas.setStroke("#000000");
+        canvas.strokeCircle(point.x, point.y, 5);
+        resetStroke(canvas);
+    }
+
     public static void resetStroke(Canvas canvas) {
         canvas.setStroke("#000000");
     }

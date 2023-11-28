@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.poofyutils.processors;
 import android.graphics.Canvas;
 
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
+import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -211,11 +212,5 @@ public class PropProcessor implements VisionProcessor {
 
     public int getSpike() {
         return spike;
-    }
-
-
-    public enum Alliance{
-        BLUE,
-        RED
     }
 }

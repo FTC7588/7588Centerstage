@@ -1,20 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.A;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.B;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_DOWN;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_LEFT;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_RIGHT;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_UP;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.LEFT_BUMPER;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.RIGHT_BUMPER;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.X;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.Y;
-import static org.firstinspires.ftc.teamcode.Constants.ARM_PIVOT_DOWN;
-import static org.firstinspires.ftc.teamcode.Constants.ARM_SHOULDER_DEPOSIT;
-import static org.firstinspires.ftc.teamcode.Constants.ARM_SHOULDER_IDLE;
-import static org.firstinspires.ftc.teamcode.Constants.ARM_WRIST_DEPOSIT;
-import static org.firstinspires.ftc.teamcode.Constants.ARM_WRIST_IDLE;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_ARM;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_DRIVE;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_ELEVATOR;
@@ -22,64 +7,23 @@ import static org.firstinspires.ftc.teamcode.Constants.DEBUG_GENERAL;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_GRABBER;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_INTAKE;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_VISION;
-import static org.firstinspires.ftc.teamcode.Constants.ELE_DOWN;
-import static org.firstinspires.ftc.teamcode.Constants.ELE_HANG;
-import static org.firstinspires.ftc.teamcode.Constants.ELE_INCREMENT;
-import static org.firstinspires.ftc.teamcode.Constants.ELE_MID;
-import static org.firstinspires.ftc.teamcode.Constants.ELE_POWER;
-import static org.firstinspires.ftc.teamcode.Constants.ELE_UP;
-import static org.firstinspires.ftc.teamcode.Constants.FLOOR_ELE;
-import static org.firstinspires.ftc.teamcode.Constants.FLOOR_SHOULDER;
-import static org.firstinspires.ftc.teamcode.Constants.FLOOR_WRIST;
 import static org.firstinspires.ftc.teamcode.Constants.FOLLOW_POSE;
-import static org.firstinspires.ftc.teamcode.Constants.GRABBER_CLOSED;
-import static org.firstinspires.ftc.teamcode.Constants.GRABBER_OPEN;
-import static org.firstinspires.ftc.teamcode.Constants.GRAB_ELE;
-import static org.firstinspires.ftc.teamcode.Constants.GRAB_SHOULDER;
-import static org.firstinspires.ftc.teamcode.Constants.GRAB_WRIST;
-import static org.firstinspires.ftc.teamcode.Constants.HIGH_SPEED;
-import static org.firstinspires.ftc.teamcode.Constants.INTAKE_POWER;
-import static org.firstinspires.ftc.teamcode.Constants.INT_DOWN;
-import static org.firstinspires.ftc.teamcode.Constants.INT_UP;
-import static org.firstinspires.ftc.teamcode.Constants.LOW_SPEED;
-import static org.firstinspires.ftc.teamcode.Constants.POISED_ELE;
-import static org.firstinspires.ftc.teamcode.Constants.POISED_SHOULDER;
-import static org.firstinspires.ftc.teamcode.Constants.POISED_WRIST;
 
 import android.annotation.SuppressLint;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.commands.arm.IncrementWristPosition;
-import org.firstinspires.ftc.teamcode.commands.arm.SetEleArmPositions;
-import org.firstinspires.ftc.teamcode.commands.arm.SetPivotPosition;
-import org.firstinspires.ftc.teamcode.commands.arm.SetShoulderPosition;
-import org.firstinspires.ftc.teamcode.commands.arm.SetShoulderTouch;
-import org.firstinspires.ftc.teamcode.commands.arm.SetWristPosition;
-import org.firstinspires.ftc.teamcode.commands.drive.EnableHeadingLock;
-import org.firstinspires.ftc.teamcode.commands.drive.FieldCentric;
-import org.firstinspires.ftc.teamcode.commands.drive.FollowTag;
-import org.firstinspires.ftc.teamcode.commands.drive.RobotCentric;
-import org.firstinspires.ftc.teamcode.commands.drive.SetHeadingLock;
-import org.firstinspires.ftc.teamcode.commands.drive.SetMaxSpeed;
-import org.firstinspires.ftc.teamcode.commands.elevator.IncrementElevatorTarget;
-import org.firstinspires.ftc.teamcode.commands.elevator.SetElevatorPower;
-import org.firstinspires.ftc.teamcode.commands.elevator.SetElevatorTarget;
-import org.firstinspires.ftc.teamcode.commands.grabber.SetGrabberPosition;
-import org.firstinspires.ftc.teamcode.commands.grabber.SetLeftGrabberPosition;
-import org.firstinspires.ftc.teamcode.commands.grabber.SetRightGrabberPosition;
-import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
-import org.firstinspires.ftc.teamcode.commands.intake.SetIntakePower;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import org.firstinspires.ftc.teamcode.poofyutils.AprilTagCustomDatabase;
-import org.firstinspires.ftc.teamcode.poofyutils.MathUtil;
 import org.firstinspires.ftc.teamcode.poofyutils.PoofyDashboardUtil;
-import org.firstinspires.ftc.teamcode.poofyutils.geometry.EulerAngles;
-import org.firstinspires.ftc.vision.apriltag.AprilTagMetadata;
+import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
+import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
+import org.firstinspires.ftc.teamcode.rr.util.DashboardUtil;
+
+import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.*;
 
 
 @TeleOp
@@ -88,11 +32,13 @@ public class DriveTournament extends BaseOpMode {
 
     @Override
     public void initialize() {
+        alliance = Alliance.BLUE;
+
         super.initialize();
 
         //p1 layer 1 controls
         gp1(LEFT_BUMPER, 1).whenActive(lowSpeed).whenInactive(highSpeed);
-        gp1(RIGHT_BUMPER, 1).toggleWhenActive(followTag, robotCentric);
+        gp1(TOUCHPAD_FINGER_1, 1).whenActive(followBackdrop).whenInactive(robotCentric);
 
         gp1(B, 1).toggleWhenActive(intakeIn, intakeIdle);
         gp1(X, 1).toggleWhenActive(intakeOut, intakeIdle);
@@ -111,7 +57,7 @@ public class DriveTournament extends BaseOpMode {
         gp1(A, 2).whenActive(wristIncUp);
         gp1(Y, 2).whenActive(wristIncDown);
         gp1(X, 2).toggleWhenActive(pivotPosDown, pivotPosUp);
-        gp1(B, 2).toggleWhenActive(grabberOpen, grabberClosed);
+        gp1(B, 2).toggleWhenActive(grabbersOpen, grabbersClosed);
 
         gp1(LEFT_BUMPER, 2).whenActive(armPoised);
         gp1(RIGHT_BUMPER, 2).whenActive(armGrab);
@@ -140,7 +86,7 @@ public class DriveTournament extends BaseOpMode {
 
         robotCentric.schedule();
         intakeDown.schedule();
-        armPoised.schedule();
+        armInit.schedule();
     }
 
     @SuppressLint("DefaultLocale")
@@ -161,9 +107,11 @@ public class DriveTournament extends BaseOpMode {
         PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getRobotPose());
         PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), FOLLOW_POSE);
 
+        PoofyDashboardUtil.drawPoint(packet.fieldOverlay(), new Pose2d(60, 60, 0));
+
         dashboard.sendTelemetryPacket(packet);
 
-        tele.update();
+        tau();
 
         robot.clearBulkCache();
     }

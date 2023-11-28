@@ -1,16 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.A;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.B;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_DOWN;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_LEFT;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_RIGHT;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_UP;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.LEFT_BUMPER;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.RIGHT_BUMPER;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.X;
-import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.Y;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -44,6 +33,8 @@ import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 import org.firstinspires.ftc.vision.apriltag.AprilTagMetadata;
 
 import static org.firstinspires.ftc.teamcode.Constants.*;
+import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.*;
+import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Trigger.*;
 
 import android.annotation.SuppressLint;
 
@@ -56,8 +47,6 @@ public class Drive extends BaseOpMode {
     private RobotCentric robotCentric;
     private FieldCentric fieldCentric;
     private FollowTag followTag;
-
-    //private ResetIMU resetIMU;
 
     protected SetMaxSpeed lowSpeed;
     protected SetMaxSpeed highSpeed;

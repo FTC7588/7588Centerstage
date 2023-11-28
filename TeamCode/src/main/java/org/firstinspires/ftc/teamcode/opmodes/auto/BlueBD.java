@@ -28,6 +28,7 @@ import org.firstinspires.ftc.teamcode.commands.grabber.SetLeftGrabberPosition;
 import org.firstinspires.ftc.teamcode.commands.grabber.SetRightGrabberPosition;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
+import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.PropProcessor;
 import org.firstinspires.ftc.teamcode.rr.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -64,14 +65,6 @@ public class BlueBD extends BaseOpMode {
     public static TrajectorySequence park;
     public static TrajectorySequence back;
 
-    public SetEleArmPositions armBack;
-    public SetEleArmPositions armDeposit;
-    public SetEleArmPositions armIn;
-    public SetEleArmPositions armIdle;
-
-    public SetGrabberPosition closeBoth;
-    public SetLeftGrabberPosition openLeft;
-    public SetRightGrabberPosition openRight;
 
     public int proppos;
 
@@ -82,7 +75,7 @@ public class BlueBD extends BaseOpMode {
         auto = true;
         super.initialize();
 
-        propProcessor = new PropProcessor(PropProcessor.Alliance.BLUE);
+        propProcessor = new PropProcessor(Alliance.BLUE);
 
         visionPortal = new VisionPortal.Builder()
                 .setCamera(robot.C920)
@@ -95,22 +88,10 @@ public class BlueBD extends BaseOpMode {
 
         autoDriveSS.setPoseEstimate(START_POSE);
 
-        SetIntakeAngle intake = new SetIntakeAngle(intakeSS, INT_DOWN);
-
-        SetArmPositions arm = new SetArmPositions(
-                armSS, GRAB_SHOULDER, GRAB_WRIST, ARM_PIVOT_DOWN
-        );
-
-        closeBoth = new SetGrabberPosition(grabSS, GRABBER_CLOSED);
-
-        openLeft = new SetLeftGrabberPosition(grabSS, GRABBER_OPEN);
-
-        openRight = new SetRightGrabberPosition(grabSS, GRABBER_OPEN);
-
         while (!isStarted() && !isStopRequested()) {
-            arm.schedule();
-            closeBoth.schedule();
-            intake.schedule();
+            armInit.schedule();
+            grabbersClosed.schedule();
+            intakeDown.schedule();
             robot.read(intakeSS, eleSS, armSS, grabSS);
 
             robot.loop(intakeSS, eleSS, armSS, grabSS);
@@ -205,12 +186,6 @@ public class BlueBD extends BaseOpMode {
         robot.clearBulkCache();
     }
 
-    public void instantiateTrajectories() {
-        moveToSpike = rrDrive.trajectorySequenceBuilder(START_POSE)
-                //.splineTo(new Vector2d())
-                .build();
-    }
-
     public void pathSchedule() {
         schedule(
                 new SequentialCommandGroup(
@@ -220,7 +195,7 @@ public class BlueBD extends BaseOpMode {
                         new WaitCommand(800),
 
                         //drop pixel
-                        openLeft,
+                        grabberLeftOpen,
                         new WaitCommand(800),
 
                         //go to backdrop
@@ -231,13 +206,13 @@ public class BlueBD extends BaseOpMode {
 
                         //push against backdrop
                         new FollowTrajectorySequenceAsync(autoDriveSS, pushAgainstBackdrop),
-                        openRight,
+                        grabberRightOpen,
                         new WaitCommand(200),
                         new FollowTrajectorySequenceAsync(autoDriveSS, back),
                         new WaitCommand(400),
 
                         //park
-                        armIn,
+                        armDown,
                         new FollowTrajectorySequenceAsync(autoDriveSS, park),
                         new WaitCommand(800)
                 )
