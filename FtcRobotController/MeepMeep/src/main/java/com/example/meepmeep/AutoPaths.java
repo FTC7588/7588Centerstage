@@ -22,7 +22,7 @@ public class AutoPaths {
         W_C
     }
 
-    public static Paths path = Paths.W_A;
+    public static Paths path = Paths.W_B;
 
     public static double VEL_MAX = 65;
     public static double ACCEL_MAX = 65;
@@ -38,6 +38,8 @@ public class AutoPaths {
     public static Pose2d RED_W_SPIKE_1 = new Pose2d(-34.9, 32, Math.toRadians(5));
     public static Pose2d RED_W_SPIKE_2 = new Pose2d(-34.9, 32, Math.toRadians(-90));
     public static Pose2d RED_W_SPIKE_3 = new Pose2d(-35.9, 25, Math.toRadians(-180));
+
+    public static Pose2d RED_STACK = new Pose2d(-61, 36, Math.toRadians(0));
 
     public static void main(String[] args) throws IOException {
         MeepMeep meepMeep = new MeepMeep(800, 120);
@@ -269,7 +271,7 @@ public class AutoPaths {
 
                                 drive.trajectorySequenceBuilder(RED_W_START)
                                         .lineToSplineHeading(RED_W_SPIKE_1)
-                                        .lineToLinearHeading(new Pose2d(-61, 38, Math.toRadians(0)))
+                                        .lineToLinearHeading(RED_STACK)
                                         .waitSeconds(0.5)
                                         .lineToSplineHeading(new Pose2d(-40, 50, Math.toRadians(0)))
                                         .splineToConstantHeading(new Vector2d(49, 39), Math.toRadians(330))
@@ -298,7 +300,7 @@ public class AutoPaths {
 
                         drive.trajectorySequenceBuilder(RED_W_START)
                                 .lineToSplineHeading(RED_W_SPIKE_2)
-                                .lineToLinearHeading(new Pose2d(-61, 36, Math.toRadians(0)))
+                                .lineToLinearHeading(RED_STACK)
                                 .waitSeconds(0.5)
                                 .lineToSplineHeading(new Pose2d(-58, 36, Math.toRadians(0)))
                                 .lineToSplineHeading(new Pose2d(-40, 50, Math.toRadians(0)))
@@ -332,7 +334,7 @@ public class AutoPaths {
                         drive.trajectorySequenceBuilder(RED_W_START)
                                 .lineToSplineHeading(RED_W_SPIKE_3)
                                 .lineToLinearHeading(new Pose2d(-34, 36, Math.toRadians(0)))
-                                .lineToLinearHeading(new Pose2d(-61, 36, Math.toRadians(0)))
+                                .lineToLinearHeading(RED_STACK)
                                 .waitSeconds(0.5)
                                 .lineToSplineHeading(new Pose2d(-40, 50, Math.toRadians(0)))
                                 .splineToConstantHeading(new Vector2d(49, 32), Math.toRadians(330))
@@ -361,7 +363,24 @@ public class AutoPaths {
                 .followTrajectorySequence(drive ->
 
                         drive.trajectorySequenceBuilder(RED_W_START)
-                                .lineToSplineHeading(new Pose2d())
+                                .lineToSplineHeading(RED_W_SPIKE_1)
+                                .lineToLinearHeading(RED_STACK)
+                                .waitSeconds(0.5)
+                                .lineToSplineHeading(new Pose2d(40, 36, Math.toRadians(0)))
+                                .splineToConstantHeading(new Vector2d(47, 40), Math.toRadians(0))
+                                .waitSeconds(0.4)
+                                .lineToSplineHeading(new Pose2d(40, 39.25, Math.toRadians(0)))
+                                .splineToConstantHeading(new Vector2d(-61, 36), Math.toRadians(180))
+                                .waitSeconds(0.5)
+                                .lineToSplineHeading(new Pose2d(40, 36, Math.toRadians(0)))
+                                .splineToConstantHeading(new Vector2d(47, 40), Math.toRadians(0))
+                                .waitSeconds(0.4)
+                                .lineToSplineHeading(new Pose2d(40, 39.25, Math.toRadians(0)))
+                                .splineToConstantHeading(new Vector2d(-61, 36), Math.toRadians(180))
+                                .waitSeconds(0.5)
+                                .lineToSplineHeading(new Pose2d(40, 36, Math.toRadians(0)))
+                                .splineToConstantHeading(new Vector2d(47, 40), Math.toRadians(0))
+                                .waitSeconds(0.4)
                                 .build());
 
 
@@ -397,6 +416,11 @@ public class AutoPaths {
                         .start();
                 break;
             case W_B:
+                meepMeep.setBackground(ImageIO.read(new File("D:/mario/Documents/Robotics/CenterStageField.png")))
+                        .setDarkMode(true)
+                        .setBackgroundAlpha(0.95f)
+                        .addEntity(W_B_1)
+                        .start();
                 break;
             case W_C:
                 break;
