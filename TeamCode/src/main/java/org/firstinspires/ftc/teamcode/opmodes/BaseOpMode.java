@@ -27,8 +27,10 @@ import org.firstinspires.ftc.teamcode.commands.elevator.SetElevatorTarget;
 import org.firstinspires.ftc.teamcode.commands.grabber.SetGrabberPosition;
 import org.firstinspires.ftc.teamcode.commands.grabber.SetLeftGrabberPosition;
 import org.firstinspires.ftc.teamcode.commands.grabber.SetRightGrabberPosition;
+import org.firstinspires.ftc.teamcode.commands.intake.IncrementIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakePower;
+import org.firstinspires.ftc.teamcode.commands.intake.VariableIntakeAngle;
 import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys;
 import org.firstinspires.ftc.teamcode.poofyutils.gamepads.PoofyGamepadEx;
@@ -83,6 +85,11 @@ public class BaseOpMode extends CommandOpMode {
 
     protected SetIntakeAngle intakeUp;
     protected SetIntakeAngle intakeDown;
+
+    protected IncrementIntakeAngle incrementIntakeUp;
+    protected IncrementIntakeAngle incrementIntakeDown;
+
+    protected VariableIntakeAngle variableIntakeAngle;
 
     protected SetElevatorPower eleUp;
     protected SetElevatorPower eleIdle;
@@ -176,11 +183,11 @@ public class BaseOpMode extends CommandOpMode {
                 FOLLOW_POSE
         );
 
-        followBackdrop = new BackdropTagSlide(
-                driveSS,
-                () -> driver.getTouchX(),
-                alliance
-        );
+//        followBackdrop = new BackdropTagSlide(
+//                driveSS,
+//                () -> driver.getTouchX(),
+//                alliance
+//        );
 
         lowSpeed = new SetMaxSpeed(driveSS, LOW_SPEED);
         highSpeed = new SetMaxSpeed(driveSS, HIGH_SPEED);
@@ -200,6 +207,16 @@ public class BaseOpMode extends CommandOpMode {
 
         intakeUp = new SetIntakeAngle(intakeSS, INT_UP);
         intakeDown = new SetIntakeAngle(intakeSS, INT_DOWN);
+
+        incrementIntakeUp = new IncrementIntakeAngle(intakeSS, INT_INCREMENT);
+        incrementIntakeDown = new IncrementIntakeAngle(intakeSS, -INT_INCREMENT);
+
+        variableIntakeAngle = new VariableIntakeAngle(
+                intakeSS,
+                () -> driver.getTouchX(),
+                INT_UP,
+                INT_DOWN
+        );
 
         //elevator
         eleUp = new SetElevatorPower(eleSS, ELE_POWER);

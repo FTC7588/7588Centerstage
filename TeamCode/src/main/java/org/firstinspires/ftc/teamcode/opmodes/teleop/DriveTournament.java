@@ -16,6 +16,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.commands.intake.VariableIntakeAngle;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import org.firstinspires.ftc.teamcode.poofyutils.AprilTagCustomDatabase;
 import org.firstinspires.ftc.teamcode.poofyutils.PoofyDashboardUtil;
@@ -23,6 +24,8 @@ import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 import org.firstinspires.ftc.teamcode.rr.util.DashboardUtil;
 
+import static org.firstinspires.ftc.teamcode.Constants.INT_DOWN;
+import static org.firstinspires.ftc.teamcode.Constants.INT_UP;
 import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.*;
 
 
@@ -38,7 +41,7 @@ public class DriveTournament extends BaseOpMode {
 
         //p1 layer 1 controls
         gp1(LEFT_BUMPER, 1).whenActive(lowSpeed).whenInactive(highSpeed);
-        gp1(TOUCHPAD_FINGER_1, 1).whenActive(followBackdrop).whenInactive(robotCentric);
+//        gp1(TOUCHPAD_FINGER_1, 1).whenActive(followBackdrop).whenInactive(robotCentric);
 
         gp1(B, 1).toggleWhenActive(intakeIn, intakeIdle);
         gp1(X, 1).toggleWhenActive(intakeOut, intakeIdle);
@@ -71,6 +74,11 @@ public class DriveTournament extends BaseOpMode {
         gp1(A, 3).toggleWhenActive(() -> DEBUG_ARM = true, () -> DEBUG_ARM = false);
         gp1(B, 3).toggleWhenActive(() -> DEBUG_GRABBER = true, () -> DEBUG_GRABBER = true);
 
+        gp1(LEFT_BUMPER, 3).whenActive(incrementIntakeUp);
+        gp1(RIGHT_BUMPER, 3).whenActive(incrementIntakeDown);
+
+        gp1(TOUCHPAD_FINGER_1, 1).whileActiveContinuous(variableIntakeAngle);
+
         //p2 controls
         gp2(DPAD_UP, 1).whileActiveContinuous(eleIncUp);
         gp2(DPAD_RIGHT, 1).whenActive(eleTargetHang);
@@ -84,6 +92,7 @@ public class DriveTournament extends BaseOpMode {
         gp2(LEFT_BUMPER, 1).toggleWhenActive(grabberLeftOpen, grabberLeftClose);
         gp2(RIGHT_BUMPER, 1).toggleWhenActive(grabberRightOpen, grabberRightClose);
 
+//        variableIntakeAngle.schedule();
         robotCentric.schedule();
         intakeDown.schedule();
         armInit.schedule();
@@ -100,6 +109,8 @@ public class DriveTournament extends BaseOpMode {
 //        }
 
         super.run();
+
+        telemetry.addData("touch x", driver.getTouchX());
 
         TelemetryPacket packet = new TelemetryPacket();
 

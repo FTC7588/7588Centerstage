@@ -126,8 +126,8 @@ public class RobotHardware {
         intRServo.setDirection(Servo.Direction.REVERSE);
 
         //elevator
-        eleL.setDirection(DcMotorSimple.Direction.FORWARD);
-        eleR.setDirection(DcMotorSimple.Direction.REVERSE);
+        eleL.setDirection(DcMotorSimple.Direction.REVERSE);
+        eleR.setDirection(DcMotorSimple.Direction.FORWARD);
         eleL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         eleR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         eleL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
