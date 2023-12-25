@@ -36,7 +36,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
 
     public void read() {
-        pos = robot.eleL.getCurrentPosition();
+        pos = robot.eleR.getCurrentPosition();
         if (DEBUG_ELEVATOR) {
             lCurrent = robot.eleL.getCurrent(CurrentUnit.AMPS);
             rCurrent = robot.eleR.getCurrent(CurrentUnit.AMPS);
