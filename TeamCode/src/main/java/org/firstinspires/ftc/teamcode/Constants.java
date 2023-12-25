@@ -37,7 +37,7 @@ public class Constants {
 
     //intake constants
     public static PwmControl.PwmRange INTAKE_RANGE = new PwmControl.PwmRange(750, 2250);
-    public static double INTAKE_POWER = 0.65;
+    public static double INTAKE_POWER = 1;
 
     public static double INT_DOWN = 0.375;
     public static double INT_UP = 0.25;

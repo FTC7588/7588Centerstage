@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
@@ -42,7 +43,12 @@ public class RobotHardware {
     public IMU imu;
     public double rollOffset, pitchOffset, headingOffset;
 
+    //cameras
     public CameraName C920;
+
+    //extra sensors
+    public NormalizedColorSensor backCS;
+    public NormalizedColorSensor frontCS;
 
     //angles
     public EulerAngles angles;
@@ -98,6 +104,9 @@ public class RobotHardware {
 
         C920 = hwMap.get(WebcamName.class, "Webcam 1");
 
+        backCS = hwMap.get(NormalizedColorSensor.class, "back");
+        frontCS = hwMap.get(NormalizedColorSensor.class, "front");
+
         //imu
 //        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
 //                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP));
@@ -140,6 +149,9 @@ public class RobotHardware {
 
         //grabber
         grab2.setDirection(Servo.Direction.REVERSE);
+
+        backCS.setGain(2);
+        frontCS.setGain(2);
 
 //        angles = new EulerAngles(
 //                imu.getRobotYawPitchRollAngles().getRoll(AngleUnit.RADIANS),

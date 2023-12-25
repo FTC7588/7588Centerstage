@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.commands.arm.SetArmPositions;
 import org.firstinspires.ftc.teamcode.commands.arm.SetEleArmPositions;
 import org.firstinspires.ftc.teamcode.commands.arm.SetPivotPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.SetShoulderPosition;
-import org.firstinspires.ftc.teamcode.commands.arm.SetShoulderTouch;
 import org.firstinspires.ftc.teamcode.commands.arm.SetWristPosition;
 import org.firstinspires.ftc.teamcode.commands.drive.BackdropTagSlide;
 import org.firstinspires.ftc.teamcode.commands.drive.EnableHeadingLock;
@@ -341,7 +340,12 @@ public class BaseOpMode extends CommandOpMode {
         if (DEBUG_INTAKE) {
             tal("=== INTAKE DEBUG INFO ===");
             tad("Intake Power", intakeSS.getPower());
-            tad("Intake Position", intakeSS.getPosition());
+            tad("Intake Position", intakeSS.getServoPosition());
+            tad("Intake Motor Position", intakeSS.getElePosition());
+            tad("Intake Mod Position", intakeSS.getModPosition());
+            tad("Intake Target", intakeSS.getTarget());
+            tad("Intake Back Pixel Loaded", intakeSS.isBackPixelLoaded());
+            tad("Intake Front Pixel Loaded", intakeSS.isFrontPixelLoaded());
             tad("Intake Left Motor Current", intakeSS.getlCurrent());
             tad("Intake Right Motor Current", intakeSS.getrCurrent());
             tal();
