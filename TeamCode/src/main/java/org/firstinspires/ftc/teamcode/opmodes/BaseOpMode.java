@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.command.button.Trigger;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.commands.arm.IncrementShoulderPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.IncrementWristPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.SetArmPositions;
 import org.firstinspires.ftc.teamcode.commands.arm.SetEleArmPositions;
@@ -107,10 +108,14 @@ public class BaseOpMode extends CommandOpMode {
     protected SetShoulderPosition shoulderPosGrab;
     protected SetShoulderPosition shoulderPosIdle;
 
+    protected IncrementShoulderPosition shoulderIncUp;
+    protected IncrementShoulderPosition shoulderIncDown;
+
     protected SetWristPosition wristPosDown;
     protected SetWristPosition wristPosPoised;
     protected SetWristPosition wristPosGrab;
     protected SetWristPosition wristPosUp;
+
     protected IncrementWristPosition wristIncDown;
     protected IncrementWristPosition wristIncUp;
 
@@ -236,12 +241,16 @@ public class BaseOpMode extends CommandOpMode {
         shoulderPosGrab = new SetShoulderPosition(armSS, GRAB_SHOULDER);
         shoulderPosIdle = new SetShoulderPosition(armSS, ARM_SHOULDER_IDLE);
 
+        shoulderIncUp = new IncrementShoulderPosition(armSS, 0.01);
+        shoulderIncDown = new IncrementShoulderPosition(armSS, -0.01);
+
         wristPosDown = new SetWristPosition(armSS, ARM_WRIST_DEPOSIT);
         wristPosPoised = new SetWristPosition(armSS, POISED_WRIST);
         wristPosGrab = new SetWristPosition(armSS, GRAB_WRIST);
         wristPosUp = new SetWristPosition(armSS, ARM_WRIST_IDLE);
-        wristIncDown = new IncrementWristPosition(armSS, 0.1);
-        wristIncUp = new IncrementWristPosition(armSS, -0.1);
+
+        wristIncDown = new IncrementWristPosition(armSS, 0.01);
+        wristIncUp = new IncrementWristPosition(armSS, -0.01);
 
         pivotPosDown = new SetPivotPosition(armSS, ARM_PIVOT_DOWN);
         pivotPosUp = new SetPivotPosition(armSS, ARM_PIVOT_DOWN);
@@ -358,7 +367,7 @@ public class BaseOpMode extends CommandOpMode {
             tal("=== INTAKE DEBUG INFO ===");
             tad("Intake Power", intakeSS.getPower());
             tad("Intake Position", intakeSS.getServoPosition());
-            tad("Intake Motor Position", intakeSS.getElePosition());
+            tad("Intake Motor Position", intakeSS.getIntakePosition());
             tad("Intake Mod Position", intakeSS.getModPosition());
             tad("Intake Target", intakeSS.getTarget());
             tad("Intake Back Pixel Loaded", intakeSS.isBackPixelLoaded());

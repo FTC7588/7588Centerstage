@@ -87,7 +87,7 @@ public class IntakeSubsystem extends SubsystemBase {
         return servoPos;
     }
 
-    public double getElePosition() {
+    public double getIntakePosition() {
         return elePos;
     }
 

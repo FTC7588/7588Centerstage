@@ -72,7 +72,7 @@ public class Constants {
     public static double ARM_SHOULDER_IDLE = 0.7;
     public static double FLOOR_SHOULDER = 0.25;
     public static double POISED_SHOULDER = 1;
-    public static double GRAB_SHOULDER = 0.96;
+    public static double GRAB_SHOULDER = 0.89;
 
         //wrist constants
     public static double ARM_WRIST_IN_ANGLE = -90;
@@ -82,7 +82,7 @@ public class Constants {
     public static double ARM_WRIST_IDLE = 0.7;
     public static double FLOOR_WRIST = 0.1;
     public static double POISED_WRIST = 0.35;
-    public static double GRAB_WRIST = 0.7;
+    public static double GRAB_WRIST = 0.14;
 
         //pivot constants
     public static double ARM_PIVOT_UP_ANGLE = 0;

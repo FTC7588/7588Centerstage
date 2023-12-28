@@ -16,7 +16,7 @@ public class IncrementIntakeAngle extends CommandBase {
 
     @Override
     public void initialize() {
-        m_intakeSubsystem.setPosition(m_intakeSubsystem.getPosition() + increment);
+        m_intakeSubsystem.setPosition(m_intakeSubsystem.getIntakePosition() + increment);
     }
 
     @Override
