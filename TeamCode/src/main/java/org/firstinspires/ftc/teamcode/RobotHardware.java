@@ -127,6 +127,8 @@ public class RobotHardware {
         //intake
         intLMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         intRMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        intLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intLMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

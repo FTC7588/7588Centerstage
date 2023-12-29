@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
 
 import org.firstinspires.ftc.teamcode.Constants;
@@ -120,6 +122,7 @@ public class BaseOpMode extends CommandOpMode {
     protected IncrementWristPosition wristIncUp;
 
     protected SetPivotPosition pivotPosDown;
+    protected SetPivotPosition pivotPosMid;
     protected SetPivotPosition pivotPosUp;
 
     protected SetGrabberPosition grabbersClosed;
@@ -137,6 +140,8 @@ public class BaseOpMode extends CommandOpMode {
     protected SetEleArmPositions armPoised;
     protected SetEleArmPositions armGrab;
     protected SetEleArmPositions armBack;
+
+    protected SequentialCommandGroup armDepositGroup;
 
     protected PoofyGamepadEx driver;
     protected PoofyGamepadEx operator;
@@ -253,7 +258,8 @@ public class BaseOpMode extends CommandOpMode {
         wristIncUp = new IncrementWristPosition(armSS, -0.01);
 
         pivotPosDown = new SetPivotPosition(armSS, ARM_PIVOT_DOWN);
-        pivotPosUp = new SetPivotPosition(armSS, ARM_PIVOT_DOWN);
+        pivotPosMid = new SetPivotPosition(armSS, ARM_PIVOT_MID);
+        pivotPosUp = new SetPivotPosition(armSS, ARM_PIVOT_UP);
 
         //grabber
         grabbersClosed = new SetGrabberPosition(grabSS, GRABBER_CLOSED);
@@ -269,7 +275,7 @@ public class BaseOpMode extends CommandOpMode {
                 armSS,
                 GRAB_SHOULDER,
                 GRAB_WRIST,
-                ARM_PIVOT_DOWN
+                ARM_PIVOT_MID
         );
 
         armDeposit = new SetEleArmPositions(
@@ -278,7 +284,7 @@ public class BaseOpMode extends CommandOpMode {
                 200,
                 ARM_SHOULDER_DEPOSIT,
                 ARM_WRIST_DEPOSIT,
-                ARM_PIVOT_DOWN
+                ARM_PIVOT_MID
         );
 
         armIdle = new SetEleArmPositions(
@@ -287,7 +293,7 @@ public class BaseOpMode extends CommandOpMode {
                 200,
                 GRAB_SHOULDER,
                 GRAB_WRIST,
-                ARM_PIVOT_DOWN
+                ARM_PIVOT_MID
         );
 
         armPoised = new SetEleArmPositions(
@@ -296,7 +302,7 @@ public class BaseOpMode extends CommandOpMode {
                 POISED_ELE,
                 POISED_SHOULDER,
                 POISED_WRIST,
-                ARM_PIVOT_DOWN
+                ARM_PIVOT_MID
         );
 
         armGrab = new SetEleArmPositions(
@@ -305,7 +311,7 @@ public class BaseOpMode extends CommandOpMode {
                 GRAB_ELE,
                 GRAB_SHOULDER,
                 GRAB_WRIST,
-                ARM_PIVOT_DOWN
+                ARM_PIVOT_MID
         );
 
         armBack = new SetEleArmPositions(
@@ -314,7 +320,7 @@ public class BaseOpMode extends CommandOpMode {
                 FLOOR_ELE,
                 FLOOR_SHOULDER,
                 FLOOR_WRIST,
-                ARM_PIVOT_DOWN
+                ARM_PIVOT_MID
         );
 
         armDown = new SetEleArmPositions(
@@ -324,6 +330,12 @@ public class BaseOpMode extends CommandOpMode {
                 GRAB_SHOULDER,
                 GRAB_WRIST,
                 ARM_PIVOT_DOWN
+        );
+
+        armDepositGroup = new SequentialCommandGroup(
+                armDeposit,
+                new WaitCommand(100),
+                new SetWristPosition(armSS, ARM_WRIST_DEPOSIT)
         );
 
         //gamepads

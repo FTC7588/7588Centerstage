@@ -49,7 +49,7 @@ public class Constants {
 //    public static TrapezoidProfile.Constraints ELE_CONSTRAINTS = new TrapezoidProfile.Constraints(10, 10);
     public static double ELE_POWER = 1;
 
-    public static boolean ELE_PID = true;
+    public static boolean ELE_PID = false;
 
     public static double ELE_UP = 1100;
     public static double ELE_MID = 200;
@@ -68,27 +68,28 @@ public class Constants {
     public static double ARM_SHOULDER_IN_ANGLE = 60;
     public static double ARM_SHOULDER_OUT_ANGLE = 320;
 
-    public static double ARM_SHOULDER_DEPOSIT = 0.5;
+    public static double ARM_SHOULDER_DEPOSIT = 0.42;
     public static double ARM_SHOULDER_IDLE = 0.7;
     public static double FLOOR_SHOULDER = 0.25;
     public static double POISED_SHOULDER = 1;
-    public static double GRAB_SHOULDER = 0.89;
+    public static double GRAB_SHOULDER = 0.895;
 
         //wrist constants
     public static double ARM_WRIST_IN_ANGLE = -90;
     public static double ARM_WRIST_OUT_ANGLE = 90;
 
-    public static double ARM_WRIST_DEPOSIT = 0.1;
+    public static double ARM_WRIST_DEPOSIT = 0.9;
     public static double ARM_WRIST_IDLE = 0.7;
     public static double FLOOR_WRIST = 0.1;
     public static double POISED_WRIST = 0.35;
-    public static double GRAB_WRIST = 0.14;
+    public static double GRAB_WRIST = 0.17;
 
         //pivot constants
     public static double ARM_PIVOT_UP_ANGLE = 0;
     public static double ARM_PIVOT_DOWN_ANGLE = 180;
 
     public static double ARM_PIVOT_UP = 1;
+    public static double ARM_PIVOT_MID = 0.485;
     public static double ARM_PIVOT_DOWN = 0;
 
     //grabber constants

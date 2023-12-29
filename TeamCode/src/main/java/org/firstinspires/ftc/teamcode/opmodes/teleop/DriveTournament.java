@@ -48,8 +48,10 @@ public class DriveTournament extends BaseOpMode {
         gp1(A, 1).whenActive(intakeDown);
         gp1(Y, 1).whenActive(intakeUp);
 
-        gp1(DPAD_UP, 1).whileActiveContinuous(eleIncUp);
-        gp1(DPAD_DOWN, 1).whileActiveContinuous(eleIncDown);
+        gp1(DPAD_UP, 1).whileActiveContinuous(eleUp).whenInactive(eleIdle);
+        gp1(DPAD_DOWN, 1).whileActiveContinuous(eleDown).whenInactive(eleIdle);
+
+        gp1(DPAD_LEFT, 1).whenActive(pivotPosMid);
 
         //p1 layer 2 controls
         gp1(DPAD_UP, 2).whenActive(shoulderPosIdle);
@@ -80,14 +82,13 @@ public class DriveTournament extends BaseOpMode {
         gp1(TOUCHPAD_FINGER_1, 1).whileActiveContinuous(variableIntakeAngle);
 
         //p2 controls
-        gp2(DPAD_UP, 1).whileActiveContinuous(eleIncUp);
-        gp2(DPAD_RIGHT, 1).whenActive(eleTargetHang);
-        gp2(DPAD_DOWN, 1).whileActiveContinuous(eleIncDown);
+        gp2(DPAD_UP, 1).whileActiveContinuous(eleUp).whenInactive(eleIdle);
+//        gp2(DPAD_RIGHT, 1).whenActive(eleTargetHang);
+        gp2(DPAD_DOWN, 1).whileActiveContinuous(eleDown).whenInactive(eleIdle);
 
         gp2(Y, 1).whenActive(armDeposit);
-        gp2(X, 1).whenActive(armPoised);
         gp2(B, 1).whenActive(armIdle);
-        gp2(A, 1).whenActive(armGrab);
+        gp2(A, 1).whenActive(armDepositGroup);
 
         gp2(LEFT_BUMPER, 1).toggleWhenActive(grabberLeftOpen, grabberLeftClose);
         gp2(RIGHT_BUMPER, 1).toggleWhenActive(grabberRightOpen, grabberRightClose);
@@ -95,7 +96,9 @@ public class DriveTournament extends BaseOpMode {
 //        variableIntakeAngle.schedule();
         robotCentric.schedule();
         intakeDown.schedule();
-        armInit.schedule();
+        shoulderPosGrab.schedule();
+        wristPosGrab.schedule();
+        pivotPosMid.schedule();
     }
 
     @SuppressLint("DefaultLocale")

@@ -26,7 +26,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private PoofyPIDController controller;
 
-    private final double mod = 128.16;
+    private final double mod = 384.5;
     private double modPos;
 
     private boolean runOnce = false;
