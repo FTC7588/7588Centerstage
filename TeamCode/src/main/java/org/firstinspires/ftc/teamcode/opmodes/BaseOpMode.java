@@ -33,6 +33,7 @@ import org.firstinspires.ftc.teamcode.commands.intake.IncrementIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakePower;
 import org.firstinspires.ftc.teamcode.commands.intake.VariableIntakeAngle;
+import org.firstinspires.ftc.teamcode.poofyutils.CommandOpModeEx;
 import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys;
 import org.firstinspires.ftc.teamcode.poofyutils.gamepads.PoofyGamepadEx;
@@ -49,7 +50,7 @@ import org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadTrigger;
 
 import static org.firstinspires.ftc.teamcode.Constants.*;
 
-public class BaseOpMode extends CommandOpMode {
+public class BaseOpMode extends CommandOpModeEx {
 
     //singletons
     protected final RobotHardware robot = RobotHardware.getInstance();
@@ -531,5 +532,10 @@ public class BaseOpMode extends CommandOpMode {
         } else {
             return operator.getGamepadTrigger(trigger);
         }
+    }
+
+    @Override
+    public void initLoop() {
+
     }
 }

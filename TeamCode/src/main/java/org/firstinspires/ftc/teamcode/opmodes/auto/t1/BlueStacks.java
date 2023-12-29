@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.auto;
+package org.firstinspires.ftc.teamcode.opmodes.auto.t1;
 
 import static org.firstinspires.ftc.teamcode.Constants.ARM_PIVOT_DOWN;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_SHOULDER_DEPOSIT;
@@ -37,44 +37,61 @@ import java.util.Locale;
 
 @Autonomous
 @Config
-public class RedBD extends BaseOpMode {
+public class BlueStacks extends BaseOpMode {
 
     public boolean runOnce = false;
 
-    public static Pose2d START_POSE = new Pose2d(-60, -12, Math.toRadians(180));
+    public static Pose2d START_POSE = new Pose2d(60, 36, Math.toRadians(0));
 
     private PropProcessor propProcessor;
 
-    public static Pose2d spike3 =       new Pose2d(-33, -32.5, Math.toRadians(-90));
-    public static Pose2d spike2 =       new Pose2d(-34, -16, Math.toRadians(180));
-    public static Pose2d spike1 =       new Pose2d(-35, -9, Math.toRadians(-90));
-    public static Pose2d backdrop3 =    new Pose2d(-42, -50, Math.toRadians(90));
-    public static Pose2d backdrop2 =    new Pose2d(-36, -50, Math.toRadians(90));
-    public static Pose2d backdrop1 =    new Pose2d(-28, -50, Math.toRadians(90));
-    public static Pose2d push3 =        new Pose2d(-42, -53, Math.toRadians(90));
-    public static Pose2d push2 =        new Pose2d(-35, -53, Math.toRadians(90));
-    public static Pose2d push1 =        new Pose2d(-30, -53, Math.toRadians(90));
+    private VisionPortal visionPortal;
 
-    public static Pose2d parkAll =      new Pose2d(-60, -46, Math.toRadians(90));
+    public static Pose2d spike1 =       new Pose2d(37, 36, Math.toRadians(-90));
+    public static Pose2d spike2 =       new Pose2d(36, 39, Math.toRadians(0));
+    public static Pose2d spike3 =       new Pose2d(36, 36, Math.toRadians(-90));
+
+    public static Pose2d side =         new Pose2d(12, 36, Math.toRadians(90));
+    public static Pose2d forward =      new Pose2d(12, -36, Math.toRadians(90));
+
+    public static Pose2d backdrop1 =    new Pose2d(44, -52, Math.toRadians(90));
+    public static Pose2d backdrop2 =    new Pose2d(37, -52, Math.toRadians(90));
+    public static Pose2d backdrop3 =    new Pose2d(32, -52, Math.toRadians(90));
+    public static Pose2d push1 =        new Pose2d(44, -56, Math.toRadians(90));
+    public static Pose2d push2 =        new Pose2d(37, -56, Math.toRadians(90));
+    public static Pose2d push3 =        new Pose2d(32, -56, Math.toRadians(90));
+
+    public static Pose2d parkAll =      new Pose2d(12, -46, Math.toRadians(90));
 
     public static TrajectorySequence moveToSpike;
+    public static TrajectorySequence moveToSide;
+    public static TrajectorySequence moveAcrossField;
     public static TrajectorySequence moveToBackdrop;
     public static TrajectorySequence pushAgainstBackdrop;
     public static TrajectorySequence park;
     public static TrajectorySequence back;
 
+    public SetEleArmPositions armBack;
+    public SetEleArmPositions armDeposit;
+    public SetEleArmPositions armIn;
+    public SetEleArmPositions armIdle;
+
+    public SetGrabberPosition closeBoth;
+    public SetLeftGrabberPosition openLeft;
+    public SetRightGrabberPosition openRight;
+
     public int proppos;
 
-    public boolean pastX;
+    public boolean pastX = false;
 
     @Override
     public void initialize() {
         auto = true;
         super.initialize();
 
-        propProcessor = new PropProcessor(Alliance.RED);
+        propProcessor = new PropProcessor(Alliance.BLUE);
 
-        VisionPortal visionPortal = new VisionPortal.Builder()
+        visionPortal = new VisionPortal.Builder()
                 .setCamera(robot.C920)
                 .addProcessor(propProcessor)
                 .setCameraResolution(new Size(640, 480))
@@ -85,10 +102,58 @@ public class RedBD extends BaseOpMode {
 
         autoDriveSS.setPoseEstimate(START_POSE);
 
+        SetIntakeAngle intake = new SetIntakeAngle(intakeSS, INT_DOWN);
+
+        SetArmPositions arm = new SetArmPositions(
+                armSS, GRAB_SHOULDER, GRAB_WRIST, ARM_PIVOT_DOWN
+        );
+
+        armBack = new SetEleArmPositions(
+                eleSS,
+                armSS,
+                FLOOR_ELE,
+                FLOOR_SHOULDER,
+                FLOOR_WRIST,
+                ARM_PIVOT_DOWN
+        );
+
+        armDeposit = new SetEleArmPositions(
+                eleSS,
+                armSS,
+                125,
+                ARM_SHOULDER_DEPOSIT,
+                ARM_WRIST_DEPOSIT,
+                ARM_PIVOT_DOWN
+        );
+
+        armIn = new SetEleArmPositions(
+                eleSS,
+                armSS,
+                0,
+                GRAB_SHOULDER,
+                GRAB_WRIST,
+                ARM_PIVOT_DOWN
+        );
+
+        armIdle = new SetEleArmPositions(
+                eleSS,
+                armSS,
+                200,
+                GRAB_SHOULDER,
+                GRAB_WRIST,
+                ARM_PIVOT_DOWN
+        );
+
+        closeBoth = new SetGrabberPosition(grabSS, GRABBER_CLOSED);
+
+        openLeft = new SetLeftGrabberPosition(grabSS, GRABBER_OPEN);
+
+        openRight = new SetRightGrabberPosition(grabSS, GRABBER_OPEN);
+
         while (!isStarted() && !isStopRequested()) {
-            armInit.schedule();
-            grabbersClosed.schedule();
-            intakeDown.schedule();
+            arm.schedule();
+            closeBoth.schedule();
+            intake.schedule();
             robot.read(intakeSS, eleSS, armSS, grabSS);
 
             robot.loop(intakeSS, eleSS, armSS, grabSS);
@@ -105,6 +170,7 @@ public class RedBD extends BaseOpMode {
             telemetry.addData("spike pos", proppos);
             telemetry.update();
         }
+
     }
 
     @Override
@@ -117,7 +183,15 @@ public class RedBD extends BaseOpMode {
                         .lineToLinearHeading(spike1)
                         .build();
 
-                moveToBackdrop = autoDriveSS.trajectorySequenceBuilder(moveToSpike.end())
+                moveToSide = autoDriveSS.trajectorySequenceBuilder(moveToSpike.end())
+                        .lineToLinearHeading(side)
+                        .build();
+
+                moveAcrossField = autoDriveSS.trajectorySequenceBuilder(moveToSide.end())
+                        .lineToLinearHeading(forward)
+                        .build();
+
+                moveToBackdrop = autoDriveSS.trajectorySequenceBuilder(moveAcrossField.end())
                         .lineToLinearHeading(backdrop1)
                         .build();
 
@@ -133,7 +207,15 @@ public class RedBD extends BaseOpMode {
                         .lineToLinearHeading(spike2)
                         .build();
 
-                moveToBackdrop = autoDriveSS.trajectorySequenceBuilder(moveToSpike.end())
+                moveToSide = autoDriveSS.trajectorySequenceBuilder(moveToSpike.end())
+                        .lineToLinearHeading(side)
+                        .build();
+
+                moveAcrossField = autoDriveSS.trajectorySequenceBuilder(moveToSide.end())
+                        .lineToLinearHeading(forward)
+                        .build();
+
+                moveToBackdrop = autoDriveSS.trajectorySequenceBuilder(moveAcrossField.end())
                         .lineToLinearHeading(backdrop2)
                         .build();
 
@@ -149,7 +231,15 @@ public class RedBD extends BaseOpMode {
                         .lineToLinearHeading(spike3)
                         .build();
 
-                moveToBackdrop = autoDriveSS.trajectorySequenceBuilder(moveToSpike.end())
+                moveToSide = autoDriveSS.trajectorySequenceBuilder(moveToSpike.end())
+                        .lineToLinearHeading(side)
+                        .build();
+
+                moveAcrossField = autoDriveSS.trajectorySequenceBuilder(moveToSide.end())
+                        .lineToLinearHeading(forward)
+                        .build();
+
+                moveToBackdrop = autoDriveSS.trajectorySequenceBuilder(moveAcrossField.end())
                         .lineToLinearHeading(backdrop3)
                         .build();
 
@@ -161,6 +251,9 @@ public class RedBD extends BaseOpMode {
                         .lineToLinearHeading(backdrop3)
                         .build();
             }
+
+
+
             park = autoDriveSS.trajectorySequenceBuilder(back.end())
                     .lineToLinearHeading(parkAll)
                     .build();
@@ -191,24 +284,32 @@ public class RedBD extends BaseOpMode {
                         new WaitCommand(800),
 
                         //drop pixel
-                        grabberLeftOpen,
+                        openLeft,
                         new WaitCommand(800),
 
-                        //go to backdrop
+                        //move to side
                         armIdle,
+                        new FollowTrajectorySequenceAsync(autoDriveSS, moveToSide),
+                        new WaitCommand(400),
+
+                        //cross field
+                        new FollowTrajectorySequenceAsync(autoDriveSS, moveAcrossField),
+                        new WaitCommand(400),
+
+                        //go to backdrop
                         new FollowTrajectorySequenceAsync(autoDriveSS, moveToBackdrop),
                         armDeposit,
                         new WaitCommand(800),
 
                         //push against backdrop
                         new FollowTrajectorySequenceAsync(autoDriveSS, pushAgainstBackdrop),
-                        grabberRightOpen,
+                        openRight,
                         new WaitCommand(200),
                         new FollowTrajectorySequenceAsync(autoDriveSS, back),
                         new WaitCommand(400),
 
                         //park
-                        armDown,
+                        armIn,
                         new FollowTrajectorySequenceAsync(autoDriveSS, park),
                         new WaitCommand(800)
                 )

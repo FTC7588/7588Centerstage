@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.auto;
+package org.firstinspires.ftc.teamcode.opmodes.auto.t1;
 
 import static org.firstinspires.ftc.teamcode.Constants.ARM_PIVOT_DOWN;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_SHOULDER_DEPOSIT;

@@ -6,6 +6,7 @@ import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
+import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 
@@ -13,27 +14,76 @@ import javax.imageio.ImageIO;
 
 public class AutoPaths {
 
+    public static class Blue {
+        public static double push = 3;
+
+        public static Pose2d BD_START = new Pose2d(14.75, 63, Math.toRadians(-90));
+
+        public static Pose2d SPIKE_ONE = new Pose2d(30, 32, Math.toRadians(-135));
+        public static Pose2d SPIKE_TWO = new Pose2d(15, 33, Math.toRadians(-90));
+        public static Pose2d SPIKE_THREE = new Pose2d(8, 32, Math.toRadians(-135));
+
+        public static Pose2d BD_ONE_OFF = new Pose2d(49, 42, Math.toRadians(180));
+        public static Pose2d BD_TWO_OFF = new Pose2d(49, 36, Math.toRadians(180));
+        public static Pose2d BD_THREE_OFF = new Pose2d(49, 28, Math.toRadians(180));
+
+        public static Pose2d BD_ONE_PUSH = new Pose2d(BD_ONE_OFF.getX() + push, BD_ONE_OFF.getY(), BD_ONE_OFF.getHeading());
+        public static Pose2d BD_TWO_PUSH = new Pose2d(BD_TWO_OFF.getX() + push, BD_TWO_OFF.getY(), BD_TWO_OFF.getHeading());
+        public static Pose2d BD_THREE_PUSH = new Pose2d(BD_THREE_OFF.getX() + push, BD_THREE_OFF.getY(), BD_THREE_OFF.getHeading());
+
+        public static Pose2d PARK_CORNER = new Pose2d(44, 60, Math.toRadians(180));
+    }
+
     enum Paths {
         BS_A,
         BS_B,
         BS_C,
         W_A,
         W_B,
-        W_C
+        W_C,
+
+        //#1 - 2+0 both sides target completion time 6-7 seconds
+        BS_0, //column A
+        W_0,
+
+        //#2 - 2+1 on wing side target completion time 12 seconds
+        W_1,
+
+        //#3 - 2+3 on wing side and 2+2 on backstage side 17 seconds
+        BS_2,
+        W_3,
+
+        //#4 - 2+5 on wing side and 2+4 on backstage side fit into the 30 seconds
+        BS_4,
+        W_5,
+
+        //#5 - 2+6 on backstage side and 2+7 on wing side through B fit into the 30 seconds
+        BS_6,
+        W_7
     }
 
-    public static Paths path = Paths.W_B;
+    public static Paths path = Paths.BS_0;
 
     public static double VEL_MAX = 65;
     public static double ACCEL_MAX = 65;
     public static double TRACK_WIDTH = 12;
+    public static double WIDTH = 14;
+    public static double HEIGHT = 14;
+    public static double WAIT_SPIKE = 0.25;
+    public static double WAIT_BD = 0.5;
+
+    public static Image field;
+
+    static {
+        try {
+            field = ImageIO.read(new File("D:/mario/Documents/Robotics/CenterStageField.png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static Pose2d RED_BS_START = new Pose2d(14.75, 63, Math.toRadians(-90));
     public static Pose2d RED_W_START = new Pose2d(-39, 61.9, Math.toRadians(-90));
-
-    public static Pose2d RED_BS_SPIKE_1;
-    public static Pose2d RED_BS_SPIKE_2;
-    public static Pose2d RED_BS_SPIKE_3;
 
     public static Pose2d RED_W_SPIKE_1 = new Pose2d(-34.9, 32, Math.toRadians(5));
     public static Pose2d RED_W_SPIKE_2 = new Pose2d(-34.9, 32, Math.toRadians(-90));
@@ -42,7 +92,56 @@ public class AutoPaths {
     public static Pose2d RED_STACK = new Pose2d(-61, 36, Math.toRadians(0));
 
     public static void main(String[] args) throws IOException {
-        MeepMeep meepMeep = new MeepMeep(800, 120);
+        MeepMeep meepMeep = new MeepMeep(920, 120);
+
+        //BS_0
+        RoadRunnerBotEntity BS_A_0 = new DefaultBotBuilder(meepMeep)
+                .setConstraints(VEL_MAX, ACCEL_MAX, Math.toRadians(220), Math.toRadians(180), TRACK_WIDTH)
+                .setDimensions(WIDTH, HEIGHT)
+                .followTrajectorySequence(drive ->
+                        drive.trajectorySequenceBuilder(Blue.BD_START)
+                                .lineToLinearHeading(Blue.SPIKE_ONE)
+                                .waitSeconds(WAIT_SPIKE)
+                                .lineToLinearHeading(Blue.BD_ONE_OFF)
+                                .lineToLinearHeading(Blue.BD_ONE_PUSH)
+                                .waitSeconds(WAIT_BD)
+                                .lineToLinearHeading(Blue.PARK_CORNER)
+                                .build());
+
+        RoadRunnerBotEntity BS_B_0 = new DefaultBotBuilder(meepMeep)
+                .setConstraints(VEL_MAX, ACCEL_MAX, Math.toRadians(220), Math.toRadians(180), TRACK_WIDTH)
+                .setDimensions(WIDTH, HEIGHT)
+                .followTrajectorySequence(drive ->
+                        drive.trajectorySequenceBuilder(Blue.BD_START)
+                                .lineToLinearHeading(Blue.SPIKE_TWO)
+                                .waitSeconds(WAIT_SPIKE)
+                                .lineToLinearHeading(Blue.BD_TWO_OFF)
+                                .lineToLinearHeading(Blue.BD_TWO_PUSH)
+                                .waitSeconds(WAIT_BD)
+                                .lineToLinearHeading(Blue.PARK_CORNER)
+                                .build());
+
+        RoadRunnerBotEntity BS_C_0 = new DefaultBotBuilder(meepMeep)
+                .setConstraints(VEL_MAX, ACCEL_MAX, Math.toRadians(220), Math.toRadians(180), TRACK_WIDTH)
+                .setDimensions(WIDTH, HEIGHT)
+                .followTrajectorySequence(drive ->
+                        drive.trajectorySequenceBuilder(Blue.BD_START)
+                                .lineToLinearHeading(Blue.SPIKE_THREE)
+                                .waitSeconds(WAIT_SPIKE)
+                                .lineToLinearHeading(Blue.BD_THREE_OFF)
+                                .lineToLinearHeading(Blue.BD_THREE_PUSH)
+                                .waitSeconds(WAIT_BD)
+                                .lineToLinearHeading(Blue.PARK_CORNER)
+                                .build());
+
+        //W_0
+        RoadRunnerBotEntity W_A_0 = new DefaultBotBuilder(meepMeep)
+                .setConstraints(VEL_MAX, ACCEL_MAX, Math.toRadians(220), Math.toRadians(180), TRACK_WIDTH)
+                .setDimensions(WIDTH, HEIGHT)
+                .followTrajectorySequence(drive ->
+                        drive.trajectorySequenceBuilder(Blue.BD_START)
+
+                                .build());
 
         RoadRunnerBotEntity BS_A_1 = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
@@ -387,7 +486,7 @@ public class AutoPaths {
 
         switch (path) {
             case BS_A:
-                meepMeep.setBackground(ImageIO.read(new File("D:/mario/Documents/Robotics/CenterStageField.png")))
+                meepMeep.setBackground(field)
                         .setDarkMode(true)
                         .setBackgroundAlpha(0.95f)
                         .addEntity(BS_A_1)
@@ -396,7 +495,7 @@ public class AutoPaths {
                         .start();
                 break;
             case BS_B:
-                meepMeep.setBackground(ImageIO.read(new File("D:/mario/Documents/Robotics/CenterStageField.png")))
+                meepMeep.setBackground(field)
                         .setDarkMode(true)
                         .setBackgroundAlpha(0.95f)
                         .addEntity(BS_B_1)
@@ -407,7 +506,7 @@ public class AutoPaths {
             case BS_C:
                 break;
             case W_A:
-                meepMeep.setBackground(ImageIO.read(new File("D:/mario/Documents/Robotics/CenterStageField.png")))
+                meepMeep.setBackground(field)
                         .setDarkMode(true)
                         .setBackgroundAlpha(0.95f)
                         .addEntity(W_A_1)
@@ -416,13 +515,22 @@ public class AutoPaths {
                         .start();
                 break;
             case W_B:
-                meepMeep.setBackground(ImageIO.read(new File("D:/mario/Documents/Robotics/CenterStageField.png")))
+                meepMeep.setBackground(field)
                         .setDarkMode(true)
                         .setBackgroundAlpha(0.95f)
                         .addEntity(W_B_1)
                         .start();
                 break;
             case W_C:
+                break;
+
+            case BS_0:
+                meepMeep.setBackground(field)
+                        .setDarkMode(true)
+                        .addEntity(BS_A_0)
+                        .addEntity(BS_B_0)
+                        .addEntity(BS_C_0)
+                        .start();
                 break;
         }
     }

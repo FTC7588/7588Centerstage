@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.auto;
+package org.firstinspires.ftc.teamcode.opmodes.auto.t1;
 
 import static org.firstinspires.ftc.teamcode.Constants.ARM_PIVOT_DOWN;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_SHOULDER_DEPOSIT;
@@ -37,34 +37,31 @@ import java.util.Locale;
 
 @Autonomous
 @Config
-public class BlueBD extends BaseOpMode {
+public class RedBD extends BaseOpMode {
 
     public boolean runOnce = false;
 
-    public static Pose2d START_POSE = new Pose2d(60, -12, Math.toRadians(0));
+    public static Pose2d START_POSE = new Pose2d(-60, -12, Math.toRadians(180));
 
     private PropProcessor propProcessor;
 
-    private VisionPortal visionPortal;
+    public static Pose2d spike3 =       new Pose2d(-33, -32.5, Math.toRadians(-90));
+    public static Pose2d spike2 =       new Pose2d(-34, -16, Math.toRadians(180));
+    public static Pose2d spike1 =       new Pose2d(-35, -9, Math.toRadians(-90));
+    public static Pose2d backdrop3 =    new Pose2d(-42, -50, Math.toRadians(90));
+    public static Pose2d backdrop2 =    new Pose2d(-36, -50, Math.toRadians(90));
+    public static Pose2d backdrop1 =    new Pose2d(-28, -50, Math.toRadians(90));
+    public static Pose2d push3 =        new Pose2d(-42, -53, Math.toRadians(90));
+    public static Pose2d push2 =        new Pose2d(-35, -53, Math.toRadians(90));
+    public static Pose2d push1 =        new Pose2d(-30, -53, Math.toRadians(90));
 
-    public static Pose2d spike1 =       new Pose2d(37, -33, Math.toRadians(-90));
-    public static Pose2d spike2 =       new Pose2d(34, -9, Math.toRadians(0));
-    public static Pose2d spike3 =       new Pose2d(36, -12, Math.toRadians(-90));
-    public static Pose2d backdrop1 =    new Pose2d(44, -52, Math.toRadians(90));
-    public static Pose2d backdrop2 =    new Pose2d(36, -52, Math.toRadians(90));
-    public static Pose2d backdrop3 =    new Pose2d(32, -52, Math.toRadians(90));
-    public static Pose2d push1 =        new Pose2d(44, -56, Math.toRadians(90));
-    public static Pose2d push2 =        new Pose2d(37, -56, Math.toRadians(90));
-    public static Pose2d push3 =        new Pose2d(32, -56, Math.toRadians(90));
-
-    public static Pose2d parkAll =      new Pose2d(60, -46, Math.toRadians(90));
+    public static Pose2d parkAll =      new Pose2d(-60, -46, Math.toRadians(90));
 
     public static TrajectorySequence moveToSpike;
     public static TrajectorySequence moveToBackdrop;
     public static TrajectorySequence pushAgainstBackdrop;
     public static TrajectorySequence park;
     public static TrajectorySequence back;
-
 
     public int proppos;
 
@@ -75,9 +72,9 @@ public class BlueBD extends BaseOpMode {
         auto = true;
         super.initialize();
 
-        propProcessor = new PropProcessor(Alliance.BLUE);
+        propProcessor = new PropProcessor(Alliance.RED);
 
-        visionPortal = new VisionPortal.Builder()
+        VisionPortal visionPortal = new VisionPortal.Builder()
                 .setCamera(robot.C920)
                 .addProcessor(propProcessor)
                 .setCameraResolution(new Size(640, 480))
@@ -108,7 +105,6 @@ public class BlueBD extends BaseOpMode {
             telemetry.addData("spike pos", proppos);
             telemetry.update();
         }
-
     }
 
     @Override
