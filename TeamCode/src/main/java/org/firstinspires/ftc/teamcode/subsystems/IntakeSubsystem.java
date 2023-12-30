@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit.AM
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Constants;
@@ -29,11 +30,16 @@ public class IntakeSubsystem extends SubsystemBase {
     private final double mod = 384.5;
     private double modPos;
 
+    private final ElapsedTime loadedTime;
+
     private boolean runOnce = false;
+    private boolean loadOnce = false;
+    private boolean isEnabled = true;
 
     public IntakeSubsystem(RobotHardware robot) {
         this.robot = robot;
         controller = new PoofyPIDController(new PoofyPIDCoefficients(0.01, 0, 0));
+        loadedTime = new ElapsedTime();
     }
 
     public void read() {
@@ -47,24 +53,28 @@ public class IntakeSubsystem extends SubsystemBase {
         elePos = robot.intLMotor.getCurrentPosition();
         modPos = elePos % mod;
         if (power == 0 && runOnce) {
-            eleTarget = elePos + (mod-modPos);
+            eleTarget = elePos - (mod-modPos);
             controller.setTargetPosition(eleTarget);
             runOnce = false;
         } else if (runOnce) {
             runOnce = false;
         }
         pidPower = controller.calculate(elePos);
+
+//        disableIfLoaded();
     }
 
     public void write() {
-        if (power == 0) {
-            robot.intLMotor.setPower(pidPower);
-            robot.intRMotor.setPower(pidPower);
+        if (isEnabled) {
+            if (power == 0) {
+                robot.intLMotor.setPower(pidPower);
+                robot.intRMotor.setPower(pidPower);
 
-        } else {
-            robot.intLMotor.setPower(power);
-            robot.intRMotor.setPower(power);
+            } else {
+                robot.intLMotor.setPower(power);
+                robot.intRMotor.setPower(power);
 
+            }
         }
         robot.intLServo.setPosition(servoPos);
         robot.intRServo.setPosition(servoPos);
@@ -77,6 +87,25 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public boolean isFrontPixelLoaded() {
         return ((DistanceSensor) robot.frontCS).getDistance(DistanceUnit.CM) < 10;
+    }
+
+    public boolean isLoaded() {
+        return (isBackPixelLoaded() && isFrontPixelLoaded());
+    }
+
+    public void disableIfLoaded() {
+        if (isLoaded()) {
+            if (!loadOnce) {
+                loadOnce = true;
+                loadedTime.reset();
+            }
+            if (loadedTime.seconds() > 0.5) {
+                setPower(0);
+                isEnabled = false;
+            }
+        } else {
+            isEnabled = true;
+        }
     }
 
     public double getPower() {
