@@ -17,21 +17,46 @@ public class AutoPaths {
     public static class Blue {
         public static double push = 3;
 
+        //starts
         public static Pose2d BD_START = new Pose2d(14.75, 63, Math.toRadians(-90));
+        public static Pose2d W_START = new Pose2d(-36, 63, Math.toRadians(-90));
 
-        public static Pose2d SPIKE_ONE = new Pose2d(30, 32, Math.toRadians(-135));
-        public static Pose2d SPIKE_TWO = new Pose2d(15, 33, Math.toRadians(-90));
-        public static Pose2d SPIKE_THREE = new Pose2d(8, 32, Math.toRadians(-135));
+        //spikes
+        public static Pose2d BD_SPIKE_ONE = new Pose2d(30, 32, Math.toRadians(-135));
+        public static Pose2d BD_SPIKE_TWO = new Pose2d(15, 33, Math.toRadians(-90));
+        public static Pose2d BD_SPIKE_THREE = new Pose2d(8, 32, Math.toRadians(-135));
 
+        public static Pose2d W_SPIKE_ONE = new Pose2d(-36, 25, Math.toRadians(180));
+        public static Pose2d W_SPIKE_TWO = new Pose2d(-31, 15, Math.toRadians(-90));
+        public static Pose2d W_SPIKE_THREE = new Pose2d(-40, 18, Math.toRadians(-45));
+
+        //to backdrop from spikes
+        public static Pose2d W_BD_ONE_A = new Pose2d(-36, 24.99, Math.toRadians(180));
+        public static Pose2d W_BD_ONE_B = new Pose2d(20, 12, Math.toRadians(180));
+        public static double W_BD_ONE_B_TANGENT = Math.toRadians(0);
+        public static double W_BD_ONE_C_TANGENT = Math.toRadians(20);
+
+        public static Pose2d W_BD_TWO_A = new Pose2d(-31, 12, Math.toRadians(180));
+        public static Pose2d W_BD_TWO_B = new Pose2d(20, 12, Math.toRadians(180));
+        public static double W_BD_TWO_C_TANGENT = Math.toRadians(20);
+
+        public static Pose2d W_BD_THREE_A = new Pose2d(-32, 12, Math.toRadians(180));
+        public static Pose2d W_BD_THREE_B = new Pose2d(20, 12, Math.toRadians(180));
+        public static double W_BD_THREE_C_TANGENT = Math.toRadians(20);
+
+        //off backdrop
         public static Pose2d BD_ONE_OFF = new Pose2d(49, 42, Math.toRadians(180));
         public static Pose2d BD_TWO_OFF = new Pose2d(49, 36, Math.toRadians(180));
         public static Pose2d BD_THREE_OFF = new Pose2d(49, 28, Math.toRadians(180));
 
+        //pushed into backdrop
         public static Pose2d BD_ONE_PUSH = new Pose2d(BD_ONE_OFF.getX() + push, BD_ONE_OFF.getY(), BD_ONE_OFF.getHeading());
         public static Pose2d BD_TWO_PUSH = new Pose2d(BD_TWO_OFF.getX() + push, BD_TWO_OFF.getY(), BD_TWO_OFF.getHeading());
         public static Pose2d BD_THREE_PUSH = new Pose2d(BD_THREE_OFF.getX() + push, BD_THREE_OFF.getY(), BD_THREE_OFF.getHeading());
 
+        //parks
         public static Pose2d PARK_CORNER = new Pose2d(44, 60, Math.toRadians(180));
+        public static Pose2d PARK_CENTER = new Pose2d(44, 14, Math.toRadians(180));
     }
 
     enum Paths {
@@ -62,7 +87,7 @@ public class AutoPaths {
         W_7
     }
 
-    public static Paths path = Paths.BS_0;
+    public static Paths path = Paths.W_0;
 
     public static double VEL_MAX = 65;
     public static double ACCEL_MAX = 65;
@@ -100,7 +125,7 @@ public class AutoPaths {
                 .setDimensions(WIDTH, HEIGHT)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(Blue.BD_START)
-                                .lineToLinearHeading(Blue.SPIKE_ONE)
+                                .lineToLinearHeading(Blue.BD_SPIKE_ONE)
                                 .waitSeconds(WAIT_SPIKE)
                                 .lineToLinearHeading(Blue.BD_ONE_OFF)
                                 .lineToLinearHeading(Blue.BD_ONE_PUSH)
@@ -113,7 +138,7 @@ public class AutoPaths {
                 .setDimensions(WIDTH, HEIGHT)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(Blue.BD_START)
-                                .lineToLinearHeading(Blue.SPIKE_TWO)
+                                .lineToLinearHeading(Blue.BD_SPIKE_TWO)
                                 .waitSeconds(WAIT_SPIKE)
                                 .lineToLinearHeading(Blue.BD_TWO_OFF)
                                 .lineToLinearHeading(Blue.BD_TWO_PUSH)
@@ -126,7 +151,7 @@ public class AutoPaths {
                 .setDimensions(WIDTH, HEIGHT)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(Blue.BD_START)
-                                .lineToLinearHeading(Blue.SPIKE_THREE)
+                                .lineToLinearHeading(Blue.BD_SPIKE_THREE)
                                 .waitSeconds(WAIT_SPIKE)
                                 .lineToLinearHeading(Blue.BD_THREE_OFF)
                                 .lineToLinearHeading(Blue.BD_THREE_PUSH)
@@ -139,10 +164,48 @@ public class AutoPaths {
                 .setConstraints(VEL_MAX, ACCEL_MAX, Math.toRadians(220), Math.toRadians(180), TRACK_WIDTH)
                 .setDimensions(WIDTH, HEIGHT)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(Blue.BD_START)
-
+                        drive.trajectorySequenceBuilder(Blue.W_START)
+                                .lineToLinearHeading(Blue.W_SPIKE_ONE)
+                                .waitSeconds(WAIT_SPIKE)
+                                .lineToLinearHeading(Blue.W_BD_ONE_A)
+                                .splineToLinearHeading(Blue.W_BD_ONE_B, Blue.W_BD_ONE_B_TANGENT)
+                                .splineToLinearHeading(Blue.BD_ONE_OFF, Blue.W_BD_ONE_C_TANGENT)
+                                .lineToLinearHeading(Blue.BD_ONE_PUSH)
+                                .waitSeconds(WAIT_BD)
+                                .lineToLinearHeading(Blue.PARK_CENTER)
                                 .build());
 
+        RoadRunnerBotEntity W_B_0 = new DefaultBotBuilder(meepMeep)
+                .setConstraints(VEL_MAX, ACCEL_MAX, Math.toRadians(220), Math.toRadians(180), TRACK_WIDTH)
+                .setDimensions(WIDTH, HEIGHT)
+                .followTrajectorySequence(drive ->
+                        drive.trajectorySequenceBuilder(Blue.W_START)
+                                .lineToLinearHeading(Blue.W_SPIKE_TWO)
+                                .waitSeconds(WAIT_SPIKE)
+                                .lineToLinearHeading(Blue.W_BD_TWO_A)
+                                .lineToLinearHeading(Blue.W_BD_TWO_B)
+                                .splineToLinearHeading(Blue.BD_TWO_OFF, Blue.W_BD_TWO_C_TANGENT)
+                                .lineToLinearHeading(Blue.BD_TWO_PUSH)
+                                .waitSeconds(WAIT_BD)
+                                .lineToLinearHeading(Blue.PARK_CENTER)
+                                .build());
+
+        RoadRunnerBotEntity W_C_0 = new DefaultBotBuilder(meepMeep)
+                .setConstraints(VEL_MAX, ACCEL_MAX, Math.toRadians(220), Math.toRadians(180), TRACK_WIDTH)
+                .setDimensions(WIDTH, HEIGHT)
+                .followTrajectorySequence(drive ->
+                        drive.trajectorySequenceBuilder(Blue.W_START)
+                                .lineToLinearHeading(Blue.W_SPIKE_THREE)
+                                .waitSeconds(WAIT_SPIKE)
+                                .lineToLinearHeading(Blue.W_BD_THREE_A)
+                                .lineToLinearHeading(Blue.W_BD_THREE_B)
+                                .splineToLinearHeading(Blue.BD_THREE_OFF, Blue.W_BD_THREE_C_TANGENT)
+                                .lineToLinearHeading(Blue.BD_THREE_PUSH)
+                                .waitSeconds(WAIT_BD)
+                                .lineToLinearHeading(Blue.PARK_CENTER)
+                                .build());
+
+        //BS_A
         RoadRunnerBotEntity BS_A_1 = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(VEL_MAX, ACCEL_MAX, Math.toRadians(220), Math.toRadians(180), TRACK_WIDTH)
@@ -266,6 +329,7 @@ public class AutoPaths {
 //                                .waitSeconds(0.2)
                                 .build());
 
+        //BS_B
         RoadRunnerBotEntity BS_B_1 = new DefaultBotBuilder(meepMeep)
                 .setConstraints(VEL_MAX, ACCEL_MAX, Math.toRadians(180), Math.toRadians(180), TRACK_WIDTH)
                 .setDimensions(14, 14)
@@ -362,6 +426,7 @@ public class AutoPaths {
                                 .build()
                 );
 
+        //W_A
         RoadRunnerBotEntity W_A_1 = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(VEL_MAX, ACCEL_MAX, Math.toRadians(180), Math.toRadians(150), TRACK_WIDTH)
@@ -456,6 +521,7 @@ public class AutoPaths {
                                 .waitSeconds(0.4)
                                 .build());
 
+        //W_B
         RoadRunnerBotEntity W_B_1 = new DefaultBotBuilder(meepMeep)
                 .setConstraints(VEL_MAX, ACCEL_MAX, Math.toRadians(180), Math.toRadians(150), TRACK_WIDTH)
                 .setDimensions(14, 14)
@@ -527,9 +593,19 @@ public class AutoPaths {
             case BS_0:
                 meepMeep.setBackground(field)
                         .setDarkMode(true)
+                        .setBackgroundAlpha(0.95f)
                         .addEntity(BS_A_0)
                         .addEntity(BS_B_0)
                         .addEntity(BS_C_0)
+                        .start();
+                break;
+
+            case W_0:
+                meepMeep.setBackground(field)
+                        .setDarkMode(true)
+                        .addEntity(W_A_0)
+                        .addEntity(W_B_0)
+                        .addEntity(W_C_0)
                         .start();
                 break;
         }
