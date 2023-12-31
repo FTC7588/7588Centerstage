@@ -15,7 +15,9 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.commands.intake.VariableIntakeAngle;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import org.firstinspires.ftc.teamcode.poofyutils.AprilTagCustomDatabase;
@@ -86,9 +88,9 @@ public class DriveTournament extends BaseOpMode {
 //        gp2(DPAD_RIGHT, 1).whenActive(eleTargetHang);
         gp2(DPAD_DOWN, 1).whileActiveContinuous(eleDown).whenInactive(eleIdle);
 
-        gp2(Y, 1).whenActive(armDeposit);
+//        gp2(Y, 1).whenActive(armDeposit);
         gp2(B, 1).whenActive(armIdle);
-        gp2(A, 1).whenActive(armDepositGroup);
+        gp2(Y, 1).whenActive(armDepositGroup);
 
         gp2(LEFT_BUMPER, 1).toggleWhenActive(grabberLeftOpen, grabberLeftClose);
         gp2(RIGHT_BUMPER, 1).toggleWhenActive(grabberRightOpen, grabberRightClose);
@@ -114,6 +116,9 @@ public class DriveTournament extends BaseOpMode {
         super.run();
 
         telemetry.addData("touch x", driver.getTouchX());
+        telemetry.addData("front", ((DistanceSensor) robot.frontCS).getDistance(DistanceUnit.CM));
+        telemetry.addData("back", ((DistanceSensor) robot.backCS).getDistance(DistanceUnit.CM));
+        telemetry.addData("front and back", intakeSS.isLoaded());
 
         TelemetryPacket packet = new TelemetryPacket();
 

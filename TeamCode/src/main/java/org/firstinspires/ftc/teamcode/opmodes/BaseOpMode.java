@@ -335,6 +335,7 @@ public class BaseOpMode extends CommandOpModeEx {
 
         armDepositGroup = new SequentialCommandGroup(
                 armDeposit,
+                new SetWristPosition(armSS, ARM_WRIST_TEST),
                 new WaitCommand(100),
                 new SetWristPosition(armSS, ARM_WRIST_DEPOSIT)
         );

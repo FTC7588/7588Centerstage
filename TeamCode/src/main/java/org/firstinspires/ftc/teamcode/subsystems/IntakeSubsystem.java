@@ -53,7 +53,7 @@ public class IntakeSubsystem extends SubsystemBase {
         elePos = robot.intLMotor.getCurrentPosition();
         modPos = elePos % mod;
         if (power == 0 && runOnce) {
-            eleTarget = elePos - (mod-modPos);
+            eleTarget = elePos + (mod-modPos);
             controller.setTargetPosition(eleTarget);
             runOnce = false;
         } else if (runOnce) {
