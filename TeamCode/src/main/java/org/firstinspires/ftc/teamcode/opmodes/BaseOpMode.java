@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
@@ -143,6 +144,9 @@ public class BaseOpMode extends CommandOpModeEx {
     protected SetEleArmPositions armBack;
 
     protected SequentialCommandGroup armDepositGroup;
+    protected SequentialCommandGroup armIdleGroup;
+
+    protected ConditionalCommand autoGrab;
 
     protected PoofyGamepadEx driver;
     protected PoofyGamepadEx operator;
@@ -333,12 +337,29 @@ public class BaseOpMode extends CommandOpModeEx {
                 ARM_PIVOT_DOWN
         );
 
+
         armDepositGroup = new SequentialCommandGroup(
-                armDeposit,
+                new SetArmPositions(
+                        armSS,
+                        ARM_SHOULDER_DEPOSIT,
+                        ARM_WRIST_DEPOSIT,
+                        ARM_PIVOT_MID
+                ),
                 new SetWristPosition(armSS, ARM_WRIST_TEST),
                 new WaitCommand(100),
                 new SetWristPosition(armSS, ARM_WRIST_DEPOSIT)
         );
+
+        armIdleGroup = new SequentialCommandGroup(
+                new SetShoulderPosition(armSS, ARM_SHOULDER_IDLE),
+                new WaitCommand(50),
+                new SetWristPosition(armSS, ARM_WRIST_IDLE),
+                new WaitCommand(50),
+                new SetShoulderPosition(armSS, GRAB_SHOULDER)
+        );
+
+
+        autoGrab = new ConditionalCommand(grabbersClosed, grabbersOpen, () -> intakeSS.isLoaded());
 
         //gamepads
         driver = new PoofyGamepadEx(gamepad1);

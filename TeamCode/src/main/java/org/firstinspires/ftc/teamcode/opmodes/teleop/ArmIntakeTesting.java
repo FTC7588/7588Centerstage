@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.*;
 
 @TeleOp
+@Disabled
 public class ArmIntakeTesting extends BaseOpMode {
 
     @Override

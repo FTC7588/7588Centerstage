@@ -8,17 +8,26 @@ import static org.firstinspires.ftc.teamcode.Constants.DEBUG_GRABBER;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_INTAKE;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_VISION;
 import static org.firstinspires.ftc.teamcode.Constants.FOLLOW_POSE;
+import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.A;
+import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.B;
+import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.DPAD_DOWN;
+import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.DPAD_LEFT;
+import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.DPAD_RIGHT;
+import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.DPAD_UP;
+import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.LEFT_BUMPER;
+import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.RIGHT_BUMPER;
+import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.TOUCHPAD_FINGER_1;
+import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.X;
+import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.Y;
 
 import android.annotation.SuppressLint;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
-import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import org.firstinspires.ftc.teamcode.poofyutils.AprilTagCustomDatabase;
@@ -26,12 +35,10 @@ import org.firstinspires.ftc.teamcode.poofyutils.PoofyDashboardUtil;
 import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 
-import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.*;
-
 
 @TeleOp
 @Config
-public class DriveTournament extends BaseOpMode {
+public class Drive2 extends BaseOpMode {
 
     @Override
     public void initialize() {
@@ -106,6 +113,8 @@ public class DriveTournament extends BaseOpMode {
         CommandScheduler.getInstance().run();
 
         super.run();
+
+        autoGrab.schedule();
 
         telemetry.addData("touch x", driver.getTouchX());
         telemetry.addData("front", ((DistanceSensor) robot.frontCS).getDistance(DistanceUnit.CM));

@@ -82,25 +82,24 @@ public class IntakeSubsystem extends SubsystemBase {
 
 
     public boolean isBackPixelLoaded() {
-        return ((DistanceSensor) robot.backCS).getDistance(DistanceUnit.CM) < 10;
+        return ((DistanceSensor) robot.backCS).getDistance(DistanceUnit.CM) < 1.1;
     }
 
     public boolean isFrontPixelLoaded() {
-        return ((DistanceSensor) robot.frontCS).getDistance(DistanceUnit.CM) < 10;
+        return ((DistanceSensor) robot.frontCS).getDistance(DistanceUnit.CM) < 1.1;
     }
 
     public boolean isLoaded() {
         return (isBackPixelLoaded() && isFrontPixelLoaded());
     }
 
-    public void disableIfLoaded() {
+    public void hasBeenLoaded(double millis) {
         if (isLoaded()) {
             if (!loadOnce) {
                 loadOnce = true;
                 loadedTime.reset();
             }
-            if (loadedTime.seconds() > 0.5) {
-                setPower(0);
+            if (loadedTime.seconds() > millis) {
                 isEnabled = false;
             }
         } else {
