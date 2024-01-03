@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.rr.drive.opmode;
+package org.firstinspires.ftc.teamcode.rr.drive.opmode.useful;
 
 import static org.firstinspires.ftc.teamcode.rr.drive.DriveConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.rr.drive.DriveConstants.MAX_VEL;
@@ -44,7 +44,6 @@ import java.util.Objects;
  */
 @Config
 @Autonomous(group = "drive")
-@Disabled
 public class ManualFeedforwardTuner extends LinearOpMode {
     public static double DISTANCE = 72; // in
 

@@ -114,7 +114,7 @@ public class Drive2 extends BaseOpMode {
 
         super.run();
 
-        autoGrab.schedule();
+//        autoGrab.schedule();
 
         telemetry.addData("touch x", driver.getTouchX());
         telemetry.addData("front", ((DistanceSensor) robot.frontCS).getDistance(DistanceUnit.CM));

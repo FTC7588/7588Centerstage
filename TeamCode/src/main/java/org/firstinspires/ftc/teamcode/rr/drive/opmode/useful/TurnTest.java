@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.rr.drive.opmode;
+package org.firstinspires.ftc.teamcode.rr.drive.opmode.useful;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.rr.drive.SampleMecanumDrive;
  */
 @Config
 @Autonomous(group = "drive")
-@Disabled
 public class TurnTest extends LinearOpMode {
     public static double ANGLE = 90; // deg
 

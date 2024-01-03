@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.rr.drive.opmode;
+package org.firstinspires.ftc.teamcode.rr.drive.opmode.useful;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -16,7 +16,6 @@ import org.firstinspires.ftc.teamcode.rr.drive.SampleMecanumDrive;
  * encoder localizer heading may be significantly off if the track width has not been tuned).
  */
 @TeleOp(group = "drive")
-@Disabled
 public class LocalizationTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

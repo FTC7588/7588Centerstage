@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.rr.drive.opmode;
+package org.firstinspires.ftc.teamcode.rr.drive.opmode.useful;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -26,7 +26,6 @@ import org.firstinspires.ftc.teamcode.rr.drive.SampleMecanumDrive;
  */
 @Config
 @Autonomous(group = "drive")
-@Disabled
 public class TrackWidthTuner extends LinearOpMode {
     public static double ANGLE = 180; // deg
     public static int NUM_TRIALS = 5;
