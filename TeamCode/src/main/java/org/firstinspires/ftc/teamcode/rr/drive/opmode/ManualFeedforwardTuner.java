@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.rr.drive.opmode.useful;
+package org.firstinspires.ftc.teamcode.rr.drive.opmode;
 
 import static org.firstinspires.ftc.teamcode.rr.drive.DriveConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.rr.drive.DriveConstants.MAX_VEL;
@@ -17,7 +17,6 @@ import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
 import com.acmerobotics.roadrunner.profile.MotionState;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.RobotLog;
