@@ -25,6 +25,8 @@ import java.util.List;
 
 public class RobotHardware {
 
+    public static boolean USING_IMU = true;
+
     //drive
     public DcMotorEx fL, fR, rL, rR;
 
@@ -79,7 +81,9 @@ public class RobotHardware {
         }
 
         //hardware
-//        imu = hwMap.get(IMU.class, "imu");
+        if (USING_IMU) {
+            imu = hwMap.get(IMU.class, "imu");
+        }
 
         fL = hwMap.get(DcMotorEx.class, "fL");
         fR = hwMap.get(DcMotorEx.class, "fR");
@@ -108,9 +112,11 @@ public class RobotHardware {
         frontCS = hwMap.get(NormalizedColorSensor.class, "front");
 
         //imu
-//        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-//                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP));
-//        imu.initialize(parameters);
+        if (USING_IMU) {
+            IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                    RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP));
+            imu.initialize(parameters);
+        }
 
         //drive
         fL.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -155,11 +161,13 @@ public class RobotHardware {
         backCS.setGain(2);
         frontCS.setGain(2);
 
-//        angles = new EulerAngles(
-//                imu.getRobotYawPitchRollAngles().getRoll(AngleUnit.RADIANS),
-//                imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.RADIANS),
-//                imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)
-//        );
+        if (USING_IMU) {
+            angles = new EulerAngles(
+                    imu.getRobotYawPitchRollAngles().getRoll(AngleUnit.RADIANS),
+                    imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.RADIANS),
+                    imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)
+            );
+        }
     }
 
     public void clearBulkCache() {
@@ -169,7 +177,9 @@ public class RobotHardware {
     }
 
     public void read(DrivetrainSubsystem drive, IntakeSubsystem intake, ElevatorSubsystem elevator, ArmSubsystem arm, GrabberSubsystem grab) {
-        //angles.yaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        if (USING_IMU) {
+            angles.yaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        }
         drive.read();
         intake.read();
         elevator.read();
@@ -194,7 +204,9 @@ public class RobotHardware {
     }
 
     public void read(IntakeSubsystem intake, ElevatorSubsystem elevator, ArmSubsystem arm, GrabberSubsystem grab) {
-        //angles.yaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        if (USING_IMU) {
+            angles.yaw = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        }
         intake.read();
         elevator.read();
         arm.read();
@@ -215,15 +227,21 @@ public class RobotHardware {
         grab.write();
     }
 
-//    public double getHeading() {
-//        return angles.yaw - headingOffset;
-//    }
-//
-//    public void resetIMU() {
-//        rollOffset = angles.roll;
-//        pitchOffset = angles.pitch;
-//        headingOffset = angles.yaw;
-//    }
+    public double getHeading() {
+        if (USING_IMU) {
+            return angles.yaw - headingOffset;
+        } else {
+            return Double.NaN;
+        }
+    }
+
+    public void resetIMU() {
+        if (USING_IMU) {
+            rollOffset = angles.roll;
+            pitchOffset = angles.pitch;
+            headingOffset = angles.yaw;
+        }
+    }
 
 
 

@@ -28,6 +28,7 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import org.firstinspires.ftc.teamcode.poofyutils.AprilTagCustomDatabase;
@@ -120,6 +121,15 @@ public class Drive2 extends BaseOpMode {
         telemetry.addData("front", ((DistanceSensor) robot.frontCS).getDistance(DistanceUnit.CM));
         telemetry.addData("back", ((DistanceSensor) robot.backCS).getDistance(DistanceUnit.CM));
         telemetry.addData("front and back", intakeSS.isLoaded());
+
+        telemetry.addData("imu ang x", robot.imu.getRobotYawPitchRollAngles().getRoll(AngleUnit.DEGREES));
+        telemetry.addData("imu ang y", robot.imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.DEGREES));
+        telemetry.addData("imu ang z", robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+
+        telemetry.addData("imu ang vel z deg", robot.imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate);
+        telemetry.addData("imu ang vel z rad", robot.imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate);
+        telemetry.addData("imu ang vel z converted", Math.toDegrees(robot.imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate));
+        telemetry.addData("imu ang vel z converted 2", Math.toRadians(robot.imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate));
 
         TelemetryPacket packet = new TelemetryPacket();
 
