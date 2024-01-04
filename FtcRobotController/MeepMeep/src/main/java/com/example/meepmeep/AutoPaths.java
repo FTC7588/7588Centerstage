@@ -44,6 +44,8 @@ public class AutoPaths {
         public static Pose2d W_BD_THREE_B = new Pose2d(20, 12, Math.toRadians(180));
         public static double W_BD_THREE_C_TANGENT = Math.toRadians(20);
 
+        //stacks
+
         //off backdrop
         public static Pose2d BD_ONE_OFF = new Pose2d(49, 42, Math.toRadians(180));
         public static Pose2d BD_TWO_OFF = new Pose2d(49, 36, Math.toRadians(180));
@@ -608,6 +610,9 @@ public class AutoPaths {
                         .addEntity(W_C_0)
                         .start();
                 break;
+
+            case W_1:
+
         }
     }
 }
