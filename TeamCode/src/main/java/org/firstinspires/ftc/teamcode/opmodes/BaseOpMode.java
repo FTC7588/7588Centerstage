@@ -359,7 +359,7 @@ public class BaseOpMode extends CommandOpModeEx {
         );
 
 
-        autoGrab = new ConditionalCommand(grabbersClosed, grabbersOpen, () -> intakeSS.isLoaded());
+        autoGrab = new ConditionalCommand(new SetGrabberPosition(grabSS, GRABBER_CLOSED), new SetGrabberPosition(grabSS, GRABBER_OPEN), () -> intakeSS.isLoaded());
 
         //gamepads
         driver = new PoofyGamepadEx(gamepad1);
@@ -444,11 +444,13 @@ public class BaseOpMode extends CommandOpModeEx {
             tad("Robot Pose", driveSS.getRobotPose());
         }
 
-        robot.read(driveSS, intakeSS, eleSS, armSS, grabSS);
+        if (!auto) {
+            robot.read(driveSS, intakeSS, eleSS, armSS, grabSS);
 
-        robot.loop(driveSS, intakeSS, eleSS, armSS, grabSS);
+            robot.loop(driveSS, intakeSS, eleSS, armSS, grabSS);
 
-        robot.write(driveSS, intakeSS, eleSS, armSS, grabSS);
+            robot.write(driveSS, intakeSS, eleSS, armSS, grabSS);
+        }
     }
 
 
@@ -558,6 +560,11 @@ public class BaseOpMode extends CommandOpModeEx {
 
     @Override
     public void initLoop() {
+
+    }
+
+    @Override
+    public void runOnce() {
 
     }
 }

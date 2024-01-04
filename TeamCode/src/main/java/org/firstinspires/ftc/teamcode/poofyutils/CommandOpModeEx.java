@@ -4,6 +4,8 @@ import com.arcrobotics.ftclib.command.CommandOpMode;
 
 public abstract class CommandOpModeEx extends CommandOpMode {
 
+    boolean runOnce = false;
+
     @Override
     public void runOpMode() throws InterruptedException {
         initialize();
@@ -14,10 +16,16 @@ public abstract class CommandOpModeEx extends CommandOpMode {
 
         // run the scheduler
         while (!isStopRequested() && opModeIsActive()) {
+            if (!runOnce) {
+                runOnce();
+                runOnce = true;
+            }
             run();
         }
         reset();
     }
 
     public abstract void initLoop();
+
+    public abstract void runOnce();
 }
