@@ -39,8 +39,13 @@ public class Constants {
     public static PwmControl.PwmRange INTAKE_RANGE = new PwmControl.PwmRange(750, 2250);
     public static double INTAKE_POWER = 1;
 
+    public static double INT_UP = 0;
+    public static double INT_FIVE = 0.175;
+    public static double INT_FOUR = 0.225;
+    public static double INT_THREE = 0.3;
+    public static double INT_TWO = 0.3;
+    public static double INT_ONE = 0.375;
     public static double INT_DOWN = 0.425;
-    public static double INT_UP = 0.1;
 
     public static double INT_INCREMENT = 0.005;
 
@@ -79,11 +84,11 @@ public class Constants {
     public static double ARM_WRIST_OUT_ANGLE = 90;
 
     public static double ARM_WRIST_DEPOSIT = 0.9;
-    public static double ARM_WRIST_IDLE = 0.7;
+    public static double ARM_WRIST_IDLE = 1;
     public static double ARM_WRIST_TEST = 0.05;
-    public static double FLOOR_WRIST = 0.1;
+    public static double FLOOR_WRIST = 1;
     public static double POISED_WRIST = 0.19;
-    public static double GRAB_WRIST = 0.175;
+    public static double GRAB_WRIST = 0.18;
 
         //pivot constants
     public static double ARM_PIVOT_UP_ANGLE = 0;

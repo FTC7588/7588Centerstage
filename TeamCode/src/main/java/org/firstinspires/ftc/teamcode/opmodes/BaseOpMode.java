@@ -145,6 +145,7 @@ public class BaseOpMode extends CommandOpModeEx {
 
     protected SequentialCommandGroup armDepositGroup;
     protected SequentialCommandGroup armIdleGroup;
+    protected SequentialCommandGroup armBackGroup;
 
     protected ConditionalCommand autoGrab;
 
@@ -350,11 +351,23 @@ public class BaseOpMode extends CommandOpModeEx {
                 new SetWristPosition(armSS, ARM_WRIST_DEPOSIT)
         );
 
+        armBackGroup = new SequentialCommandGroup(
+                new SetArmPositions(
+                        armSS,
+                        FLOOR_SHOULDER,
+                        FLOOR_WRIST,
+                        ARM_PIVOT_MID
+                ),
+                new SetWristPosition(armSS, ARM_WRIST_TEST),
+                new WaitCommand(100),
+                new SetWristPosition(armSS, FLOOR_WRIST)
+        );
+
         armIdleGroup = new SequentialCommandGroup(
                 new SetShoulderPosition(armSS, ARM_SHOULDER_IDLE),
-                new WaitCommand(50),
+                new WaitCommand(75),
                 new SetWristPosition(armSS, ARM_WRIST_IDLE),
-                new WaitCommand(50),
+                new WaitCommand(75),
                 new SetShoulderPosition(armSS, GRAB_SHOULDER)
         );
 

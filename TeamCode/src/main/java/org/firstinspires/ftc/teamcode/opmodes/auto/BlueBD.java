@@ -100,6 +100,7 @@ public class BlueBD extends BaseOpMode {
         }
 
         tad("spike pos", propPos);
+        tad("path", path);
         tau();
     }
 

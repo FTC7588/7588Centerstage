@@ -95,6 +95,7 @@ public class Drive2 extends BaseOpMode {
         gp2(DPAD_DOWN, 1).whileActiveContinuous(eleDown).whenInactive(eleIdle);
 
 //        gp2(Y, 1).whenActive(armDeposit);
+        gp2(A, 1).whenActive(armIdleGroup);
         gp2(B, 1).whenActive(armIdle);
         gp2(Y, 1).whenActive(armDepositGroup);
 
