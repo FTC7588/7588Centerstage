@@ -24,6 +24,7 @@ import org.firstinspires.ftc.teamcode.commands.drive.FollowTag;
 import org.firstinspires.ftc.teamcode.commands.drive.RobotCentric;
 import org.firstinspires.ftc.teamcode.commands.drive.SetHeadingLock;
 import org.firstinspires.ftc.teamcode.commands.drive.SetMaxSpeed;
+import org.firstinspires.ftc.teamcode.commands.elevator.IncrementElevatorOffset;
 import org.firstinspires.ftc.teamcode.commands.elevator.IncrementElevatorTarget;
 import org.firstinspires.ftc.teamcode.commands.elevator.SetElevatorPower;
 import org.firstinspires.ftc.teamcode.commands.elevator.SetElevatorTarget;
@@ -106,6 +107,9 @@ public class BaseOpMode extends CommandOpModeEx {
 
     protected IncrementElevatorTarget eleIncUp;
     protected IncrementElevatorTarget eleIncDown;
+
+    protected IncrementElevatorOffset eleIncOffsetUp;
+    protected IncrementElevatorOffset eleIncOffsetDown;
 
     protected SetShoulderPosition shoulderPosDeposit;
     protected SetShoulderPosition shoulderPosPoised;
@@ -245,6 +249,9 @@ public class BaseOpMode extends CommandOpModeEx {
 
         eleIncUp = new IncrementElevatorTarget(eleSS, ELE_INCREMENT);
         eleIncDown = new IncrementElevatorTarget(eleSS, -ELE_INCREMENT);
+
+        eleIncOffsetUp = new IncrementElevatorOffset(eleSS, ELE_INCREMENT);
+        eleIncOffsetDown = new IncrementElevatorOffset(eleSS, -ELE_INCREMENT);
 
         //arm
         shoulderPosDeposit = new SetShoulderPosition(armSS, ARM_SHOULDER_DEPOSIT);

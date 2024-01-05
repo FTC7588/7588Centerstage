@@ -22,6 +22,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private double target;
 
+    private double eleOffset = 0;
+
     private final PoofyPIDController controller;
 
     public ElevatorSubsystem(RobotHardware robot) {
@@ -45,7 +47,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void loop() {
         if (ELE_PID) {
-            controller.setTargetPosition(target);
+            controller.setTargetPosition(target + eleOffset);
             power = controller.calculate(pos);
         }
     }
@@ -74,6 +76,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public double getPower() {
         return power;
+    }
+
+    public void addOffset(double added) {
+        eleOffset += added;
     }
 
     public void setTarget(double target) {

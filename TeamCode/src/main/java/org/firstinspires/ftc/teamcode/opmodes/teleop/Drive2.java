@@ -49,15 +49,14 @@ public class Drive2 extends BaseOpMode {
 
         //p1 layer 1 controls
         gp1(LEFT_BUMPER, 1).whenActive(lowSpeed).whenInactive(highSpeed);
-//        gp1(TOUCHPAD_FINGER_1, 1).whenActive(followBackdrop).whenInactive(robotCentric);
 
         gp1(B, 1).toggleWhenActive(intakeIn, intakeIdle);
         gp1(X, 1).toggleWhenActive(intakeOut, intakeIdle);
         gp1(A, 1).whenActive(intakeDown);
         gp1(Y, 1).whenActive(intakeUp);
 
-        gp1(DPAD_UP, 1).whileActiveContinuous(eleUp).whenInactive(eleIdle);
-        gp1(DPAD_DOWN, 1).whileActiveContinuous(eleDown).whenInactive(eleIdle);
+        gp1(DPAD_UP, 1).whileActiveContinuous(eleIncUp);
+        gp1(DPAD_DOWN, 1).whileActiveContinuous(eleIncDown);
 
         gp1(DPAD_LEFT, 1).whenActive(pivotPosMid);
 
@@ -90,11 +89,13 @@ public class Drive2 extends BaseOpMode {
         gp1(TOUCHPAD_FINGER_1, 1).whileActiveContinuous(variableIntakeAngle);
 
         //p2 controls
-        gp2(DPAD_UP, 1).whileActiveContinuous(eleUp).whenInactive(eleIdle);
-//        gp2(DPAD_RIGHT, 1).whenActive(eleTargetHang);
-        gp2(DPAD_DOWN, 1).whileActiveContinuous(eleDown).whenInactive(eleIdle);
+        gp2(DPAD_UP, 1).whileActiveContinuous(eleIncUp);
+        gp2(DPAD_LEFT, 1).whenActive(eleTargetHang);
+        gp2(DPAD_DOWN, 1).whileActiveContinuous(eleIncDown);
 
-//        gp2(Y, 1).whenActive(armDeposit);
+        gp2(DPAD_UP, 2).whenActive(eleIncOffsetUp);
+        gp2(DPAD_DOWN, 2).whenActive(eleIncOffsetDown);
+
         gp2(A, 1).whenActive(armIdleGroup);
         gp2(B, 1).whenActive(armIdle);
         gp2(Y, 1).whenActive(armDepositGroup);
@@ -102,7 +103,6 @@ public class Drive2 extends BaseOpMode {
         gp2(LEFT_BUMPER, 1).toggleWhenActive(grabberLeftOpen, grabberLeftClose);
         gp2(RIGHT_BUMPER, 1).toggleWhenActive(grabberRightOpen, grabberRightClose);
 
-//        variableIntakeAngle.schedule();
         robotCentric.schedule();
         intakeDown.schedule();
         shoulderPosGrab.schedule();
@@ -117,20 +117,6 @@ public class Drive2 extends BaseOpMode {
         super.run();
 
 //        autoGrab.schedule();
-
-        telemetry.addData("touch x", driver.getTouchX());
-        telemetry.addData("front", ((DistanceSensor) robot.frontCS).getDistance(DistanceUnit.CM));
-        telemetry.addData("back", ((DistanceSensor) robot.backCS).getDistance(DistanceUnit.CM));
-        telemetry.addData("front and back", intakeSS.isLoaded());
-
-        telemetry.addData("imu ang x", robot.imu.getRobotYawPitchRollAngles().getRoll(AngleUnit.DEGREES));
-        telemetry.addData("imu ang y", robot.imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.DEGREES));
-        telemetry.addData("imu ang z", robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-
-        telemetry.addData("imu ang vel z deg", robot.imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate);
-        telemetry.addData("imu ang vel z rad", robot.imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate);
-        telemetry.addData("imu ang vel z converted", Math.toDegrees(robot.imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate));
-        telemetry.addData("imu ang vel z converted 2", Math.toRadians(robot.imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate));
 
         TelemetryPacket packet = new TelemetryPacket();
 
