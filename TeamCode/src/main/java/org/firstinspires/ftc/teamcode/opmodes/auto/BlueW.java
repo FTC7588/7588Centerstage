@@ -4,12 +4,12 @@ import static org.firstinspires.ftc.teamcode.opmodes.auto.AutoConstants.Blue.*;
 
 import android.util.Size;
 
-import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectorySequenceAsync;
+import org.firstinspires.ftc.teamcode.commands.elevator.SetElevatorTarget;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakePower;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
@@ -238,13 +238,8 @@ public class BlueW extends BaseOpMode {
                 tal("W_3_C");
                 schedule(
                         new SequentialCommandGroup(
-                                new ParallelCommandGroup(
-                                        new FollowTrajectorySequenceAsync(autoDriveSS, toSpike),
-                                        new SequentialCommandGroup(
-                                                new WaitCommand(500),
-                                                armBackGroup
-                                        )
-                                ),
+                                new FollowTrajectorySequenceAsync(autoDriveSS, toSpike),
+                                armBackGroup,
                                 new WaitCommand(400),
                                 grabberLeftOpen,
                                 new WaitCommand(200),

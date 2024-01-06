@@ -43,7 +43,7 @@ public class Constants {
     public static double INT_FIVE = 0.175;
     public static double INT_FOUR = 0.225;
     public static double INT_THREE = 0.3;
-    public static double INT_TWO = 0.3;
+    public static double INT_TWO = 0.35;
     public static double INT_ONE = 0.375;
     public static double INT_DOWN = 0.425;
 
