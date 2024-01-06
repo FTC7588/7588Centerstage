@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.opmodes.auto.AutoConstants.Blue.*;
 
 import android.util.Size;
 
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -36,8 +37,21 @@ public class BlueW extends BaseOpMode {
     private final double WAIT_SPIKE = 1;
 
     private TrajectorySequence toSpike;
+
+    private TrajectorySequence toAStackFromOne;
+    private TrajectorySequence toAStackFromTwo;
+    private TrajectorySequence toAStackFromThree;
+
+    private TrajectorySequence toBStackFromOne;
+    private TrajectorySequence toBStackFromTwo;
+    private TrajectorySequence toBStackFromThree;
+
     private TrajectorySequence toCStackFromOne;
+    private TrajectorySequence toCStackFromTwo;
+    private TrajectorySequence toCStackFromThree;
+
     private TrajectorySequence toCStackFromBD;
+
     private TrajectorySequence toBD2FromCStack;
     private TrajectorySequence toStackFromTwo;
     private TrajectorySequence toStackFromThree;
@@ -224,8 +238,13 @@ public class BlueW extends BaseOpMode {
                 tal("W_3_C");
                 schedule(
                         new SequentialCommandGroup(
-                                new FollowTrajectorySequenceAsync(autoDriveSS, toSpike),
-                                armBackGroup,
+                                new ParallelCommandGroup(
+                                        new FollowTrajectorySequenceAsync(autoDriveSS, toSpike),
+                                        new SequentialCommandGroup(
+                                                new WaitCommand(500),
+                                                armBackGroup
+                                        )
+                                ),
                                 new WaitCommand(400),
                                 grabberLeftOpen,
                                 new WaitCommand(200),
