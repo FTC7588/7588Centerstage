@@ -145,14 +145,14 @@ public class BlueW extends BaseOpMode {
 
         toBDFromCStack = autoDriveSS.trajectorySequenceBuilder(toCStackFromOne.end())
                 .setReversed(true)
-                .splineToSplineHeading(STACK_BD_1_A, STACK_BD_1_A_TANGENT)
-                .splineToLinearHeading(BD_ONE_OFF, Math.toRadians(0))
+                .lineToLinearHeading(STACK_BD_1_A)
+                .lineToLinearHeading(BD_ONE_OFF)
                 .build();
 
         toCStackFromBD = autoDriveSS.trajectorySequenceBuilder(toBDFromCStack.end())
                 .setReversed(false)
-                .splineToLinearHeading(STACK_BD_1_A,Math.toRadians(180))
-                .splineToSplineHeading(STACK_C,Math.toRadians(180))
+                .lineToLinearHeading(STACK_BD_1_A)
+                .lineToLinearHeading(STACK_C)
                 .build();
 
         toBDFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
@@ -163,8 +163,8 @@ public class BlueW extends BaseOpMode {
 
         toBD2FromCStack = autoDriveSS.trajectorySequenceBuilder(toCStackFromBD.end())
                 .setReversed(true)
-                .splineToSplineHeading(STACK_BD_1_A, STACK_BD_1_A_TANGENT)
-                .splineToLinearHeading(BD_TWO_OFF, Math.toRadians(0))
+                .lineToLinearHeading(STACK_BD_1_A)
+                .lineToLinearHeading(BD_TWO_OFF)
                 .build();
 
         push = autoDriveSS.trajectorySequenceBuilder(toBDFromSpike.end())
@@ -258,11 +258,13 @@ public class BlueW extends BaseOpMode {
 
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStack),
                                 armDepositGroup,
+
                                 new WaitCommand(400),
                                 new FollowTrajectorySequenceAsync(autoDriveSS, push),
                                 grabbersOpen,
                                 new WaitCommand(400),
                                 armGrab,
+
 
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toCStackFromBD),
                                 new WaitCommand(100),
@@ -279,7 +281,7 @@ public class BlueW extends BaseOpMode {
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBD2FromCStack),
                                 armDepositGroup,
                                 new WaitCommand(500),
-                                new FollowTrajectorySequenceAsync(autoDriveSS, push),
+                                
                                 grabbersOpen,
                                 new WaitCommand(500),
                                 armGrab,
