@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
@@ -71,7 +72,6 @@ public class BaseOpMode extends CommandOpModeEx {
     protected RobotCentric robotCentric;
     protected FieldCentric fieldCentric;
     protected FollowTag followTag;
-    protected BackdropTagSlide followBackdrop;
 
     protected SetMaxSpeed lowSpeed;
     protected SetMaxSpeed highSpeed;
@@ -83,6 +83,8 @@ public class BaseOpMode extends CommandOpModeEx {
     protected SetHeadingLock leftLock;
     protected SetHeadingLock backLock;
     protected SetHeadingLock rightLock;
+
+    protected InstantCommand resetIMU;
 
     protected SetIntakePower intakeIn;
     protected SetIntakePower intakeIdle;
@@ -218,6 +220,8 @@ public class BaseOpMode extends CommandOpModeEx {
         leftLock = new SetHeadingLock(driveSS, 180);
         backLock = new SetHeadingLock(driveSS, -90);
         rightLock = new SetHeadingLock(driveSS, 0);
+
+        resetIMU = new InstantCommand(robot::resetIMU);
 
         //intake
         intakeIn = new SetIntakePower(intakeSS, INTAKE_POWER);

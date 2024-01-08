@@ -81,10 +81,6 @@ public class RobotHardware {
         }
 
         //hardware
-        if (USING_IMU) {
-            imu = hwMap.get(IMU.class, "imu");
-        }
-
         fL = hwMap.get(DcMotorEx.class, "fL");
         fR = hwMap.get(DcMotorEx.class, "fR");
         rL = hwMap.get(DcMotorEx.class, "rL");
@@ -113,9 +109,17 @@ public class RobotHardware {
 
         //imu
         if (USING_IMU) {
+            imu = hwMap.get(IMU.class, "imu");
+
             IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                     RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP));
             imu.initialize(parameters);
+
+            angles = new EulerAngles(
+                    imu.getRobotYawPitchRollAngles().getRoll(AngleUnit.RADIANS),
+                    imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.RADIANS),
+                    imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)
+            );
         }
 
         //drive
@@ -161,13 +165,6 @@ public class RobotHardware {
         backCS.setGain(2);
         frontCS.setGain(2);
 
-        if (USING_IMU) {
-            angles = new EulerAngles(
-                    imu.getRobotYawPitchRollAngles().getRoll(AngleUnit.RADIANS),
-                    imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.RADIANS),
-                    imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)
-            );
-        }
     }
 
     public void clearBulkCache() {
