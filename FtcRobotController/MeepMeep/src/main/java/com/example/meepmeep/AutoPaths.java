@@ -34,7 +34,7 @@ public class AutoPaths {
         public static Pose2d STACK_C = new Pose2d(-59,11,Math.toRadians(180));
 
         //to backdrop from spikes
-        public static Pose2d W_BD_ONE_A = new Pose2d(-36, 24.99, Math.toRadians(180));
+        public static Pose2d W_BD_ONE_A = new Pose2d(-31, 12, Math.toRadians(180));
         public static Pose2d W_BD_ONE_B = new Pose2d(20, 12, Math.toRadians(180));
         public static double W_BD_ONE_B_TANGENT = Math.toRadians(0);
         public static double W_BD_ONE_C_TANGENT = Math.toRadians(20);
@@ -108,7 +108,7 @@ public class AutoPaths {
 
     static {
         try {
-            field = ImageIO.read(new File("C:/Users/ckrog/Documents/CenterStageField.png"));
+            field = ImageIO.read(new File("/D:/mario/Documents/Robotics/CenterStageField.png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -175,8 +175,7 @@ public class AutoPaths {
                                 .lineToLinearHeading(Blue.W_SPIKE_ONE)
                                 .waitSeconds(WAIT_SPIKE)
                                 .lineToLinearHeading(Blue.W_BD_ONE_A)
-                                .splineToLinearHeading(Blue.W_BD_ONE_B, Blue.W_BD_ONE_B_TANGENT)
-                                .splineToLinearHeading(Blue.BD_ONE_OFF, Blue.W_BD_ONE_C_TANGENT)
+                                .lineToLinearHeading(Blue.W_BD_ONE_B)
                                 .lineToLinearHeading(Blue.BD_ONE_PUSH)
                                 .waitSeconds(WAIT_BD)
                                 .lineToLinearHeading(Blue.PARK_CENTER)
@@ -191,7 +190,7 @@ public class AutoPaths {
                                 .waitSeconds(WAIT_SPIKE)
                                 .lineToLinearHeading(Blue.W_BD_TWO_A)
                                 .lineToLinearHeading(Blue.W_BD_TWO_B)
-                                .splineToLinearHeading(Blue.BD_TWO_OFF, Blue.W_BD_TWO_C_TANGENT)
+                                .lineToLinearHeading(Blue.BD_TWO_OFF)
                                 .lineToLinearHeading(Blue.BD_TWO_PUSH)
                                 .waitSeconds(WAIT_BD)
                                 .lineToLinearHeading(Blue.PARK_CENTER)
@@ -206,7 +205,7 @@ public class AutoPaths {
                                 .waitSeconds(WAIT_SPIKE)
                                 .lineToLinearHeading(Blue.W_BD_THREE_A)
                                 .lineToLinearHeading(Blue.W_BD_THREE_B)
-                                .splineToLinearHeading(Blue.BD_THREE_OFF, Blue.W_BD_THREE_C_TANGENT)
+                                .lineToLinearHeading(Blue.BD_THREE_OFF)
                                 .lineToLinearHeading(Blue.BD_THREE_PUSH)
                                 .waitSeconds(WAIT_BD)
                                 .lineToLinearHeading(Blue.PARK_CENTER)

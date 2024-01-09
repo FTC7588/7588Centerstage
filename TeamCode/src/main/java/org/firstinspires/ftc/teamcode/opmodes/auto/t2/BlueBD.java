@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.opmodes.auto;
+package org.firstinspires.ftc.teamcode.opmodes.auto.t2;
 
-import static org.firstinspires.ftc.teamcode.opmodes.auto.AutoConstants.Blue.*;
+import static org.firstinspires.ftc.teamcode.opmodes.auto.t2.AutoConstants.Blue.*;
 
 import android.util.Size;
 

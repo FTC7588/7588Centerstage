@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.auto;
+package org.firstinspires.ftc.teamcode.opmodes.auto.t2;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
@@ -24,7 +24,7 @@ public class AutoConstants {
         public static Pose2d STACK_C = new Pose2d(-59,12,Math.toRadians(180));
 
         //to backdrop from spikes
-        public static Pose2d W_BD_ONE_A = new Pose2d(-36, 24.99, Math.toRadians(180));
+        public static Pose2d W_BD_ONE_A = new Pose2d(-31, 12, Math.toRadians(180));
         public static Pose2d W_BD_ONE_B = new Pose2d(20, 12, Math.toRadians(180));
         public static double W_BD_ONE_B_TANGENT = Math.toRadians(0);
         public static double W_BD_ONE_C_TANGENT = Math.toRadians(20);
