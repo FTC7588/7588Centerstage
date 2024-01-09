@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectorySequenceAsync;
 import org.firstinspires.ftc.teamcode.commands.elevator.SetElevatorTarget;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
@@ -64,10 +65,15 @@ public class BlueW extends BaseOpMode {
 
     private boolean pastX = false;
 
+    private double eleHeight;
+
     @Override
     public void initialize() {
+//        Constants.ELE_PID = true;
         auto = true;
         super.initialize();
+
+        eleHeight = 600;
 
         propProcessor = new PropProcessor(Alliance.BLUE);
 
@@ -242,7 +248,7 @@ public class BlueW extends BaseOpMode {
                                 armBackGroup,
                                 new WaitCommand(400),
                                 grabberLeftOpen,
-                                new WaitCommand(200),
+                                new WaitCommand(300),
                                 armGrab,
                                 new WaitCommand(250),
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toCStackFromOne),
@@ -257,10 +263,10 @@ public class BlueW extends BaseOpMode {
                                 grabbersClosed,
 
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStack),
-                                armDepositGroup,
-
+                                autoArmBack,
+                                new WaitCommand(200),
+                                pivotPosUp,
                                 new WaitCommand(400),
-                                new FollowTrajectorySequenceAsync(autoDriveSS, push),
                                 grabbersOpen,
                                 new WaitCommand(400),
                                 armGrab,
@@ -279,11 +285,13 @@ public class BlueW extends BaseOpMode {
                                 grabbersClosed,
 
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBD2FromCStack),
-                                armDepositGroup,
-                                new WaitCommand(500),
-                                
+                                new SetElevatorTarget(eleSS, eleHeight),
+                                autoArmBack,
+                                new WaitCommand(200),
+                                pivotPosUp,
+                                new WaitCommand(400),
                                 grabbersOpen,
-                                new WaitCommand(500),
+                                new WaitCommand(400),
                                 armGrab,
 
                                 new FollowTrajectorySequenceAsync(autoDriveSS, park)

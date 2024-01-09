@@ -27,6 +27,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import org.firstinspires.ftc.teamcode.poofyutils.AprilTagCustomDatabase;
 import org.firstinspires.ftc.teamcode.poofyutils.PoofyDashboardUtil;
@@ -40,13 +41,15 @@ public class DriveFC extends BaseOpMode {
 
     @Override
     public void initialize() {
+
+        Constants.ELE_PID = false;
         alliance = Alliance.BLUE;
 
         super.initialize();
 
         //p1 layer 1 controls
         gp1(LEFT_BUMPER, 1).whenActive(lowSpeed).whenInactive(highSpeed);
-        gp1(RIGHT_BUMPER, 1).toggleWhenActive(intakeIn, intakeIdle);
+        gp1(RIGHT_BUMPER, 1).toggleWhenActive(intakeOut, intakeIdle);
 
         gp1(A, 1).whenActive(enabledHeadingLock).whenActive(backLock).whenInactive(disableHeadingLock);
         gp1(B, 1).whenActive(enabledHeadingLock).whenActive(rightLock).whenInactive(disableHeadingLock);
@@ -54,7 +57,7 @@ public class DriveFC extends BaseOpMode {
         gp1(Y, 1).whenActive(enabledHeadingLock).whenActive(forwardLock).whenInactive(disableHeadingLock);
 
         gp1(DPAD_UP, 1).whenActive(intakeUp);
-        gp1(DPAD_LEFT, 1).toggleWhenActive(intakeOut, intakeIdle);
+        gp1(DPAD_LEFT, 1).toggleWhenActive(intakeIn, intakeIdle);
         gp1(DPAD_DOWN, 1).whenActive(intakeDown);
 
         //p1 layer 2 controls
@@ -86,15 +89,15 @@ public class DriveFC extends BaseOpMode {
         gp1(TOUCHPAD_FINGER_1, 1).whileActiveContinuous(variableIntakeAngle);
 
         //p2 controls
-        gp2(DPAD_UP, 1).whileActiveContinuous(eleIncUp);
+        gp2(DPAD_UP, 1).whileActiveContinuous(eleUp).whenInactive(eleIdle);
         gp2(DPAD_LEFT, 1).whenActive(eleTargetHang);
-        gp2(DPAD_DOWN, 1).whileActiveContinuous(eleIncDown);
+        gp2(DPAD_DOWN, 1).whileActiveContinuous(eleDown).whenInactive(eleIdle);
 
-        gp2(DPAD_UP, 2).whenActive(eleIncOffsetUp);
-        gp2(DPAD_DOWN, 2).whenActive(eleIncOffsetDown);
+        gp2(DPAD_UP, 2).whenActive(eleIncUp);
+        gp2(DPAD_DOWN, 2).whenActive(eleIncDown);
 
-        gp2(A, 1).whenActive(armIdleGroup);
-        gp2(B, 1).whenActive(armIdle);
+//        gp2(A, 1).whenActive(armIdleGroup);
+        gp2(A, 1).whenActive(armIdle);
         gp2(Y, 1).whenActive(armDepositGroup);
 
         gp2(LEFT_BUMPER, 1).toggleWhenActive(grabberLeftOpen, grabberLeftClose);

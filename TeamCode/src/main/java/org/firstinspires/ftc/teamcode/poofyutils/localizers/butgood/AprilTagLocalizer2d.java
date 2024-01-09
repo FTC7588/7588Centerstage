@@ -114,27 +114,27 @@ public class AprilTagLocalizer2d implements Localizer {
         double y = 0;
         double yaw = 0;
 
-        double num = 0;
+        double num = 1;
 
         for (Map.Entry<AprilTagDetection, Pose3d> entry : detections.entrySet()) {
-            Pose2d tagPose = new Pose2d(
-                    entry.getKey().metadata.fieldPosition.get(0),
-                    entry.getKey().metadata.fieldPosition.get(1),
-                    MathUtil.quaternionToEuler(entry.getKey().metadata.fieldOrientation).yaw + Math.toRadians(90)
-            );
-
-            Transform2d camToTag = new Transform2d(
-                    entry.getKey().ftcPose.x,
-                    entry.getKey().ftcPose.y,
-                    Math.toRadians(entry.getKey().ftcPose.yaw - 90)
-            );
-
-            Pose2d robotPose = getRobotToTagPose2dAxes(tagPose, camToTag, entry.getValue());
-
-            x += robotPose.getX();
-            y += robotPose.getY();
-            yaw += robotPose.getTheta();
-            num++;
+//            Pose2d tagPose = new Pose2d(
+//                    entry.getKey().metadata.fieldPosition.get(0),
+//                    entry.getKey().metadata.fieldPosition.get(1),
+//                    MathUtil.quaternionToEuler(entry.getKey().metadata.fieldOrientation).yaw + Math.toRadians(90)
+//            );
+//
+//            Transform2d camToTag = new Transform2d(
+//                    entry.getKey().ftcPose.x,
+//                    entry.getKey().ftcPose.y,
+//                    Math.toRadians(entry.getKey().ftcPose.yaw - 90)
+//            );
+//
+//            Pose2d robotPose = getRobotToTagPose2dAxes(tagPose, camToTag, entry.getValue());
+//
+//            x += robotPose.getX();
+//            y += robotPose.getY();
+//            yaw += robotPose.getTheta();
+//            num++;
         }
 
         return new Pose2d(x/num, y/num, yaw/num);

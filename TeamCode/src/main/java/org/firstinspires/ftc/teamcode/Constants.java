@@ -56,7 +56,7 @@ public class Constants {
 
     public static boolean ELE_PID = false;
 
-    public static double ELE_MAX = 1200;
+    public static double ELE_MAX = 3600;
     public static double ELE_UP = 1100;
     public static double ELE_MID = 200;
     public static double ELE_DOWN = 0;

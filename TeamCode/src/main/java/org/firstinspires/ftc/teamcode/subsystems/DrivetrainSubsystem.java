@@ -95,7 +95,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
 
     public void loop() {
-        //heading = robot.getHeading();
+        heading = robot.getHeading();
         tagLocalizer.update();
         robotPose = tagLocalizer.getPoseEstimate();
     }
