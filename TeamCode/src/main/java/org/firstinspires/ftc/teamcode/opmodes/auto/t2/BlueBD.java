@@ -8,7 +8,9 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectorySequenceAsync;
+import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakePower;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
@@ -16,6 +18,8 @@ import org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.PropProcessor;
 import org.firstinspires.ftc.teamcode.rr.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
+
+import static org.firstinspires.ftc.teamcode.Constants.*;
 
 import java.util.Locale;
 
@@ -33,14 +37,19 @@ public class BlueBD extends BaseOpMode {
     private final double WAIT_SPIKE = 1;
 
     private TrajectorySequence toSpike;
-    private TrajectorySequence toBD;
-    private TrajectorySequence push;
+    private TrajectorySequence toBDFromSpike;
+    private TrajectorySequence toCStackFromBD;
+    private TrajectorySequence toBDFromCStackA;
+    private TrajectorySequence toBDFromCStackB;
     private TrajectorySequence park;
 
-    private int propPos;
+    public static int propPos = 1;
+
+    private boolean pastA = false;
 
     @Override
     public void initialize() {
+        Constants.ELE_PID = false;
         auto = true;
         super.initialize();
 
@@ -62,7 +71,8 @@ public class BlueBD extends BaseOpMode {
     public void initLoop() {
         intakeUp.schedule();
         armGrab.schedule();
-        grabbersClosed.schedule();
+        grabberLeftClose.schedule();
+        grabberRightOpen.schedule();
 
         robot.read(intakeSS, eleSS, armSS, grabSS);
 
@@ -76,13 +86,15 @@ public class BlueBD extends BaseOpMode {
             visionPortal.saveNextFrameRaw(String.format(Locale.US, "CameraFrameCapture-%06d", 1));
         }
 
-        if (driver.wasJustPressed(GamepadKeys.Button.A)) {
+        //change path type
+        if (gamepad1.a && !pastA) {
             if (list < 4) {
                 list++;
             } else {
                 list = 0;
             }
         }
+        gamepad1.a = pastA;
 
         switch (list) {
             case 0:
@@ -107,49 +119,186 @@ public class BlueBD extends BaseOpMode {
     @Override
     public void runOnce() {
 
-        toSpike = autoDriveSS.trajectorySequenceBuilder(BD_START)
-                .lineToLinearHeading(BD_SPIKE_ONE)
-                .build();
+        switch (path) {
+            case BS_0:
+                switch (propPos) {
+                    case 1:
+                        toSpike = autoDriveSS.trajectorySequenceBuilder(BD_START)
+                                .lineToLinearHeading(BD_SPIKE_ONE)
+                                .build();
 
-        toBD = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
-                .lineToLinearHeading(BD_ONE_OFF)
-                .build();
+                        toBDFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
+                                .lineToLinearHeading(BD_ONE_OFF)
+                                .build();
 
-        push = autoDriveSS.trajectorySequenceBuilder(toBD.end())
-                .lineToLinearHeading(BD_ONE_PUSH)
-                .build();
+                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromSpike.end())
+                                .lineToLinearHeading(PARK_CORNER)
+                                .build();
+                        break;
+                    case 2:
+                        toSpike = autoDriveSS.trajectorySequenceBuilder(BD_START)
+                                .lineToLinearHeading(BD_SPIKE_TWO)
+                                .build();
 
-        park = autoDriveSS.trajectorySequenceBuilder(push.end())
-                .lineToLinearHeading(PARK_CORNER)
-                .build();
+                        toBDFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
+                                .lineToLinearHeading(BD_TWO_OFF)
+                                .build();
+
+                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromSpike.end())
+                                .lineToLinearHeading(PARK_CORNER)
+                                .build();
+                        break;
+                    case 3:
+                        toSpike = autoDriveSS.trajectorySequenceBuilder(BD_START)
+                                .lineToLinearHeading(BD_SPIKE_THREE)
+                                .build();
+
+                        toBDFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
+                                .lineToLinearHeading(BD_THREE_OFF)
+                                .build();
+
+                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromSpike.end())
+                                .lineToLinearHeading(PARK_CORNER)
+                                .build();
+                        break;
+                }
+                break;
+            case BS_2_A:
+                switch (propPos) {
+                    case 1:
+                        toSpike = autoDriveSS.trajectorySequenceBuilder(BD_START)
+                                .lineToLinearHeading(BD_SPIKE_ONE)
+                                .build();
+
+                        toBDFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
+                                .lineToLinearHeading(BD_ONE_OFF)
+                                .build();
+
+                        toCStackFromBD = autoDriveSS.trajectorySequenceBuilder(toBDFromSpike.end())
+                                .lineToLinearHeading(STACK_BD_2_A)
+                                .lineToLinearHeading(STACK_BD_2_B)
+                                .lineToLinearHeading(STACK_A)
+                                .build();
+
+                        toBDFromCStackA = autoDriveSS.trajectorySequenceBuilder(toCStackFromBD.end())
+                                .lineToLinearHeading(STACK_BD_2_B)
+                                .lineToLinearHeading(STACK_BD_2_A)
+                                .build();
+
+                        toBDFromCStackB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackA.end())
+                                .lineToLinearHeading(BD_TWO_OFF)
+                                .build();
+
+                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
+                                .lineToLinearHeading(PARK_CORNER)
+                                .build();
+                        break;
+                    case 2:
+                        toSpike = autoDriveSS.trajectorySequenceBuilder(BD_START)
+                                .lineToLinearHeading(BD_SPIKE_TWO)
+                                .build();
+
+                        toBDFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
+                                .lineToLinearHeading(BD_TWO_OFF)
+                                .build();
+
+                        toCStackFromBD = autoDriveSS.trajectorySequenceBuilder(toBDFromSpike.end())
+                                .lineToLinearHeading(STACK_BD_2_A)
+                                .lineToLinearHeading(STACK_BD_2_B)
+                                .lineToLinearHeading(STACK_A)
+                                .build();
+
+                        toBDFromCStackA = autoDriveSS.trajectorySequenceBuilder(toCStackFromBD.end())
+                                .lineToLinearHeading(STACK_BD_2_B)
+                                .lineToLinearHeading(STACK_BD_2_A)
+                                .build();
+
+                        toBDFromCStackB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackA.end())
+                                .lineToLinearHeading(BD_THREE_OFF)
+                                .build();
+
+                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
+                                .lineToLinearHeading(PARK_CORNER)
+                                .build();
+                        break;
+                    case 3:
+                        toSpike = autoDriveSS.trajectorySequenceBuilder(BD_START)
+                                .lineToLinearHeading(BD_SPIKE_THREE)
+                                .build();
+
+                        toBDFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
+                                .lineToLinearHeading(BD_THREE_OFF)
+                                .build();
+
+                        toCStackFromBD = autoDriveSS.trajectorySequenceBuilder(toBDFromSpike.end())
+                                .lineToLinearHeading(STACK_BD_2_A)
+                                .lineToLinearHeading(STACK_BD_2_B)
+                                .lineToLinearHeading(STACK_A)
+                                .build();
+
+                        toBDFromCStackA = autoDriveSS.trajectorySequenceBuilder(toCStackFromBD.end())
+                                .lineToLinearHeading(STACK_BD_2_B)
+                                .lineToLinearHeading(STACK_BD_2_A)
+                                .build();
+
+                        toBDFromCStackB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackA.end())
+                                .lineToLinearHeading(BD_TWO_OFF)
+                                .build();
+
+                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
+                                .lineToLinearHeading(PARK_CORNER)
+                                .build();
+                        break;
+                }
+        }
+
 
         switch (path) {
             case BS_0:
                 schedule(
                         new SequentialCommandGroup(
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toSpike),
-
                                 new SetIntakePower(intakeSS, 0.5),
                                 new WaitCommand(500),
                                 intakeIdle,
-
                                 armDepositGroup,
-
-                                new FollowTrajectorySequenceAsync(autoDriveSS, toBD),
-
-                                new FollowTrajectorySequenceAsync(autoDriveSS, push),
-
+                                new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromSpike),
                                 grabberLeftOpen,
                                 new WaitCommand(500),
-
                                 armGrab,
-
                                 new FollowTrajectorySequenceAsync(autoDriveSS, park)
                         )
                 );
                 break;
             case BS_2_A:
+                schedule(
+                        new SequentialCommandGroup(
+                                new FollowTrajectorySequenceAsync(autoDriveSS, toSpike),
+                                new SetIntakePower(intakeSS, 0.5),
+                                new WaitCommand(500),
+                                intakeIdle,
+                                armDepositGroup,
+                                new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromSpike),
+                                grabberLeftOpen,
+                                new WaitCommand(500),
+                                armGrab,
+                                new FollowTrajectorySequenceAsync(autoDriveSS, toCStackFromBD),
+                                new WaitCommand(100),
+                                new SetIntakePower(intakeSS, -1),
+                                new WaitCommand(250),
+                                new SetIntakeAngle(intakeSS, INT_FIVE),
+                                new WaitCommand(1000),
+                                new SetIntakeAngle(intakeSS, INT_FOUR),
+                                new WaitCommand(1500),
+                                grabbersClosed,
+                                new WaitCommand(250),
+                                intakeIdle,
 
+                                
+
+                                new FollowTrajectorySequenceAsync(autoDriveSS, park)
+                        )
+                );
                 break;
         }
     }

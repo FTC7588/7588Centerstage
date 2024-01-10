@@ -10,11 +10,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectorySequenceAsync;
-import org.firstinspires.ftc.teamcode.commands.elevator.SetElevatorTarget;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakePower;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
-import org.firstinspires.ftc.teamcode.poofyutils.RunDuringDelayCommand;
 import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.PropProcessor;
@@ -39,31 +37,24 @@ public class BlueW extends BaseOpMode {
     private final double WAIT_SPIKE = 1;
 
     private TrajectorySequence toSpike;
-
     private TrajectorySequence toCStackFromSpike;
-
     private TrajectorySequence toCStackFromBD;
-
-    private TrajectorySequence toBDFromCStackA;
-    private TrajectorySequence toBDFromCStackB;
-
+    private TrajectorySequence toBDFromCStackAA;
+    private TrajectorySequence toBDFromCStackAB;
+    private TrajectorySequence toBDFromCStackBA;
+    private TrajectorySequence toBDFromCStackBB;
     private TrajectorySequence toBDFromSpike;
-
     private TrajectorySequence park;
 
-    private int propPos = 3;
+    public static int propPos = 3;
 
     private boolean pastA = false;
-
-    private double eleHeight;
 
     @Override
     public void initialize() {
         Constants.ELE_PID = false;
         auto = true;
         super.initialize();
-
-        eleHeight = 600;
 
         propProcessor = new PropProcessor(Alliance.BLUE);
 
@@ -192,13 +183,16 @@ public class BlueW extends BaseOpMode {
                                 .lineToLinearHeading(STACK_C)
                                 .build();
 
-                        toBDFromCStackA = autoDriveSS.trajectorySequenceBuilder(toCStackFromSpike.end())
+                        toBDFromCStackAA = autoDriveSS.trajectorySequenceBuilder(toCStackFromSpike.end())
                                 .setReversed(true)
                                 .lineToLinearHeading(STACK_BD_1_A)
+                                .build();
+
+                        toBDFromCStackAB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAA.end())
                                 .lineToLinearHeading(BD_ONE_OFF)
                                 .build();
 
-                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackA.end())
+                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
                         break;
@@ -211,13 +205,16 @@ public class BlueW extends BaseOpMode {
                                 .lineToLinearHeading(STACK_C)
                                 .build();
 
-                        toBDFromCStackA = autoDriveSS.trajectorySequenceBuilder(toCStackFromSpike.end())
+                        toBDFromCStackAA = autoDriveSS.trajectorySequenceBuilder(toCStackFromSpike.end())
                                 .setReversed(true)
                                 .lineToLinearHeading(STACK_BD_1_A)
+                                .build();
+
+                        toBDFromCStackAB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAA.end())
                                 .lineToLinearHeading(BD_TWO_OFF)
                                 .build();
 
-                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackA.end())
+                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
                         break;
@@ -230,13 +227,16 @@ public class BlueW extends BaseOpMode {
                                 .lineToLinearHeading(STACK_C)
                                 .build();
 
-                        toBDFromCStackA = autoDriveSS.trajectorySequenceBuilder(toCStackFromSpike.end())
+                        toBDFromCStackAA = autoDriveSS.trajectorySequenceBuilder(toCStackFromSpike.end())
                                 .setReversed(true)
                                 .lineToLinearHeading(STACK_BD_1_A)
+                                .build();
+
+                        toBDFromCStackAB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAA.end())
                                 .lineToLinearHeading(BD_THREE_OFF)
                                 .build();
 
-                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackA.end())
+                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
                         break;
@@ -253,25 +253,31 @@ public class BlueW extends BaseOpMode {
                                 .lineToLinearHeading(STACK_C)
                                 .build();
 
-                        toBDFromCStackA = autoDriveSS.trajectorySequenceBuilder(toCStackFromSpike.end())
+                        toBDFromCStackAA = autoDriveSS.trajectorySequenceBuilder(toCStackFromSpike.end())
                                 .setReversed(true)
                                 .lineToLinearHeading(STACK_BD_1_A)
+                                .build();
+
+                        toBDFromCStackAB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAA.end())
                                 .lineToLinearHeading(BD_ONE_OFF)
                                 .build();
 
-                        toCStackFromBD = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackA.end())
+                        toCStackFromBD = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
                                 .setReversed(false)
                                 .lineToLinearHeading(STACK_BD_1_A)
                                 .lineToLinearHeading(STACK_C)
                                 .build();
 
-                        toBDFromCStackB = autoDriveSS.trajectorySequenceBuilder(toCStackFromBD.end())
+                        toBDFromCStackBA = autoDriveSS.trajectorySequenceBuilder(toCStackFromBD.end())
                                 .setReversed(true)
                                 .lineToLinearHeading(STACK_BD_1_A)
+                                .build();
+
+                        toBDFromCStackBB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackBA.end())
                                 .lineToLinearHeading(BD_TWO_OFF)
                                 .build();
 
-                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
+                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackBB.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
                         break;
@@ -284,25 +290,31 @@ public class BlueW extends BaseOpMode {
                                 .lineToLinearHeading(STACK_C)
                                 .build();
 
-                        toBDFromCStackA = autoDriveSS.trajectorySequenceBuilder(toCStackFromSpike.end())
+                        toBDFromCStackAA = autoDriveSS.trajectorySequenceBuilder(toCStackFromSpike.end())
                                 .setReversed(true)
                                 .lineToLinearHeading(STACK_BD_1_A)
+                                .build();
+
+                        toBDFromCStackAB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAA.end())
                                 .lineToLinearHeading(BD_TWO_OFF)
                                 .build();
 
-                        toCStackFromBD = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackA.end())
+                        toCStackFromBD = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
                                 .setReversed(false)
                                 .lineToLinearHeading(STACK_BD_1_A)
                                 .lineToLinearHeading(STACK_C)
                                 .build();
 
-                        toBDFromCStackB = autoDriveSS.trajectorySequenceBuilder(toCStackFromBD.end())
+                        toBDFromCStackBA = autoDriveSS.trajectorySequenceBuilder(toCStackFromBD.end())
                                 .setReversed(true)
                                 .lineToLinearHeading(STACK_BD_1_A)
+                                .build();
+
+                        toBDFromCStackBB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackBA.end())
                                 .lineToLinearHeading(BD_ONE_OFF)
                                 .build();
 
-                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
+                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackBB.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
                         break;
@@ -315,25 +327,31 @@ public class BlueW extends BaseOpMode {
                                 .lineToLinearHeading(STACK_C)
                                 .build();
 
-                        toBDFromCStackA = autoDriveSS.trajectorySequenceBuilder(toCStackFromSpike.end())
+                        toBDFromCStackAA = autoDriveSS.trajectorySequenceBuilder(toCStackFromSpike.end())
                                 .setReversed(true)
                                 .lineToLinearHeading(STACK_BD_1_A)
+                                .build();
+
+                        toBDFromCStackAB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAA.end())
                                 .lineToLinearHeading(BD_THREE_OFF)
                                 .build();
 
-                        toCStackFromBD = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackA.end())
+                        toCStackFromBD = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
                                 .setReversed(false)
                                 .lineToLinearHeading(STACK_BD_1_A)
                                 .lineToLinearHeading(STACK_C)
                                 .build();
 
-                        toBDFromCStackB = autoDriveSS.trajectorySequenceBuilder(toCStackFromBD.end())
+                        toBDFromCStackBA = autoDriveSS.trajectorySequenceBuilder(toCStackFromBD.end())
                                 .setReversed(true)
                                 .lineToLinearHeading(STACK_BD_1_A)
+                                .build();
+
+                        toBDFromCStackBB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackBA.end())
                                 .lineToLinearHeading(BD_TWO_OFF)
                                 .build();
 
-                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
+                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackBB.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
                         break;
@@ -341,47 +359,6 @@ public class BlueW extends BaseOpMode {
                 break;
         }
 
-
-
-//        toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
-//                .lineToLinearHeading(W_SPIKE_ONE)
-//                .build();
-//
-//        toCStackFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
-//                .lineToLinearHeading(STACK_C)
-//                .build();
-//
-//        toBD1FromCStack = autoDriveSS.trajectorySequenceBuilder(toCStackFromSpike.end())
-//                .setReversed(true)
-//                .lineToLinearHeading(STACK_BD_1_A)
-//                .lineToLinearHeading(BD_ONE_OFF)
-//                .build();
-//
-//        toBD2FromCStack = autoDriveSS.trajectorySequenceBuilder(toCStackFromBD1.end())
-//                .setReversed(true)
-//                .lineToLinearHeading(STACK_BD_1_A)
-//                .lineToLinearHeading(BD_TWO_OFF)
-//                .build();
-//
-//        toCStackFromBD1 = autoDriveSS.trajectorySequenceBuilder(toBD1FromCStack.end())
-//                .setReversed(false)
-//                .lineToLinearHeading(STACK_BD_1_A)
-//                .lineToLinearHeading(STACK_C)
-//                .build();
-//
-//        toBD1FromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
-//                .lineToLinearHeading(W_BD_ONE_A)
-//                .splineToLinearHeading(W_BD_ONE_B, W_BD_ONE_B_TANGENT)
-//                .splineToLinearHeading(BD_ONE_OFF, W_BD_ONE_C_TANGENT)
-//                .build();
-//
-//        push = autoDriveSS.trajectorySequenceBuilder(toBD1FromSpike.end())
-//                .lineToLinearHeading(BD_ONE_PUSH)
-//                .build();
-//
-//        park = autoDriveSS.trajectorySequenceBuilder(push.end())
-//                .lineToLinearHeading(PARK_CENTER)
-//                .build();
 
         switch (path) {
             case W_0:
@@ -425,12 +402,13 @@ public class BlueW extends BaseOpMode {
                                 new WaitCommand(250),
                                 new SetIntakeAngle(intakeSS, INT_FIVE),
                                 new WaitCommand(2000),
-                                intakeIdle,
-                                new WaitCommand(500),
                                 grabbersClosed,
+                                new WaitCommand(250),
+                                intakeIdle,
 
-                                new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStackA),
+                                new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStackAA),
                                 armDepositGroup,
+                                new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStackAB),
                                 new WaitCommand(500),
                                 grabbersOpen,
                                 new WaitCommand(500),
@@ -458,12 +436,13 @@ public class BlueW extends BaseOpMode {
                                 new WaitCommand(250),
                                 new SetIntakeAngle(intakeSS, INT_FIVE),
                                 new WaitCommand(1000),
-                                intakeIdle,
-                                new WaitCommand(500),
                                 grabbersClosed,
+                                new WaitCommand(250),
+                                intakeIdle,
 
-                                new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStackA),
+                                new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStackAA),
                                 autoArmBack,
+                                new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStackAB),
                                 new WaitCommand(200),
                                 pivotPosUp,
                                 new WaitCommand(400),
@@ -480,13 +459,13 @@ public class BlueW extends BaseOpMode {
                                 new WaitCommand(1000),
                                 new SetIntakeAngle(intakeSS, INT_THREE),
                                 new WaitCommand(1000),
-                                intakeIdle,
-                                new WaitCommand(500),
                                 grabbersClosed,
+                                new WaitCommand(250),
+                                intakeIdle,
 
-                                new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStackB),
-                                new SetElevatorTarget(eleSS, eleHeight),
+                                new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStackBA),
                                 autoArmBack,
+                                new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStackBB),
                                 new WaitCommand(200),
                                 pivotPosUp,
                                 new WaitCommand(400),

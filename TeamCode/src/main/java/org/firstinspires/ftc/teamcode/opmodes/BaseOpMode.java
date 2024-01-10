@@ -383,7 +383,7 @@ public class BaseOpMode extends CommandOpModeEx {
         );
         autoArmBack = new SequentialCommandGroup(
                 new SetArmPositions(
-                        armSS, ARM_AUTO, 0.05, 0.5
+                        armSS, ARM_AUTO, 0, 0.5
                 ),
                 new SetWristPosition(armSS, ARM_WRIST_TEST),
                 new WaitCommand(100),
