@@ -41,6 +41,9 @@ public class RobotHardware {
     //grabber
     public ServoImplEx grab1, grab2;
 
+    //drone
+    public ServoImplEx drone;
+
     //imu
     public IMU imu;
     public double rollOffset, pitchOffset, headingOffset;
@@ -101,6 +104,8 @@ public class RobotHardware {
 
         grab1 = hwMap.get(ServoImplEx.class, "grab1");
         grab2 = hwMap.get(ServoImplEx.class, "grab2");
+
+        drone = hwMap.get(ServoImplEx.class, "drone");
 
         C920 = hwMap.get(WebcamName.class, "Webcam 1");
 

@@ -23,6 +23,7 @@ import org.firstinspires.ftc.teamcode.commands.drive.EnableHeadingLock;
 import org.firstinspires.ftc.teamcode.commands.drive.FieldCentric;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowTag;
 import org.firstinspires.ftc.teamcode.commands.drive.RobotCentric;
+import org.firstinspires.ftc.teamcode.commands.drive.SetDronePosition;
 import org.firstinspires.ftc.teamcode.commands.drive.SetHeadingLock;
 import org.firstinspires.ftc.teamcode.commands.drive.SetMaxSpeed;
 import org.firstinspires.ftc.teamcode.commands.elevator.IncrementElevatorOffset;
@@ -85,6 +86,9 @@ public class BaseOpMode extends CommandOpModeEx {
     protected SetHeadingLock rightLock;
 
     protected InstantCommand resetIMU;
+
+    protected SetDronePosition droneRelease;
+    protected SetDronePosition droneHold;
 
     protected SetIntakePower intakeIn;
     protected SetIntakePower intakeIdle;
@@ -223,6 +227,9 @@ public class BaseOpMode extends CommandOpModeEx {
         rightLock = new SetHeadingLock(driveSS, 0);
 
         resetIMU = new InstantCommand(robot::resetIMU);
+
+        droneHold = new SetDronePosition(driveSS, DRONE_HOLD);
+        droneRelease = new SetDronePosition(driveSS, DRONE_RELEASE);
 
         //intake
         intakeIn = new SetIntakePower(intakeSS, INTAKE_POWER);
@@ -376,7 +383,7 @@ public class BaseOpMode extends CommandOpModeEx {
         );
         autoArmBack = new SequentialCommandGroup(
                 new SetArmPositions(
-                        armSS, 0.525, 1, 0.5
+                        armSS, ARM_AUTO, 0.05, 0.5
                 ),
                 new SetWristPosition(armSS, ARM_WRIST_TEST),
                 new WaitCommand(100),

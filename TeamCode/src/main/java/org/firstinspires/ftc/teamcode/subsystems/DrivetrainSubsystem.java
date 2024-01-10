@@ -211,6 +211,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
         drive.setHeadingLockTarget(target);
     }
 
+    public void setDronePosition(double pos) {
+        robot.drone.setPosition(pos);
+    }
+
     //getters
     public double getHeading() {
         return Math.toDegrees(heading);

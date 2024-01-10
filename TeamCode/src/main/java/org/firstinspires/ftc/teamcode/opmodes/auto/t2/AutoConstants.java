@@ -9,14 +9,14 @@ public class AutoConstants {
 
         //starts
         public static Pose2d BD_START = new Pose2d(14.75, 63, Math.toRadians(-90));
-        public static Pose2d W_START = new Pose2d(-36, 63, Math.toRadians(-90));
+        public static Pose2d W_START = new Pose2d(-39.5, 63, Math.toRadians(-90));
 
         //spikes
         public static Pose2d BD_SPIKE_ONE = new Pose2d(31.5, 32, Math.toRadians(-135));
         public static Pose2d BD_SPIKE_TWO = new Pose2d(15, 33, Math.toRadians(-90));
         public static Pose2d BD_SPIKE_THREE = new Pose2d(8, 32, Math.toRadians(-135));
 
-        public static Pose2d W_SPIKE_ONE = new Pose2d(-36.5, 31, Math.toRadians(180));
+        public static Pose2d W_SPIKE_ONE = new Pose2d(-37.25, 31, Math.toRadians(180));
         public static Pose2d W_SPIKE_TWO = new Pose2d(-31, 15, Math.toRadians(-90));
         public static Pose2d W_SPIKE_THREE = new Pose2d(-40, 18, Math.toRadians(-45));
 
@@ -41,7 +41,7 @@ public class AutoConstants {
         public static Pose2d STACK_BD_1_A = new Pose2d(20,11, Math.toRadians(180));
         public static double STACK_BD_1_A_TANGENT = Math.toRadians(0);
         //off backdrop
-        public static Pose2d BD_ONE_OFF = new Pose2d(52, 42, Math.toRadians(180));
+        public static Pose2d BD_ONE_OFF = new Pose2d(52, 43, Math.toRadians(180));
         public static Pose2d BD_TWO_OFF = new Pose2d(52, 36, Math.toRadians(180));
         public static Pose2d BD_THREE_OFF = new Pose2d(52, 28, Math.toRadians(180));
 

@@ -51,7 +51,7 @@ public class BlueW extends BaseOpMode {
 
     private TrajectorySequence park;
 
-    private int propPos;
+    private int propPos = 3;
 
     private boolean pastA = false;
 
@@ -93,7 +93,7 @@ public class BlueW extends BaseOpMode {
 
         robot.write(intakeSS, eleSS, armSS, grabSS);
 
-        propPos = propProcessor.getSpike();
+//        propPos = propProcessor.getSpike();
 
         //take picture
         if (driver.wasJustPressed(GamepadKeys.Button.X)) {

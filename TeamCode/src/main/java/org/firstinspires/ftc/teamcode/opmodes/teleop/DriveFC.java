@@ -95,13 +95,20 @@ public class DriveFC extends BaseOpMode {
 
         gp2(DPAD_UP, 2).whenActive(eleIncUp);
         gp2(DPAD_DOWN, 2).whenActive(eleIncDown);
+        gp2(DPAD_LEFT, 2).whenActive(droneHold);
 
 //        gp2(A, 1).whenActive(armIdleGroup);
         gp2(A, 1).whenActive(armIdle);
         gp2(Y, 1).whenActive(armDepositGroup);
 
+        gp2(B, 1).whenActive(pivotPosDown).whenInactive(pivotPosMid);
+        gp2(X, 1).whenActive(pivotPosUp).whenInactive(pivotPosMid);
+
         gp2(LEFT_BUMPER, 1).toggleWhenActive(grabberLeftOpen, grabberLeftClose);
         gp2(RIGHT_BUMPER, 1).toggleWhenActive(grabberRightOpen, grabberRightClose);
+
+        gp1(LEFT_BUMPER, 3).whenActive(droneHold);
+        gp1(RIGHT_BUMPER, 3).whenActive(droneRelease);
 
         fieldCentric.schedule();
         intakeDown.schedule();
@@ -115,6 +122,12 @@ public class DriveFC extends BaseOpMode {
         CommandScheduler.getInstance().run();
 
         super.run();
+
+        if (intakeSS.isBackPixelLoaded()) {
+            gamepad2.rumble(1, 0, 10);
+        } else if (intakeSS.isBackPixelLoaded() && intakeSS.isFrontPixelLoaded()) {
+            gamepad2.rumble(1, 1, 10);
+        }
 
 //        autoGrab.schedule();
 

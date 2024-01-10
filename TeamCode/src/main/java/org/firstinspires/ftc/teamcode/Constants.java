@@ -35,6 +35,9 @@ public class Constants {
     public static double LOW_SPEED = 0.4;
     public static double HIGH_SPEED = 1;
 
+    public static double DRONE_RELEASE = 0.8;
+    public static double DRONE_HOLD = 1;
+
     //intake constants
     public static PwmControl.PwmRange INTAKE_RANGE = new PwmControl.PwmRange(750, 2250);
     public static double INTAKE_POWER = 1;
@@ -80,6 +83,7 @@ public class Constants {
     public static double FLOOR_SHOULDER = 0.25;
     public static double POISED_SHOULDER = 1;
     public static double GRAB_SHOULDER = 0.895;
+    public static double ARM_AUTO = 0.5;
 
         //wrist constants
     public static double ARM_WRIST_IN_ANGLE = -90;
