@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.commands.drive;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
+import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
 import org.firstinspires.ftc.teamcode.subsystems.DrivetrainSubsystem;
 
 import java.util.function.DoubleSupplier;

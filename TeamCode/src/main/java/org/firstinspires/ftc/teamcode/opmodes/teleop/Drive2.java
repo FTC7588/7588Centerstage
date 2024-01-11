@@ -26,14 +26,11 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import org.firstinspires.ftc.teamcode.poofyutils.AprilTagCustomDatabase;
 import org.firstinspires.ftc.teamcode.poofyutils.PoofyDashboardUtil;
-import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
+import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 
 

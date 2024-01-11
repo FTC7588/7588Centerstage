@@ -31,7 +31,7 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import org.firstinspires.ftc.teamcode.poofyutils.AprilTagCustomDatabase;
 import org.firstinspires.ftc.teamcode.poofyutils.PoofyDashboardUtil;
-import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
+import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 
 
@@ -123,11 +123,19 @@ public class DriveFC extends BaseOpMode {
 
         super.run();
 
-        if (intakeSS.isBackPixelLoaded()) {
-            gamepad2.rumble(1, 0, 10);
-        } else if (intakeSS.isBackPixelLoaded() && intakeSS.isFrontPixelLoaded()) {
-            gamepad2.rumble(1, 1, 10);
+        if (intakeSS.isLoaded()) {
+            gamepad2.rumble(0, 1, 100);
+        } else if (intakeSS.isBackPixelLoaded() ) {
+            gamepad2.rumble(1, 0, 100);
         }
+
+        if (grabSS.isClosed()) {
+            gamepad1.rumble(1, 1, 50);
+        }
+
+        tad("back", intakeSS.isBackPixelLoaded());
+        tad("front", intakeSS.isFrontPixelLoaded());
+        tad("both", intakeSS.isLoaded());
 
 //        autoGrab.schedule();
 

@@ -18,8 +18,7 @@ import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectorySequenceAsync
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakePower;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
-import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
-import org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys;
+import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.PropProcessor;
 import org.firstinspires.ftc.teamcode.rr.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -53,6 +52,7 @@ public class RedW extends BaseOpMode {
     public static int propPos = 3;
 
     private boolean pastA = false;
+    private boolean pastX = false;
 
     @Override
     public void initialize() {
@@ -60,7 +60,7 @@ public class RedW extends BaseOpMode {
         auto = true;
         super.initialize();
 
-        propProcessor = new PropProcessor(Alliance.BLUE);
+        propProcessor = new PropProcessor(Alliance.RED_W);
 
         visionPortal = new VisionPortal.Builder()
                 .setCamera(robot.C920)
@@ -88,13 +88,14 @@ public class RedW extends BaseOpMode {
 
         robot.write(intakeSS, eleSS, armSS, grabSS);
 
-//        propPos = propProcessor.getSpike();
+        propPos = propProcessor.getSpike();
 
         //take picture
-        if (driver.wasJustPressed(GamepadKeys.Button.X)) {
-            visionPortal.saveNextFrameRaw(String.format(Locale.US, "CameraFrameCapture-%06d", 1));
+        if (gamepad1.x && !pastX) {
+            visionPortal.saveNextFrameRaw(String.format(Locale.US, "CameraFrameCapture-%06d", System.nanoTime()));
             tal("Picture Taken!");
         }
+        gamepad1.x = pastX;
 
         //change path type
         if (gamepad1.a && !pastA) {
@@ -184,7 +185,7 @@ public class RedW extends BaseOpMode {
                                 .build();
 
                         toCStackFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
-                                .lineToLinearHeading(STACK_C)
+                                .lineToLinearHeading(STACK_C_1)
                                 .build();
 
                         toBDFromCStackAA = autoDriveSS.trajectorySequenceBuilder(toCStackFromSpike.end())
@@ -206,7 +207,7 @@ public class RedW extends BaseOpMode {
                                 .build();
 
                         toCStackFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
-                                .lineToLinearHeading(STACK_C)
+                                .lineToLinearHeading(STACK_C_2)
                                 .build();
 
                         toBDFromCStackAA = autoDriveSS.trajectorySequenceBuilder(toCStackFromSpike.end())
@@ -228,7 +229,7 @@ public class RedW extends BaseOpMode {
                                 .build();
 
                         toCStackFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
-                                .lineToLinearHeading(STACK_C)
+                                .lineToLinearHeading(STACK_C_3)
                                 .build();
 
                         toBDFromCStackAA = autoDriveSS.trajectorySequenceBuilder(toCStackFromSpike.end())
@@ -254,7 +255,7 @@ public class RedW extends BaseOpMode {
                                 .build();
 
                         toCStackFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
-                                .lineToLinearHeading(STACK_C)
+                                .lineToLinearHeading(STACK_C_1)
                                 .build();
 
                         toBDFromCStackAA = autoDriveSS.trajectorySequenceBuilder(toCStackFromSpike.end())
@@ -269,7 +270,7 @@ public class RedW extends BaseOpMode {
                         toCStackFromBD = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
                                 .setReversed(false)
                                 .lineToLinearHeading(STACK_BD_1_A)
-                                .lineToLinearHeading(STACK_C)
+                                .lineToLinearHeading(STACK_C_1)
                                 .build();
 
                         toBDFromCStackBA = autoDriveSS.trajectorySequenceBuilder(toCStackFromBD.end())
@@ -291,7 +292,7 @@ public class RedW extends BaseOpMode {
                                 .build();
 
                         toCStackFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
-                                .lineToLinearHeading(STACK_C)
+                                .lineToLinearHeading(STACK_C_2)
                                 .build();
 
                         toBDFromCStackAA = autoDriveSS.trajectorySequenceBuilder(toCStackFromSpike.end())
@@ -306,7 +307,7 @@ public class RedW extends BaseOpMode {
                         toCStackFromBD = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
                                 .setReversed(false)
                                 .lineToLinearHeading(STACK_BD_1_A)
-                                .lineToLinearHeading(STACK_C)
+                                .lineToLinearHeading(STACK_C_2)
                                 .build();
 
                         toBDFromCStackBA = autoDriveSS.trajectorySequenceBuilder(toCStackFromBD.end())
@@ -328,7 +329,7 @@ public class RedW extends BaseOpMode {
                                 .build();
 
                         toCStackFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
-                                .lineToLinearHeading(STACK_C)
+                                .lineToLinearHeading(STACK_C_3)
                                 .build();
 
                         toBDFromCStackAA = autoDriveSS.trajectorySequenceBuilder(toCStackFromSpike.end())
@@ -343,7 +344,7 @@ public class RedW extends BaseOpMode {
                         toCStackFromBD = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
                                 .setReversed(false)
                                 .lineToLinearHeading(STACK_BD_1_A)
-                                .lineToLinearHeading(STACK_C)
+                                .lineToLinearHeading(STACK_C_3)
                                 .build();
 
                         toBDFromCStackBA = autoDriveSS.trajectorySequenceBuilder(toCStackFromBD.end())

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 
 public class GrabberSubsystem extends SubsystemBase {
@@ -47,5 +48,9 @@ public class GrabberSubsystem extends SubsystemBase {
 
     public double getRightPos() {
         return rightPos;
+    }
+
+    public boolean isClosed() {
+        return (leftPos == Constants.GRABBER_CLOSED && rightPos == Constants.GRABBER_CLOSED);
     }
 }

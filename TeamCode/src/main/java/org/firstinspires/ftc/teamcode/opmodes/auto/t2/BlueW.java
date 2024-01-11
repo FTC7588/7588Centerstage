@@ -11,11 +11,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectorySequenceAsync;
+import org.firstinspires.ftc.teamcode.commands.arm.SetPivotPosition;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakePower;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
-import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
-import org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys;
+import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.PropProcessor;
 import org.firstinspires.ftc.teamcode.rr.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -48,9 +48,12 @@ public class BlueW extends BaseOpMode {
     private TrajectorySequence toBDFromSpike;
     private TrajectorySequence park;
 
+    private SetPivotPosition pivotPosition;
+
     public static int propPos = 3;
 
     private boolean pastA = false;
+    private boolean pastX = false;
 
     @Override
     public void initialize() {
@@ -58,7 +61,7 @@ public class BlueW extends BaseOpMode {
         auto = true;
         super.initialize();
 
-        propProcessor = new PropProcessor(Alliance.BLUE);
+        propProcessor = new PropProcessor(Alliance.BLUE_W);
 
         visionPortal = new VisionPortal.Builder()
                 .setCamera(robot.C920)
@@ -86,13 +89,14 @@ public class BlueW extends BaseOpMode {
 
         robot.write(intakeSS, eleSS, armSS, grabSS);
 
-//        propPos = propProcessor.getSpike();
+        propPos = propProcessor.getSpike();
 
         //take picture
-        if (driver.wasJustPressed(GamepadKeys.Button.X)) {
-            visionPortal.saveNextFrameRaw(String.format(Locale.US, "CameraFrameCapture-%06d", 1));
+        if (gamepad1.x && !pastX) {
+            visionPortal.saveNextFrameRaw(String.format(Locale.US, "CameraFrameCapture-%06d", System.nanoTime()));
             tal("Picture Taken!");
         }
+        gamepad1.x = pastX;
 
         //change path type
         if (gamepad1.a && !pastA) {
@@ -143,6 +147,8 @@ public class BlueW extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromSpike.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
+
+                        pivotPosition = pivotPosUp;
                         break;
                     case 2:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
@@ -157,6 +163,8 @@ public class BlueW extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromSpike.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
+
+                        pivotPosition = pivotPosUp;
                         break;
                     case 3:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
@@ -171,6 +179,8 @@ public class BlueW extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromSpike.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
+
+                        pivotPosition = pivotPosDown;
                         break;
                 }
                 break;
@@ -197,6 +207,8 @@ public class BlueW extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
+
+                        pivotPosition = pivotPosUp;
                         break;
                     case 2:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
@@ -219,6 +231,8 @@ public class BlueW extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
+
+                        pivotPosition = pivotPosUp;
                         break;
                     case 3:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
@@ -241,6 +255,8 @@ public class BlueW extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
+
+                        pivotPosition = pivotPosDown;
                         break;
                 }
                 break;
@@ -282,6 +298,8 @@ public class BlueW extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackBB.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
+
+                        pivotPosition = pivotPosUp;
                         break;
                     case 2:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
@@ -319,6 +337,8 @@ public class BlueW extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackBB.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
+
+                        pivotPosition = pivotPosUp;
                         break;
                     case 3:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
@@ -356,6 +376,8 @@ public class BlueW extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackBB.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
+
+                        pivotPosition = pivotPosDown;
                         break;
                 }
                 break;
@@ -446,7 +468,7 @@ public class BlueW extends BaseOpMode {
                                 autoArmBack,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStackAB),
                                 new WaitCommand(200),
-                                pivotPosUp,
+                                pivotPosition,
                                 new WaitCommand(400),
                                 grabbersOpen,
                                 new WaitCommand(400),
@@ -469,7 +491,7 @@ public class BlueW extends BaseOpMode {
                                 autoArmBack,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStackBB),
                                 new WaitCommand(200),
-                                pivotPosUp,
+                                pivotPosition,
                                 new WaitCommand(400),
                                 grabbersOpen,
                                 new WaitCommand(400),

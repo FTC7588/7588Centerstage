@@ -16,8 +16,7 @@ import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectorySequenceAsync
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakePower;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
-import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
-import org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys;
+import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.PropProcessor;
 import org.firstinspires.ftc.teamcode.rr.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -48,6 +47,7 @@ public class RedBD extends BaseOpMode {
     public static int propPos = 1;
 
     private boolean pastA = false;
+    private boolean pastX = false;
 
     @Override
     public void initialize() {
@@ -55,7 +55,7 @@ public class RedBD extends BaseOpMode {
         auto = true;
         super.initialize();
 
-        propProcessor = new PropProcessor(Alliance.BLUE);
+        propProcessor = new PropProcessor(Alliance.RED_BD);
 
         visionPortal = new VisionPortal.Builder()
                 .setCamera(robot.C920)
@@ -82,11 +82,14 @@ public class RedBD extends BaseOpMode {
 
         robot.write(intakeSS, eleSS, armSS, grabSS);
 
-//        propPos = propProcessor.getSpike();
+        propPos = propProcessor.getSpike();
 
-        if (driver.wasJustPressed(GamepadKeys.Button.X)) {
-            visionPortal.saveNextFrameRaw(String.format(Locale.US, "CameraFrameCapture-%06d", 1));
+        //take picture
+        if (gamepad1.x && !pastX) {
+            visionPortal.saveNextFrameRaw(String.format(Locale.US, "CameraFrameCapture-%06d", System.nanoTime()));
+            tal("Picture Taken!");
         }
+        gamepad1.x = pastX;
 
         //change path type
         if (gamepad1.a && !pastA) {
@@ -184,11 +187,10 @@ public class RedBD extends BaseOpMode {
 
                         toBDFromCStackA = autoDriveSS.trajectorySequenceBuilder(toCStackFromBD.end())
                                 .lineToLinearHeading(STACK_BD_2_B)
-                                .lineToLinearHeading(STACK_BD_2_A)
                                 .build();
 
                         toBDFromCStackB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackA.end())
-                                .lineToLinearHeading(BD_BD_TWO_OFF)
+                                .lineToLinearHeading(PARK_CORNER)
                                 .build();
 
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
@@ -212,11 +214,10 @@ public class RedBD extends BaseOpMode {
 
                         toBDFromCStackA = autoDriveSS.trajectorySequenceBuilder(toCStackFromBD.end())
                                 .lineToLinearHeading(STACK_BD_2_B)
-                                .lineToLinearHeading(STACK_BD_2_A)
                                 .build();
 
                         toBDFromCStackB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackA.end())
-                                .lineToLinearHeading(BD_BD_THREE_OFF)
+                                .lineToLinearHeading(PARK_CORNER)
                                 .build();
 
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
@@ -240,11 +241,10 @@ public class RedBD extends BaseOpMode {
 
                         toBDFromCStackA = autoDriveSS.trajectorySequenceBuilder(toCStackFromBD.end())
                                 .lineToLinearHeading(STACK_BD_2_B)
-                                .lineToLinearHeading(STACK_BD_2_A)
                                 .build();
 
                         toBDFromCStackB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackA.end())
-                                .lineToLinearHeading(BD_BD_TWO_OFF)
+                                .lineToLinearHeading(PARK_CORNER)
                                 .build();
 
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
