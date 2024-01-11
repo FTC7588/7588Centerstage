@@ -19,6 +19,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectorySequenceAsync;
 import org.firstinspires.ftc.teamcode.commands.arm.SetArmPositions;
@@ -36,6 +37,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import java.util.Locale;
 
 @Autonomous
+@Disabled
 @Config
 public class RedStacks extends BaseOpMode {
 

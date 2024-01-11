@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto.t2;
 
-import static org.firstinspires.ftc.teamcode.opmodes.auto.t2.AutoConstants.Blue.*;
+import static org.firstinspires.ftc.teamcode.Constants.INT_FIVE;
+import static org.firstinspires.ftc.teamcode.Constants.INT_FOUR;
+import static org.firstinspires.ftc.teamcode.Constants.INT_THREE;
+import static org.firstinspires.ftc.teamcode.Constants.INT_UP;
+import static org.firstinspires.ftc.teamcode.opmodes.auto.t2.AutoConstants.Red.*;
 
 import android.util.Size;
 
@@ -22,11 +26,9 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.Locale;
 
-import static org.firstinspires.ftc.teamcode.Constants.*;
-
 @Autonomous
 @Config
-public class BlueW extends BaseOpMode {
+public class RedW extends BaseOpMode {
 
     public static Paths path = Paths.W_1_C;
     private int list = 2;

@@ -1,17 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto.t1;
 
-import static org.firstinspires.ftc.teamcode.Constants.ARM_PIVOT_DOWN;
-import static org.firstinspires.ftc.teamcode.Constants.ARM_SHOULDER_DEPOSIT;
-import static org.firstinspires.ftc.teamcode.Constants.ARM_WRIST_DEPOSIT;
-import static org.firstinspires.ftc.teamcode.Constants.FLOOR_ELE;
-import static org.firstinspires.ftc.teamcode.Constants.FLOOR_SHOULDER;
-import static org.firstinspires.ftc.teamcode.Constants.FLOOR_WRIST;
-import static org.firstinspires.ftc.teamcode.Constants.GRABBER_CLOSED;
-import static org.firstinspires.ftc.teamcode.Constants.GRABBER_OPEN;
-import static org.firstinspires.ftc.teamcode.Constants.GRAB_SHOULDER;
-import static org.firstinspires.ftc.teamcode.Constants.GRAB_WRIST;
-import static org.firstinspires.ftc.teamcode.Constants.INT_DOWN;
-
 import android.util.Size;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -19,14 +7,9 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectorySequenceAsync;
-import org.firstinspires.ftc.teamcode.commands.arm.SetArmPositions;
-import org.firstinspires.ftc.teamcode.commands.arm.SetEleArmPositions;
-import org.firstinspires.ftc.teamcode.commands.grabber.SetGrabberPosition;
-import org.firstinspires.ftc.teamcode.commands.grabber.SetLeftGrabberPosition;
-import org.firstinspires.ftc.teamcode.commands.grabber.SetRightGrabberPosition;
-import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.PropProcessor;
@@ -36,8 +19,9 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import java.util.Locale;
 
 @Autonomous
+@Disabled
 @Config
-public class RedBD extends BaseOpMode {
+public class RedBDOld extends BaseOpMode {
 
     public boolean runOnce = false;
 

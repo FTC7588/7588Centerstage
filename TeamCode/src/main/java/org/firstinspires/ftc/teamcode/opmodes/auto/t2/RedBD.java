@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto.t2;
 
-import static org.firstinspires.ftc.teamcode.opmodes.auto.t2.AutoConstants.Blue.*;
+import static org.firstinspires.ftc.teamcode.Constants.INT_FIVE;
+import static org.firstinspires.ftc.teamcode.Constants.INT_FOUR;
+import static org.firstinspires.ftc.teamcode.opmodes.auto.t2.AutoConstants.Red.*;
 
 import android.util.Size;
 
@@ -20,13 +22,11 @@ import org.firstinspires.ftc.teamcode.poofyutils.processors.PropProcessor;
 import org.firstinspires.ftc.teamcode.rr.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-import static org.firstinspires.ftc.teamcode.Constants.*;
-
 import java.util.Locale;
 
 @Autonomous
 @Config
-public class BlueBD extends BaseOpMode {
+public class RedBD extends BaseOpMode {
 
     public static Paths path = Paths.BS_0;
     private int list = 0;
@@ -73,8 +73,8 @@ public class BlueBD extends BaseOpMode {
     public void initLoop() {
         intakeUp.schedule();
         armGrab.schedule();
-        grabberLeftClose.schedule();
-        grabberRightOpen.schedule();
+        grabberLeftOpen.schedule();
+        grabberRightClose.schedule();
 
         robot.read(intakeSS, eleSS, armSS, grabSS);
 
@@ -260,13 +260,13 @@ public class BlueBD extends BaseOpMode {
                 schedule(
                         new SequentialCommandGroup(
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toSpike),
-                                new SetIntakePower(intakeSS, 0.5),
+                                new SetIntakePower(intakeSS, 0.7),
                                 new WaitCommand(500),
                                 intakeIdle,
                                 new WaitCommand(250),
                                 autoArmBack,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromSpike),
-                                grabberLeftOpen,
+                                grabberRightOpen,
                                 new WaitCommand(500),
                                 armGrab,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, park)
@@ -277,12 +277,12 @@ public class BlueBD extends BaseOpMode {
                 schedule(
                         new SequentialCommandGroup(
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toSpike),
-                                new SetIntakePower(intakeSS, 0.5),
+                                new SetIntakePower(intakeSS, 0.7),
                                 new WaitCommand(500),
                                 intakeIdle,
                                 autoArmBack,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromSpike),
-                                grabberLeftOpen,
+                                grabberRightOpen,
                                 new WaitCommand(500),
                                 armGrab,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toCStackFromBD),

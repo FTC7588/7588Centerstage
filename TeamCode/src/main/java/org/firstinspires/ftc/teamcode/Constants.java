@@ -43,8 +43,8 @@ public class Constants {
     public static double INTAKE_POWER = 1;
 
     public static double INT_UP = 0;
-    public static double INT_FIVE = 0.175;
-    public static double INT_FOUR = 0.225;
+    public static double INT_FIVE = 0.18;
+    public static double INT_FOUR = 0.235;
     public static double INT_THREE = 0.3;
     public static double INT_TWO = 0.35;
     public static double INT_ONE = 0.375;
@@ -82,7 +82,7 @@ public class Constants {
     public static double ARM_SHOULDER_IDLE = 0.7;
     public static double FLOOR_SHOULDER = 0.25;
     public static double POISED_SHOULDER = 1;
-    public static double GRAB_SHOULDER = 0.895;
+    public static double GRAB_SHOULDER = 0.8925;
     public static double ARM_AUTO = 0.5;
 
         //wrist constants
