@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectorySequenceAsync;
+import org.firstinspires.ftc.teamcode.commands.arm.SetPivotPosition;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakePower;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
@@ -43,6 +44,8 @@ public class RedBD extends BaseOpMode {
     private TrajectorySequence toBDFromCStackA;
     private TrajectorySequence toBDFromCStackB;
     private TrajectorySequence park;
+
+    private SetPivotPosition pivotPosition;
 
     public static int propPos = 1;
 
@@ -82,7 +85,9 @@ public class RedBD extends BaseOpMode {
 
         robot.write(intakeSS, eleSS, armSS, grabSS);
 
-        propPos = propProcessor.getSpike();
+        if (propProcessor.getSpike() != 0) {
+            propPos = propProcessor.getSpike();
+        }
 
         //take picture
         if (gamepad1.x && !pastX) {
@@ -139,6 +144,7 @@ public class RedBD extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromSpike.end())
                                 .lineToLinearHeading(PARK_CORNER)
                                 .build();
+                        pivotPosition = pivotPosUp;
                         break;
                     case 2:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(BD_START)
@@ -152,6 +158,7 @@ public class RedBD extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromSpike.end())
                                 .lineToLinearHeading(PARK_CORNER)
                                 .build();
+                        pivotPosition = pivotPosUp;
                         break;
                     case 3:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(BD_START)
@@ -165,6 +172,7 @@ public class RedBD extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromSpike.end())
                                 .lineToLinearHeading(PARK_CORNER)
                                 .build();
+                        pivotPosition = pivotPosDown;
                         break;
                 }
                 break;
@@ -196,6 +204,7 @@ public class RedBD extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
                                 .lineToLinearHeading(PARK_CORNER)
                                 .build();
+                        pivotPosition = pivotPosUp;
                         break;
                     case 2:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(BD_START)
@@ -223,6 +232,7 @@ public class RedBD extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
                                 .lineToLinearHeading(PARK_CORNER)
                                 .build();
+                        pivotPosition = pivotPosUp;
                         break;
                     case 3:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(BD_START)
@@ -250,6 +260,7 @@ public class RedBD extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
                                 .lineToLinearHeading(PARK_CORNER)
                                 .build();
+                        pivotPosition = pivotPosDown;
                         break;
                 }
         }
@@ -301,7 +312,7 @@ public class RedBD extends BaseOpMode {
                                 autoArmBack,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStackB),
                                 new WaitCommand(250),
-                                pivotPosUp,
+                                pivotPosition,
                                 new WaitCommand(400),
                                 grabbersOpen,
                                 new WaitCommand(400),

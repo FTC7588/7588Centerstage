@@ -89,7 +89,9 @@ public class BlueW extends BaseOpMode {
 
         robot.write(intakeSS, eleSS, armSS, grabSS);
 
-        propPos = propProcessor.getSpike();
+        if (propProcessor.getSpike() != 0) {
+            propPos = propProcessor.getSpike();
+        }
 
         //take picture
         if (gamepad1.x && !pastX) {
@@ -338,7 +340,7 @@ public class BlueW extends BaseOpMode {
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
 
-                        pivotPosition = pivotPosUp;
+                        pivotPosition = pivotPosDown;
                         break;
                     case 3:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)

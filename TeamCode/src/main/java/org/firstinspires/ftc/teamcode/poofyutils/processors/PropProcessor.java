@@ -34,8 +34,8 @@ public class PropProcessor implements VisionProcessor {
     public Rect centerROIBox;
     public Rect rightROIBox;
 
-    public Rect blueBD_redW_LeftROIBox = new Rect(525, 5, 30, 25);
-    public Rect blueBD_redWCenterROIBox = new Rect(530, 225, 30, 25);
+    public Rect blueBD_redW_LeftROIBox = new Rect(525, 20, 30, 25);
+    public Rect blueBD_redWCenterROIBox = new Rect(530, 240, 30, 25);
     public Rect blueBD_redWRightROIBox = new Rect(0, 265, 30, 25);
 
     public Rect redBD_blueWLeftROIBox = new Rect(0,265,30,25);
@@ -77,6 +77,8 @@ public class PropProcessor implements VisionProcessor {
 
     @Override
     public Object processFrame(Mat input, long captureTimeNanos) {
+
+        spike = 0;
 
         if (tuneBlue) {
             Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2HSV);
@@ -243,6 +245,12 @@ public class PropProcessor implements VisionProcessor {
         }
         Imgproc.putText(input, Integer.toString(contours.size()), new Point(rightROIBox.x,400), Imgproc.FONT_HERSHEY_COMPLEX, 1, new Scalar(255,255,255));
         contours.clear();
+
+        if (spike == 0 && (alliance == Alliance.BLUE_BD || alliance == Alliance.RED_W)) {
+            spike = 3;
+        } else if (spike == 0 && (alliance == Alliance.RED_BD || alliance == Alliance.BLUE_W)) {
+            spike = 1;
+        }
 
         //clear the ROI mats
         ROIs.clear();

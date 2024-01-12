@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectorySequenceAsync;
+import org.firstinspires.ftc.teamcode.commands.arm.SetPivotPosition;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakePower;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
@@ -48,6 +49,8 @@ public class RedW extends BaseOpMode {
     private TrajectorySequence toBDFromCStackBB;
     private TrajectorySequence toBDFromSpike;
     private TrajectorySequence park;
+
+    private SetPivotPosition pivotPosition;
 
     public static int propPos = 3;
 
@@ -88,7 +91,9 @@ public class RedW extends BaseOpMode {
 
         robot.write(intakeSS, eleSS, armSS, grabSS);
 
-        propPos = propProcessor.getSpike();
+        if (propProcessor.getSpike() != 0) {
+            propPos = propProcessor.getSpike();
+        }
 
         //take picture
         if (gamepad1.x && !pastX) {
@@ -146,6 +151,7 @@ public class RedW extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromSpike.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
+                        pivotPosition = pivotPosUp;
                         break;
                     case 2:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
@@ -160,6 +166,7 @@ public class RedW extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromSpike.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
+                        pivotPosition = pivotPosUp;
                         break;
                     case 3:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
@@ -174,6 +181,7 @@ public class RedW extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromSpike.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
+                        pivotPosition = pivotPosDown;
                         break;
                 }
                 break;
@@ -200,6 +208,7 @@ public class RedW extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
+                        pivotPosition = pivotPosUp;
                         break;
                     case 2:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
@@ -222,6 +231,7 @@ public class RedW extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
+                        pivotPosition = pivotPosUp;
                         break;
                     case 3:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
@@ -244,6 +254,7 @@ public class RedW extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
+                        pivotPosition = pivotPosDown;
                         break;
                 }
                 break;
@@ -285,6 +296,7 @@ public class RedW extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackBB.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
+                        pivotPosition = pivotPosUp;
                         break;
                     case 2:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
@@ -322,6 +334,7 @@ public class RedW extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackBB.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
+                        pivotPosition = pivotPosUp;
                         break;
                     case 3:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
@@ -359,6 +372,7 @@ public class RedW extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackBB.end())
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
+                        pivotPosition = pivotPosDown;
                         break;
                 }
                 break;
@@ -449,7 +463,7 @@ public class RedW extends BaseOpMode {
                                 autoArmBack,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStackAB),
                                 new WaitCommand(200),
-                                pivotPosUp,
+                                pivotPosition,
                                 new WaitCommand(400),
                                 grabbersOpen,
                                 new WaitCommand(400),

@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectorySequenceAsync;
+import org.firstinspires.ftc.teamcode.commands.arm.SetPivotPosition;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakePower;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
@@ -20,8 +21,6 @@ import org.firstinspires.ftc.teamcode.rr.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 import static org.firstinspires.ftc.teamcode.Constants.*;
-import static org.firstinspires.ftc.teamcode.opmodes.auto.t2.AutoConstants.Red.PARK_CORNER;
-import static org.firstinspires.ftc.teamcode.opmodes.auto.t2.AutoConstants.Red.STACK_BD_2_B;
 
 import java.util.Locale;
 
@@ -45,6 +44,8 @@ public class BlueBD extends BaseOpMode {
     private TrajectorySequence toBDFromCStackA;
     private TrajectorySequence toBDFromCStackB;
     private TrajectorySequence park;
+
+    private SetPivotPosition pivotPosition;
 
     public static int propPos = 1;
 
@@ -75,8 +76,8 @@ public class BlueBD extends BaseOpMode {
     public void initLoop() {
         intakeUp.schedule();
         armGrab.schedule();
-        grabberLeftClose.schedule();
-        grabberRightOpen.schedule();
+        grabberLeftOpen.schedule();
+        grabberRightClose.schedule();
 
         robot.read(intakeSS, eleSS, armSS, grabSS);
 
@@ -84,9 +85,9 @@ public class BlueBD extends BaseOpMode {
 
         robot.write(intakeSS, eleSS, armSS, grabSS);
 
-//        if (visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING) {
-//            propPos = propProcessor.getSpike();
-//        }
+        if (propProcessor.getSpike() != 0) {
+            propPos = propProcessor.getSpike();
+        }
 
         //take picture
         if (gamepad1.x && !pastX) {
@@ -143,6 +144,7 @@ public class BlueBD extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromSpike.end())
                                 .lineToLinearHeading(PARK_CORNER)
                                 .build();
+                        pivotPosition = pivotPosUp;
                         break;
                     case 2:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(BD_START)
@@ -156,6 +158,7 @@ public class BlueBD extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromSpike.end())
                                 .lineToLinearHeading(PARK_CORNER)
                                 .build();
+                        pivotPosition = pivotPosUp;
                         break;
                     case 3:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(BD_START)
@@ -169,6 +172,7 @@ public class BlueBD extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromSpike.end())
                                 .lineToLinearHeading(PARK_CORNER)
                                 .build();
+                        pivotPosition = pivotPosDown;
                         break;
                 }
                 break;
@@ -200,6 +204,7 @@ public class BlueBD extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
                                 .lineToLinearHeading(PARK_CORNER)
                                 .build();
+                        pivotPosition = pivotPosUp;
                         break;
                     case 2:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(BD_START)
@@ -227,6 +232,7 @@ public class BlueBD extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
                                 .lineToLinearHeading(PARK_CORNER)
                                 .build();
+                        pivotPosition = pivotPosUp;
                         break;
                     case 3:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(BD_START)
@@ -254,6 +260,7 @@ public class BlueBD extends BaseOpMode {
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
                                 .lineToLinearHeading(PARK_CORNER)
                                 .build();
+                        pivotPosition = pivotPosDown;
                         break;
                 }
         }
@@ -270,7 +277,7 @@ public class BlueBD extends BaseOpMode {
                                 new WaitCommand(250),
                                 autoArmBack,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromSpike),
-                                grabberLeftOpen,
+                                grabberRightOpen,
                                 new WaitCommand(500),
                                 armGrab,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, park)
@@ -286,7 +293,7 @@ public class BlueBD extends BaseOpMode {
                                 intakeIdle,
                                 autoArmBack,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromSpike),
-                                grabberLeftOpen,
+                                grabberRightOpen,
                                 new WaitCommand(500),
                                 armGrab,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toCStackFromBD),
@@ -305,7 +312,7 @@ public class BlueBD extends BaseOpMode {
                                 autoArmBack,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStackB),
                                 new WaitCommand(250),
-                                pivotPosUp,
+                                pivotPosition,
                                 new WaitCommand(400),
                                 grabbersOpen,
                                 new WaitCommand(400),

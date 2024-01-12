@@ -35,7 +35,7 @@ public class Constants {
     public static double LOW_SPEED = 0.4;
     public static double HIGH_SPEED = 1;
 
-    public static double DRONE_RELEASE = 0.8;
+    public static double DRONE_RELEASE = 0.5;
     public static double DRONE_HOLD = 1;
 
     //intake constants
