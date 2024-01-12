@@ -78,9 +78,9 @@ public class AutoConstants {
         //stack positions
         public static Pose2d STACK_A = new Pose2d(-57.5, -36, Math.toRadians(-180));
 
-        public static Pose2d STACK_C_1 = new Pose2d(-60, -12, Math.toRadians(-180));
-        public static Pose2d STACK_C_2 = new Pose2d(-59.75, -12, Math.toRadians(-180));
-        public static Pose2d STACK_C_3 = new Pose2d(-58.25,-12,Math.toRadians(-180));
+        public static Pose2d STACK_C_1 = new Pose2d(-60.25, -12, Math.toRadians(-180));
+        public static Pose2d STACK_C_2 = new Pose2d(-60, -12, Math.toRadians(-180));
+        public static Pose2d STACK_C_3 = new Pose2d(-58.5,-12,Math.toRadians(-180));
 
         //to backdrop from spikes
         public static Pose2d W_BD_ONE_A = new Pose2d(-31, -12, Math.toRadians(-180));
