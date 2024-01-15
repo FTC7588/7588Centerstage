@@ -78,8 +78,8 @@ public class Constants {
     public static double ARM_SHOULDER_IN_ANGLE = 60;
     public static double ARM_SHOULDER_OUT_ANGLE = 320;
 
-    public static double ARM_SHOULDER_DEPOSIT = 0.42;
-    public static double ARM_SHOULDER_IDLE = 0.7;
+    public static double ARM_SHOULDER_DEPOSIT = 0.39;
+    public static double ARM_SHOULDER_IDLE = 0.71;
     public static double FLOOR_SHOULDER = 0.25;
     public static double POISED_SHOULDER = 1;
     public static double GRAB_SHOULDER = 0.8925;

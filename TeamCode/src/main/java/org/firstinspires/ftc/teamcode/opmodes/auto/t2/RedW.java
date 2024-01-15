@@ -155,7 +155,7 @@ public class RedW extends BaseOpMode {
                         break;
                     case 2:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
-                                .lineToLinearHeading(W_SPIKE_TWO)
+                                .lineToLinearHeading(W_SPIKE_TWO_ALT)
                                 .build();
 
                         toBDFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
@@ -202,7 +202,7 @@ public class RedW extends BaseOpMode {
                                 .build();
 
                         toBDFromCStackAB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAA.end())
-                                .lineToLinearHeading(W_BD_ONE_OFF)
+                                .lineToLinearHeading(W_BD_ONE_THREE_OFF)
                                 .build();
 
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
@@ -212,7 +212,7 @@ public class RedW extends BaseOpMode {
                         break;
                     case 2:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
-                                .lineToLinearHeading(W_SPIKE_TWO)
+                                .lineToLinearHeading(W_SPIKE_TWO_ALT)
                                 .build();
 
                         toCStackFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
@@ -225,7 +225,7 @@ public class RedW extends BaseOpMode {
                                 .build();
 
                         toBDFromCStackAB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAA.end())
-                                .lineToLinearHeading(W_BD_TWO_OFF)
+                                .lineToLinearHeading(W_BD_TWO_THREE_OFF)
                                 .build();
 
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
@@ -275,7 +275,7 @@ public class RedW extends BaseOpMode {
                                 .build();
 
                         toBDFromCStackAB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAA.end())
-                                .lineToLinearHeading(W_BD_ONE_OFF)
+                                .lineToLinearHeading(W_BD_ONE_ONE_OFF)
                                 .build();
 
                         toCStackFromBD = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
@@ -290,7 +290,7 @@ public class RedW extends BaseOpMode {
                                 .build();
 
                         toBDFromCStackBB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackBA.end())
-                                .lineToLinearHeading(W_BD_TWO_OFF)
+                                .lineToLinearHeading(W_BD_TWO_ONE_OFF)
                                 .build();
 
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackBB.end())
@@ -300,7 +300,7 @@ public class RedW extends BaseOpMode {
                         break;
                     case 2:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
-                                .lineToLinearHeading(W_SPIKE_TWO)
+                                .lineToLinearHeading(W_SPIKE_TWO_ALT)
                                 .build();
 
                         toCStackFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
@@ -313,7 +313,7 @@ public class RedW extends BaseOpMode {
                                 .build();
 
                         toBDFromCStackAB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAA.end())
-                                .lineToLinearHeading(W_BD_TWO_OFF)
+                                .lineToLinearHeading(W_BD_TWO_TWO_OFF)
                                 .build();
 
                         toCStackFromBD = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
@@ -328,7 +328,7 @@ public class RedW extends BaseOpMode {
                                 .build();
 
                         toBDFromCStackBB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackBA.end())
-                                .lineToLinearHeading(W_BD_ONE_OFF)
+                                .lineToLinearHeading(W_BD_ONE_TWO_OFF)
                                 .build();
 
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackBB.end())
@@ -366,7 +366,7 @@ public class RedW extends BaseOpMode {
                                 .build();
 
                         toBDFromCStackBB = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackBA.end())
-                                .lineToLinearHeading(W_BD_TWO_OFF)
+                                .lineToLinearHeading(W_BD_TWO_THREE_OFF)
                                 .build();
 
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackBB.end())

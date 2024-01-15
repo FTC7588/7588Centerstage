@@ -154,7 +154,7 @@ public class BlueW extends BaseOpMode {
                         break;
                     case 2:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
-                                .lineToLinearHeading(W_SPIKE_TWO)
+                                .lineToLinearHeading(W_SPIKE_TWO_ALT)
                                 .build();
 
                         toBDFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
@@ -207,14 +207,14 @@ public class BlueW extends BaseOpMode {
                                 .build();
 
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
-                                .lineToLinearHeading(PARK_CENTER)
+                                .lineToLinearHeading(PARK_CORNER)
                                 .build();
 
                         pivotPosition = pivotPosUp;
                         break;
                     case 2:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
-                                .lineToLinearHeading(W_SPIKE_TWO)
+                                .lineToLinearHeading(W_SPIKE_TWO_ALT)
                                 .build();
 
                         toCStackFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
@@ -231,7 +231,7 @@ public class BlueW extends BaseOpMode {
                                 .build();
 
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
-                                .lineToLinearHeading(PARK_CENTER)
+                                .lineToLinearHeading(PARK_CORNER)
                                 .build();
 
                         pivotPosition = pivotPosUp;
@@ -255,7 +255,7 @@ public class BlueW extends BaseOpMode {
                                 .build();
 
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackAB.end())
-                                .lineToLinearHeading(PARK_CENTER)
+                                .lineToLinearHeading(PARK_CORNER)
                                 .build();
 
                         pivotPosition = pivotPosDown;
@@ -305,7 +305,7 @@ public class BlueW extends BaseOpMode {
                         break;
                     case 2:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
-                                .lineToLinearHeading(W_SPIKE_TWO)
+                                .lineToLinearHeading(W_SPIKE_TWO_ALT)
                                 .build();
 
                         toCStackFromSpike = autoDriveSS.trajectorySequenceBuilder(toSpike.end())
@@ -340,7 +340,7 @@ public class BlueW extends BaseOpMode {
                                 .lineToLinearHeading(PARK_CENTER)
                                 .build();
 
-                        pivotPosition = pivotPosDown;
+                        pivotPosition = pivotPosUp;
                         break;
                     case 3:
                         toSpike = autoDriveSS.trajectorySequenceBuilder(W_START)
@@ -414,11 +414,12 @@ public class BlueW extends BaseOpMode {
                 tal("W_1_C");
                 schedule(
                         new SequentialCommandGroup(
+                                new WaitCommand(1500),
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toSpike),
                                 armBackGroup,
                                 new WaitCommand(500),
                                 grabberLeftOpen,
-                                new WaitCommand(200),
+                                new WaitCommand(500),
                                 armGrab,
                                 new WaitCommand(250),
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toCStackFromSpike),
@@ -427,17 +428,21 @@ public class BlueW extends BaseOpMode {
                                 new SetIntakePower(intakeSS, -1),
                                 new WaitCommand(250),
                                 new SetIntakeAngle(intakeSS, INT_FIVE),
-                                new WaitCommand(2000),
+                                new WaitCommand(1250),
                                 grabbersClosed,
                                 new WaitCommand(250),
                                 intakeIdle,
 
+                                new WaitCommand(10000),
+
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStackAA),
-                                armDepositGroup,
+                                autoArmBack,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStackAB),
-                                new WaitCommand(500),
+                                new WaitCommand(200),
+                                pivotPosition,
+                                new WaitCommand(400),
                                 grabbersOpen,
-                                new WaitCommand(500),
+                                new WaitCommand(400),
                                 armGrab,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, park)
                         )
@@ -448,6 +453,7 @@ public class BlueW extends BaseOpMode {
                 tal("W_3_C");
                 schedule(
                         new SequentialCommandGroup(
+                                new WaitCommand(1500),
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toSpike),
                                 armBackGroup,
                                 new WaitCommand(500),

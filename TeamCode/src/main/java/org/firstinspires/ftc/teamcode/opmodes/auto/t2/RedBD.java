@@ -29,7 +29,7 @@ import java.util.Locale;
 public class RedBD extends BaseOpMode {
 
     public static Paths path = Paths.BS_0;
-    private int list = 0;
+    private int list = 1;
 
     private PropProcessor propProcessor;
 
@@ -201,9 +201,9 @@ public class RedBD extends BaseOpMode {
                                 .lineToLinearHeading(PARK_CORNER)
                                 .build();
 
-                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
-                                .lineToLinearHeading(PARK_CORNER)
-                                .build();
+//                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
+//                                .lineToLinearHeading(PARK_CORNER)
+//                                .build();
                         pivotPosition = pivotPosUp;
                         break;
                     case 2:
@@ -229,9 +229,9 @@ public class RedBD extends BaseOpMode {
                                 .lineToLinearHeading(PARK_CORNER)
                                 .build();
 
-                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
-                                .lineToLinearHeading(PARK_CORNER)
-                                .build();
+//                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
+//                                .lineToLinearHeading(PARK_CORNER)
+//                                .build();
                         pivotPosition = pivotPosUp;
                         break;
                     case 3:
@@ -257,9 +257,9 @@ public class RedBD extends BaseOpMode {
                                 .lineToLinearHeading(PARK_CORNER)
                                 .build();
 
-                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
-                                .lineToLinearHeading(PARK_CORNER)
-                                .build();
+//                        park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
+//                                .lineToLinearHeading(PARK_CORNER)
+//                                .build();
                         pivotPosition = pivotPosDown;
                         break;
                 }
@@ -271,7 +271,7 @@ public class RedBD extends BaseOpMode {
                 schedule(
                         new SequentialCommandGroup(
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toSpike),
-                                new SetIntakePower(intakeSS, 0.7),
+                                new SetIntakePower(intakeSS, 0.5),
                                 new WaitCommand(500),
                                 intakeIdle,
                                 new WaitCommand(250),
@@ -288,9 +288,10 @@ public class RedBD extends BaseOpMode {
                 schedule(
                         new SequentialCommandGroup(
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toSpike),
-                                new SetIntakePower(intakeSS, 0.7),
+                                new SetIntakePower(intakeSS, 0.5),
                                 new WaitCommand(500),
                                 intakeIdle,
+                                new WaitCommand(250),
                                 autoArmBack,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromSpike),
                                 grabberRightOpen,
@@ -301,7 +302,7 @@ public class RedBD extends BaseOpMode {
                                 new SetIntakePower(intakeSS, -1),
                                 new WaitCommand(250),
                                 new SetIntakeAngle(intakeSS, INT_FIVE),
-                                new WaitCommand(1000),
+                                new WaitCommand(1250),
                                 new SetIntakeAngle(intakeSS, INT_FOUR),
                                 new WaitCommand(1500),
                                 grabbersClosed,
@@ -309,16 +310,14 @@ public class RedBD extends BaseOpMode {
                                 intakeIdle,
 
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStackA),
-                                autoArmBack,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromCStackB),
+                                autoArmBack,
                                 new WaitCommand(250),
                                 pivotPosition,
                                 new WaitCommand(400),
                                 grabbersOpen,
                                 new WaitCommand(400),
-                                armGrab,
-
-                                new FollowTrajectorySequenceAsync(autoDriveSS, park)
+                                armGrab
                         )
                 );
                 break;

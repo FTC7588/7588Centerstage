@@ -82,11 +82,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
 
     public boolean isBackPixelLoaded() {
-        return ((DistanceSensor) robot.backCS).getDistance(DistanceUnit.CM) < 1.1;
+        return ((DistanceSensor) robot.backCS).getDistance(DistanceUnit.CM) < 1;
     }
 
     public boolean isFrontPixelLoaded() {
-        return ((DistanceSensor) robot.frontCS).getDistance(DistanceUnit.CM) < 1.1;
+        return ((DistanceSensor) robot.frontCS).getDistance(DistanceUnit.CM) < 1;
     }
 
     public boolean isLoaded() {

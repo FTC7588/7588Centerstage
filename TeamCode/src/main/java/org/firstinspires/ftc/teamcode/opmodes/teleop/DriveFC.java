@@ -123,11 +123,11 @@ public class DriveFC extends BaseOpMode {
 
         super.run();
 
-        if (intakeSS.isLoaded()) {
-            gamepad2.rumble(0, 1, 100);
-        } else if (intakeSS.isBackPixelLoaded() ) {
-            gamepad2.rumble(1, 0, 100);
-        }
+//        if (intakeSS.isLoaded()) {
+//            gamepad2.rumble(0, 1, 100);
+//        } else if (intakeSS.isBackPixelLoaded() ) {
+//            gamepad2.rumble(1, 0, 100);
+//        }
 
         if (grabSS.isClosed()) {
             gamepad1.rumble(1, 1, 50);
