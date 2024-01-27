@@ -9,8 +9,8 @@ public class GrabberSubsystem extends SubsystemBase {
 
     private final RobotHardware robot;
 
-    private double leftPos;
-    private double rightPos;
+    private double leftPos = Constants.GRABBER_ONE_OPEN;
+    private double rightPos = Constants.GRABBER_TWO_OPEN;
 
     public GrabberSubsystem(RobotHardware robot) {
         this.robot = robot;
@@ -34,6 +34,11 @@ public class GrabberSubsystem extends SubsystemBase {
         rightPos = pos;
     }
 
+    public void setGrabberPositions(double pos1, double pos2) {
+        leftPos = pos1;
+        rightPos = pos2;
+    }
+
     public void setLeftGrabberPosition(double pos) {
         leftPos = pos;
     }
@@ -51,6 +56,6 @@ public class GrabberSubsystem extends SubsystemBase {
     }
 
     public boolean isClosed() {
-        return (leftPos == Constants.GRABBER_CLOSED && rightPos == Constants.GRABBER_CLOSED);
+        return (leftPos == Constants.GRABBER_ONE_CLOSED && rightPos == Constants.GRABBER_ONE_CLOSED);
     }
 }

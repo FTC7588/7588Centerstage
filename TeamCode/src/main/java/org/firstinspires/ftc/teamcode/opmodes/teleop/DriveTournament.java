@@ -14,6 +14,7 @@ import android.annotation.SuppressLint;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
@@ -27,6 +28,7 @@ import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.*;
 
 
+@Disabled
 @TeleOp
 @Config
 public class DriveTournament extends BaseOpMode {

@@ -16,7 +16,6 @@ public class MecanumDrive {
     private final PoofyPIDController xController;
     private final PoofyPIDController yController;
     private final PoofyPIDController thetaController;
-    private double maxTurnSpeedPID;
 
     private double turnSpeed;
     private double theta;
@@ -27,6 +26,7 @@ public class MecanumDrive {
     private double headingLockTarget;
 
     private Pose2d currentPose;
+    private Pose2d targetPose;
 
     public MecanumDrive(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx backLeft, DcMotorEx backRight) {
         this.frontLeft = frontLeft;
@@ -47,8 +47,7 @@ public class MecanumDrive {
                         DcMotorEx backRight,
                         PoofyPIDCoefficients xCoeffs,
                         PoofyPIDCoefficients yCoeffs,
-                        PoofyPIDCoefficients thetaCoeffs,
-                        double maxTurnSpeedPID
+                        PoofyPIDCoefficients thetaCoeffs
     ) {
         this.frontLeft = frontLeft;
         this.frontRight = frontRight;
@@ -61,8 +60,6 @@ public class MecanumDrive {
         thetaController = new PoofyPIDController(thetaCoeffs);
         thetaController.setInputBounds(-180, 180);
         thetaController.setOutputBounds(-1, 1);
-
-        this.maxTurnSpeedPID = maxTurnSpeedPID;
 
         currentPose = new Pose2d(0, 0, 0);
 
@@ -91,13 +88,6 @@ public class MecanumDrive {
         driveRobotCentric(strafeSpeed, forwardSpeed, turnSpeed);
     }
 
-    public void driveRobotCentricPID(double strafeSpeed, double forwardSpeed, double turnSpeed, double gyroAngle) {
-//        thetaTarget -= turnSpeed * maxTurnSpeedPID;
-//        turnSpeed = -thetaController.calculate(gyroAngle, Math.toRadians(thetaTarget));
-
-        driveRobotCentric(strafeSpeed, forwardSpeed, turnSpeed);
-    }
-
     public void driveFieldCentric(double strafeSpeed,
                                   double forwardSpeed,
                                   double turnSpeed,
@@ -118,51 +108,6 @@ public class MecanumDrive {
                 input.getX(),
                 input.getY(),
                 turnSpeed
-        );
-    }
-
-    public void driveFieldCentricPID(double strafeSpeed,
-                                  double forwardSpeed,
-                                  double turnSpeed,
-                                  double gyroAngle
-    ) {
-        Vector2d input = new Vector2d(strafeSpeed, forwardSpeed);
-        input = input.rotateBy(-gyroAngle);
-
-        driveRobotCentricPID(
-                input.getX(),
-                input.getY(),
-                turnSpeed,
-                gyroAngle
-        );
-    }
-
-    public void drivePointCentric(double strafeSpeed,
-                                  double forwardSpeed,
-                                  double gyroAngle,
-                                  Vector2d target,
-                                  Pose2d currentPose,
-                                  double angleOffset
-    ) {
-
-        this.currentPose = currentPose;
-
-        Vector2d difference = target.subtract(currentPose.getVector());
-
-        theta = difference.getAngle() + Math.toRadians(angleOffset);
-
-        turnSpeed = thetaController.calculate(theta, currentPose.getTheta());
-
-        double turnError = Math.abs(theta = currentPose.getTheta());
-//
-//        strafeSpeed *= Math.cos(Range.clip(turnError, -Math.PI/2, Math.PI/2));
-//        forwardSpeed *= Math.cos(Range.clip(turnError, -Math.PI/2, Math.PI/2));
-
-        driveFieldCentric(
-                strafeSpeed,
-                forwardSpeed,
-                -turnSpeed,
-                gyroAngle
         );
     }
 
@@ -234,6 +179,36 @@ public class MecanumDrive {
 
     public void write() {
         driveWithMotorPowers(frontLeftSpeed, frontRightSpeed, backLeftSpeed, backRightSpeed);
+    }
+
+    //pidtopoint stuff
+
+    public boolean reachedTarget(double tolerance, Pose2d currentPose) {
+        return Math.sqrt((targetPose.getX() - currentPose.getX())*(targetPose.getX() - currentPose.getX()) + (targetPose.getY() - currentPose.getY())*(targetPose.getY() - currentPose.getY())) <= tolerance;
+    }
+
+    public boolean reachedHeading(double tolerance, Pose2d currentPose) {
+        double diff = targetPose.getTheta() - currentPose.getTheta();
+        while(diff>Math.PI) diff -= Math.PI * 2.0;
+        while(diff<-Math.PI) diff += Math.PI * 2.0;
+        return Math.abs(diff) <= tolerance;
+    }
+
+    public void driveFollowPose(Pose2d targetPose, Pose2d currentPose) {
+        xController.setTargetPosition(targetPose.getX());
+        double strafeSpeed = xController.calculate(currentPose.getX());
+
+        yController.setTargetPosition(targetPose.getY());
+        double forwardSpeed = yController.calculate(currentPose.getY());
+
+        thetaController.setTargetPosition(Math.toRadians(targetPose.getTheta()));
+        double turnSpeed = thetaController.calculate(Math.toRadians(currentPose.getTheta()));
+
+        driveRobotCentric(
+                strafeSpeed,
+                -forwardSpeed,
+                turnSpeed
+        );
     }
 
 }

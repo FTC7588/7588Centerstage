@@ -152,7 +152,8 @@ public class BaseOpMode extends CommandOpModeEx {
     protected SetEleArmPositions armBack;
 
     protected SequentialCommandGroup armDepositGroup;
-    protected SequentialCommandGroup armIdleGroup;
+    protected SequentialCommandGroup armPoisedGroup;
+    protected SequentialCommandGroup armGrabGroup;
     protected SequentialCommandGroup armBackGroup;
     protected SequentialCommandGroup autoArmBack;
 
@@ -248,9 +249,9 @@ public class BaseOpMode extends CommandOpModeEx {
         );
 
         //elevator
-        eleUp = new SetElevatorPower(eleSS, ELE_POWER);
+        eleUp = new SetElevatorPower(eleSS, -ELE_POWER);
         eleIdle = new SetElevatorPower(eleSS, 0);
-        eleDown = new SetElevatorPower(eleSS, -ELE_POWER);
+        eleDown = new SetElevatorPower(eleSS, ELE_POWER);
 
         eleTargetUp = new SetElevatorTarget(eleSS, ELE_UP);
         eleTargetMid = new SetElevatorTarget(eleSS, ELE_MID);
@@ -285,13 +286,13 @@ public class BaseOpMode extends CommandOpModeEx {
         pivotPosUp = new SetPivotPosition(armSS, ARM_PIVOT_UP);
 
         //grabber
-        grabbersClosed = new SetGrabberPosition(grabSS, GRABBER_CLOSED);
-        grabbersOpen = new SetGrabberPosition(grabSS, GRABBER_OPEN);
+        grabbersClosed = new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED);
+        grabbersOpen = new SetGrabberPosition(grabSS, GRABBER_ONE_OPEN, GRABBER_TWO_OPEN);
 
-        grabberLeftClose = new SetLeftGrabberPosition(grabSS, GRABBER_CLOSED);
-        grabberLeftOpen = new SetLeftGrabberPosition(grabSS, GRABBER_OPEN);
-        grabberRightClose = new SetRightGrabberPosition(grabSS, GRABBER_CLOSED);
-        grabberRightOpen = new SetRightGrabberPosition(grabSS, GRABBER_OPEN);
+        grabberLeftClose = new SetLeftGrabberPosition(grabSS, GRABBER_ONE_CLOSED);
+        grabberLeftOpen = new SetLeftGrabberPosition(grabSS, GRABBER_ONE_OPEN);
+        grabberRightClose = new SetRightGrabberPosition(grabSS, GRABBER_ONE_CLOSED);
+        grabberRightOpen = new SetRightGrabberPosition(grabSS, GRABBER_ONE_OPEN);
 
         //macros
         armInit = new SetArmPositions(
@@ -368,6 +369,8 @@ public class BaseOpMode extends CommandOpModeEx {
                 new SetWristPosition(armSS, ARM_WRIST_DEPOSIT)
         );
 
+
+
         armBackGroup = new SequentialCommandGroup(
                 new SetArmPositions(
                         armSS,
@@ -388,16 +391,20 @@ public class BaseOpMode extends CommandOpModeEx {
                 new SetWristPosition(armSS, FLOOR_WRIST)
         );
 
-        armIdleGroup = new SequentialCommandGroup(
+        armGrabGroup = new SequentialCommandGroup(
                 new SetShoulderPosition(armSS, ARM_SHOULDER_IDLE),
                 new WaitCommand(75),
                 new SetWristPosition(armSS, ARM_WRIST_IDLE),
                 new WaitCommand(75),
                 new SetShoulderPosition(armSS, GRAB_SHOULDER)
         );
+        armPoisedGroup = new SequentialCommandGroup(
+                new SetShoulderPosition(armSS, POISED_SHOULDER),
+                new SetWristPosition(armSS, POISED_WRIST)
+        );
 
 
-        autoGrab = new ConditionalCommand(new SetGrabberPosition(grabSS, GRABBER_CLOSED), new SetGrabberPosition(grabSS, GRABBER_OPEN), () -> intakeSS.isLoaded());
+        autoGrab = new ConditionalCommand(new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED), new SetGrabberPosition(grabSS, GRABBER_ONE_OPEN, GRABBER_TWO_OPEN), () -> intakeSS.isLoaded());
 
         //gamepads
         driver = new PoofyGamepadEx(gamepad1);

@@ -28,6 +28,7 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import org.firstinspires.ftc.teamcode.poofyutils.AprilTagCustomDatabase;
 import org.firstinspires.ftc.teamcode.poofyutils.PoofyDashboardUtil;
@@ -37,11 +38,12 @@ import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 
 @TeleOp
 @Config
-public class DriveFC extends BaseOpMode {
+public class DriveFinal extends BaseOpMode {
 
     @Override
     public void initialize() {
 
+        RobotHardware.USING_IMU = true;
         Constants.ELE_PID = false;
         alliance = Alliance.BLUE;
 
@@ -58,6 +60,7 @@ public class DriveFC extends BaseOpMode {
 
         gp1(DPAD_UP, 1).whenActive(intakeUp);
         gp1(DPAD_LEFT, 1).toggleWhenActive(intakeIn, intakeIdle);
+        gp1(DPAD_RIGHT, 1).whenActive(resetIMU);
         gp1(DPAD_DOWN, 1).whenActive(intakeDown);
 
         //p1 layer 2 controls
@@ -91,6 +94,7 @@ public class DriveFC extends BaseOpMode {
         //p2 controls
         gp2(DPAD_UP, 1).whileActiveContinuous(eleUp).whenInactive(eleIdle);
         gp2(DPAD_LEFT, 1).whenActive(eleTargetHang);
+        gp2(DPAD_RIGHT, 1).whenActive(armPoisedGroup);
         gp2(DPAD_DOWN, 1).whileActiveContinuous(eleDown).whenInactive(eleIdle);
 
         gp2(DPAD_UP, 2).whenActive(eleIncUp);
@@ -110,7 +114,7 @@ public class DriveFC extends BaseOpMode {
         gp1(LEFT_BUMPER, 3).whenActive(droneHold);
         gp1(RIGHT_BUMPER, 3).whenActive(droneRelease);
 
-        fieldCentric.schedule();
+        robotCentric.schedule();
         intakeDown.schedule();
         shoulderPosGrab.schedule();
         wristPosGrab.schedule();
@@ -123,19 +127,9 @@ public class DriveFC extends BaseOpMode {
 
         super.run();
 
-//        if (intakeSS.isLoaded()) {
-//            gamepad2.rumble(0, 1, 100);
-//        } else if (intakeSS.isBackPixelLoaded() ) {
-//            gamepad2.rumble(1, 0, 100);
+//        if (grabSS.isClosed()) {
+//            gamepad1.rumble(1, 1, 50);
 //        }
-
-        if (grabSS.isClosed()) {
-            gamepad1.rumble(1, 1, 50);
-        }
-
-        tad("back", intakeSS.isBackPixelLoaded());
-        tad("front", intakeSS.isFrontPixelLoaded());
-        tad("both", intakeSS.isLoaded());
 
 //        autoGrab.schedule();
 

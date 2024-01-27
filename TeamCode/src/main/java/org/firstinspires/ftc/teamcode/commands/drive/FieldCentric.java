@@ -30,8 +30,7 @@ public class FieldCentric extends CommandBase {
         m_drivetrainSubsystem.fieldCentricMode(
                 strafeSpeed.getAsDouble(),
                 forwardSpeed.getAsDouble(),
-                turnSpeed.getAsDouble(),
-                false
+                turnSpeed.getAsDouble()
         );
     }
 }

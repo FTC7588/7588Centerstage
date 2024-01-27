@@ -6,8 +6,9 @@ import static org.firstinspires.ftc.teamcode.Constants.ARM_WRIST_DEPOSIT;
 import static org.firstinspires.ftc.teamcode.Constants.FLOOR_ELE;
 import static org.firstinspires.ftc.teamcode.Constants.FLOOR_SHOULDER;
 import static org.firstinspires.ftc.teamcode.Constants.FLOOR_WRIST;
-import static org.firstinspires.ftc.teamcode.Constants.GRABBER_CLOSED;
-import static org.firstinspires.ftc.teamcode.Constants.GRABBER_OPEN;
+import static org.firstinspires.ftc.teamcode.Constants.GRABBER_ONE_CLOSED;
+import static org.firstinspires.ftc.teamcode.Constants.GRABBER_ONE_OPEN;
+import static org.firstinspires.ftc.teamcode.Constants.GRABBER_TWO_CLOSED;
 import static org.firstinspires.ftc.teamcode.Constants.GRAB_SHOULDER;
 import static org.firstinspires.ftc.teamcode.Constants.GRAB_WRIST;
 import static org.firstinspires.ftc.teamcode.Constants.INT_DOWN;
@@ -146,11 +147,11 @@ public class RedStacks extends BaseOpMode {
                 ARM_PIVOT_DOWN
         );
 
-        closeBoth = new SetGrabberPosition(grabSS, GRABBER_CLOSED);
+        closeBoth = new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED);
 
-        openLeft = new SetLeftGrabberPosition(grabSS, GRABBER_OPEN);
+        openLeft = new SetLeftGrabberPosition(grabSS, GRABBER_ONE_OPEN);
 
-        openRight = new SetRightGrabberPosition(grabSS, GRABBER_OPEN);
+        openRight = new SetRightGrabberPosition(grabSS, GRABBER_ONE_OPEN);
 
         while (!isStarted() && !isStopRequested()) {
             arm.schedule();

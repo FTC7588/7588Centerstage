@@ -52,8 +52,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 robot.rR,
                 X_COEFFS,
                 Y_COEFFS,
-                THETA_COEFFS,
-                0
+                THETA_COEFFS
         );
 
         mode = DriveMode.NONE;
@@ -119,58 +118,26 @@ public class DrivetrainSubsystem extends SubsystemBase {
     public boolean isDetected() {
         return tagLocalizer.isDetected();
     }
-//
-//    public Pose2d getTagPose() {
-//        return tagLocalizer.getTagPose();
-//    }
-//
-//    public Pose2d getCamPose() {
-//        return tagLocalizer.getCamPose();
-//    }
-//
-//    public Transform2d getCamToTag() {
-//        return tagLocalizer.getCamToTag();
-//    }
 
     public void robotCentricMode(double strafeSpeed, double forwardSpeed, double turnSpeed, boolean pidTurning) {
-        if (!pidTurning) {
-            mode = DriveMode.ROBOT_CENTRIC;
-            drive.driveRobotCentricLock(
-                    strafeSpeed,
-                    forwardSpeed,
-                    turnSpeed,
-                    0
-            );
-        } else {
-            mode = DriveMode.ROBOT_CENTRIC_PID;
-            drive.driveRobotCentricPID(
-                    strafeSpeed,
-                    forwardSpeed,
-                    turnSpeed,
-                    heading
-            );
-        }
+        mode = DriveMode.ROBOT_CENTRIC;
+        drive.driveRobotCentricLock(
+                strafeSpeed,
+                forwardSpeed,
+                turnSpeed,
+                0
+        );
         mode = DriveMode.ROBOT_CENTRIC;
     }
 
-    public void fieldCentricMode(double strafeSpeed, double forwardSpeed, double turnSpeed, boolean pidTurning) {
-        if (!pidTurning) {
-            mode = DriveMode.FIELD_CENTRIC;
-            drive.driveFieldCentric(
-                    strafeSpeed,
-                    forwardSpeed,
-                    turnSpeed,
-                    robot.headingOffset
-            );
-        } else {
-            mode = DriveMode.FIELD_CENTRIC_PID;
-            drive.driveFieldCentricPID(
-                    strafeSpeed,
-                    forwardSpeed,
-                    turnSpeed,
-                    heading
-            );
-        }
+    public void fieldCentricMode(double strafeSpeed, double forwardSpeed, double turnSpeed) {
+        mode = DriveMode.FIELD_CENTRIC;
+        drive.driveFieldCentric(
+                strafeSpeed,
+                forwardSpeed,
+                turnSpeed,
+                robot.getHeading()
+        );
         mode = DriveMode.FIELD_CENTRIC;
     }
 
@@ -196,6 +163,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
         }
 
         followTagMode(followPose);
+    }
+
+    public void followPoseMode(Pose2d targetPose) {
+        drive.driveFollowPose(targetPose, robotPose);
     }
 
     //setters

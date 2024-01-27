@@ -81,7 +81,7 @@ public class Constants {
     public static double ARM_SHOULDER_DEPOSIT = 0.39;
     public static double ARM_SHOULDER_IDLE = 0.71;
     public static double FLOOR_SHOULDER = 0.25;
-    public static double POISED_SHOULDER = 1;
+    public static double POISED_SHOULDER = 0.91;
     public static double GRAB_SHOULDER = 0.8925;
     public static double ARM_AUTO = 0.5;
 
@@ -100,13 +100,16 @@ public class Constants {
     public static double ARM_PIVOT_UP_ANGLE = 0;
     public static double ARM_PIVOT_DOWN_ANGLE = 180;
 
-    public static double ARM_PIVOT_UP = 1;
+    public static double ARM_PIVOT_UP = 0.77;
     public static double ARM_PIVOT_MID = 0.485;
-    public static double ARM_PIVOT_DOWN = 0;
+    public static double ARM_PIVOT_DOWN = 0.21;
 
     //grabber constants
-    public static double GRABBER_CLOSED = 0.825;
-    public static double GRABBER_OPEN = 0.53;
+    public static double GRABBER_ONE_CLOSED = 0.87;
+    public static double GRABBER_ONE_OPEN = 0.65;
+
+    public static double GRABBER_TWO_CLOSED = 0.87;
+    public static double GRABBER_TWO_OPEN = 0.65;
 
 
     //vision constants

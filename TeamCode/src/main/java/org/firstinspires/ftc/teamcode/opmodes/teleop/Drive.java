@@ -30,12 +30,10 @@ import org.firstinspires.ftc.teamcode.poofyutils.AprilTagCustomDatabase;
 import org.firstinspires.ftc.teamcode.poofyutils.MathUtil;
 import org.firstinspires.ftc.teamcode.poofyutils.PoofyDashboardUtil;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.EulerAngles;
-import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 import org.firstinspires.ftc.vision.apriltag.AprilTagMetadata;
 
 import static org.firstinspires.ftc.teamcode.Constants.*;
 import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.*;
-import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Trigger.*;
 
 import android.annotation.SuppressLint;
 
@@ -181,8 +179,8 @@ public class Drive extends BaseOpMode {
         pivotPosUp = new SetPivotPosition(armSS, ARM_PIVOT_DOWN);
 
         //grabber
-        grabberClosed = new SetGrabberPosition(grabSS, GRABBER_CLOSED);
-        grabberOpen = new SetGrabberPosition(grabSS, GRABBER_OPEN);
+        grabberClosed = new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED);
+        grabberOpen = new SetGrabberPosition(grabSS, GRABBER_ONE_OPEN, GRABBER_TWO_OPEN);
 
         armDeposit = new SetEleArmPositions(
                 eleSS,

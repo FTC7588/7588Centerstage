@@ -25,6 +25,7 @@ import android.annotation.SuppressLint;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
@@ -34,6 +35,7 @@ import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 
 
+@Disabled
 @TeleOp
 @Config
 public class Drive2 extends BaseOpMode {
@@ -93,7 +95,7 @@ public class Drive2 extends BaseOpMode {
         gp2(DPAD_UP, 2).whenActive(eleIncOffsetUp);
         gp2(DPAD_DOWN, 2).whenActive(eleIncOffsetDown);
 
-        gp2(A, 1).whenActive(armIdleGroup);
+        gp2(A, 1).whenActive(armGrabGroup);
         gp2(B, 1).whenActive(armIdle);
         gp2(Y, 1).whenActive(armDepositGroup);
 
