@@ -486,7 +486,7 @@ public class BaseOpMode extends CommandOpModeEx {
             tad("Tag Pose", driveSS.getTagLocalizer().getTagPose());
             tad("Tag Readings", driveSS.getTagLocalizer().getTagReadings());
             tad("Camera Pose", driveSS.getTagLocalizer().getCameraPose());
-            tad("Robot Pose", driveSS.getRobotPose());
+            tad("Robot Pose", driveSS.getTagPose());
         }
 
         if (!auto) {

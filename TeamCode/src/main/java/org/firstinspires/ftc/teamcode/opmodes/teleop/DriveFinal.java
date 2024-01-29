@@ -127,19 +127,12 @@ public class DriveFinal extends BaseOpMode {
 
         super.run();
 
-//        if (grabSS.isClosed()) {
-//            gamepad1.rumble(1, 1, 50);
-//        }
-
-//        autoGrab.schedule();
 
         TelemetryPacket packet = new TelemetryPacket();
 
         PoofyDashboardUtil.drawTags(packet.fieldOverlay(), AprilTagCustomDatabase.getCenterStageTagLibrary());
-        PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getRobotPose());
-        PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), FOLLOW_POSE);
-
-        PoofyDashboardUtil.drawPoint(packet.fieldOverlay(), new Pose2d(60, 60, 0));
+        PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getDwPose());
+        PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getTagPose());
 
         dashboard.sendTelemetryPacket(packet);
 

@@ -26,7 +26,7 @@ public class MecanumDrive {
     private double headingLockTarget;
 
     private Pose2d currentPose;
-    private Pose2d targetPose;
+    private Pose2d targetPose = new Pose2d(0, 0, 0);
 
     public MecanumDrive(DcMotorEx frontLeft, DcMotorEx frontRight, DcMotorEx backLeft, DcMotorEx backRight) {
         this.frontLeft = frontLeft;
@@ -58,7 +58,7 @@ public class MecanumDrive {
         yController = new PoofyPIDController(yCoeffs);
 
         thetaController = new PoofyPIDController(thetaCoeffs);
-        thetaController.setInputBounds(-180, 180);
+        thetaController.setInputBounds(-Math.PI, Math.PI);
         thetaController.setOutputBounds(-1, 1);
 
         currentPose = new Pose2d(0, 0, 0);
@@ -153,7 +153,7 @@ public class MecanumDrive {
 
     public void setHeadingLockTarget(double target) {
         headingLockTarget = target;
-        thetaController.setTargetPosition(target);
+        thetaController.setTargetPosition(Math.toRadians(target));
     }
 
     public boolean getHeadingLock() {
@@ -194,20 +194,23 @@ public class MecanumDrive {
         return Math.abs(diff) <= tolerance;
     }
 
-    public void driveFollowPose(Pose2d targetPose, Pose2d currentPose) {
+    public void driveFollowPose(Pose2d targetPose, Pose2d currentPose, double gyroAngle) {
+        this.targetPose = targetPose;
+
         xController.setTargetPosition(targetPose.getX());
-        double strafeSpeed = xController.calculate(currentPose.getX());
+        double forwardSpeed = xController.calculate(currentPose.getX());
 
         yController.setTargetPosition(targetPose.getY());
-        double forwardSpeed = yController.calculate(currentPose.getY());
+        double strafeSpeed = yController.calculate(currentPose.getY());
 
-        thetaController.setTargetPosition(Math.toRadians(targetPose.getTheta()));
-        double turnSpeed = thetaController.calculate(Math.toRadians(currentPose.getTheta()));
+        thetaController.setTargetPosition(targetPose.getTheta());
+        double turnSpeed = thetaController.calculate(currentPose.getTheta());
 
-        driveRobotCentric(
-                strafeSpeed,
-                -forwardSpeed,
-                turnSpeed
+        driveFieldCentric(
+                -strafeSpeed,
+                forwardSpeed,
+                -turnSpeed,
+                gyroAngle
         );
     }
 

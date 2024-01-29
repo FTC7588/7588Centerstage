@@ -1,24 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
-import static org.firstinspires.ftc.teamcode.Constants.DEBUG_ARM;
-import static org.firstinspires.ftc.teamcode.Constants.DEBUG_DRIVE;
-import static org.firstinspires.ftc.teamcode.Constants.DEBUG_ELEVATOR;
-import static org.firstinspires.ftc.teamcode.Constants.DEBUG_GENERAL;
-import static org.firstinspires.ftc.teamcode.Constants.DEBUG_GRABBER;
-import static org.firstinspires.ftc.teamcode.Constants.DEBUG_INTAKE;
-import static org.firstinspires.ftc.teamcode.Constants.DEBUG_VISION;
 import static org.firstinspires.ftc.teamcode.Constants.FOLLOW_POSE;
-import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.A;
-import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.B;
-import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.DPAD_DOWN;
-import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.DPAD_LEFT;
-import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.DPAD_RIGHT;
-import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.DPAD_UP;
-import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.LEFT_BUMPER;
-import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.RIGHT_BUMPER;
-import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.TOUCHPAD_FINGER_1;
-import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.X;
-import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.Y;
 
 import android.annotation.SuppressLint;
 
@@ -144,7 +126,7 @@ public class DriveOutreach extends BaseOpMode {
         TelemetryPacket packet = new TelemetryPacket();
 
         PoofyDashboardUtil.drawTags(packet.fieldOverlay(), AprilTagCustomDatabase.getCenterStageTagLibrary());
-        PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getRobotPose());
+        PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getTagPose());
         PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), FOLLOW_POSE);
 
         PoofyDashboardUtil.drawPoint(packet.fieldOverlay(), new Pose2d(60, 60, 0));

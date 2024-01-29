@@ -115,7 +115,7 @@ public class DriveTournament extends BaseOpMode {
         TelemetryPacket packet = new TelemetryPacket();
 
         PoofyDashboardUtil.drawTags(packet.fieldOverlay(), AprilTagCustomDatabase.getCenterStageTagLibrary());
-        PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getRobotPose());
+        PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getTagPose());
         PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), FOLLOW_POSE);
 
         PoofyDashboardUtil.drawPoint(packet.fieldOverlay(), new Pose2d(60, 60, 0));

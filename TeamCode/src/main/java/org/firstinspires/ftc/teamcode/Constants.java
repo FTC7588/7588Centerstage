@@ -14,6 +14,9 @@ import org.firstinspires.ftc.teamcode.poofyutils.pid.PoofyPIDCoefficients;
 @Config
 public class Constants {
 
+    //pid to point
+    public static double VELOCITY_THRESHOLD = 0.25;
+
     //control layer buttons
     public static GamepadKeys.Trigger CONTROL_LAYER_2 = GamepadKeys.Trigger.LEFT_TRIGGER;
     public static GamepadKeys.Trigger CONTROL_LAYER_3 = GamepadKeys.Trigger.RIGHT_TRIGGER;
@@ -30,7 +33,7 @@ public class Constants {
     //drive constants
     public static PoofyPIDCoefficients X_COEFFS = new PoofyPIDCoefficients(0.1, 0, 0);
     public static PoofyPIDCoefficients Y_COEFFS = new PoofyPIDCoefficients(0.1, 0, 0);
-    public static PoofyPIDCoefficients THETA_COEFFS = new PoofyPIDCoefficients(50, 0, 0);
+    public static PoofyPIDCoefficients THETA_COEFFS = new PoofyPIDCoefficients(0.4, 0, 0, 0, 0, 0.075, 0);
 
     public static double LOW_SPEED = 0.4;
     public static double HIGH_SPEED = 1;

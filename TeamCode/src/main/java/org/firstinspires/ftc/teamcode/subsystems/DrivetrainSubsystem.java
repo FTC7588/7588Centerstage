@@ -3,8 +3,10 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.util.InterpLUT;
 
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.poofyutils.MecanumDrive;
+import org.firstinspires.ftc.teamcode.poofyutils.localizers.butgood.DeadwheelLocalizer;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.enums.DriveMode;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
@@ -35,11 +37,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
     private double rLCurrent;
     private double rRCurrent;
 
-    private Pose2d robotPose;
+    private Pose2d dwPose;
+    private Pose2d tagPose;
 
     private final InterpLUT blueBackdropLUT;
     private final InterpLUT redBackdropLUT;
 
+    private final DeadwheelLocalizer dwLocalizer;
     private final AprilTagLocalizer2d tagLocalizer;
 
     public DrivetrainSubsystem(RobotHardware robot) {
@@ -57,6 +61,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         mode = DriveMode.NONE;
 
+        dwLocalizer = new DeadwheelLocalizer(robot);
+
         tagLocalizer = new AprilTagLocalizer2d(
                 new CameraConfig(
                         robot.C920,
@@ -69,7 +75,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 )
         );
 
-        robotPose = new Pose2d(0, 0, 0);
+        tagPose = new Pose2d(0, 0, 0);
 
         blueBackdropLUT = new InterpLUT();
         blueBackdropLUT.add(-1, BLUE_BACKDROP_LEFT);
@@ -95,16 +101,22 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     public void loop() {
         heading = robot.getHeading();
+        dwLocalizer.update();
+        dwPose = dwLocalizer.getPoseEstimate();
         tagLocalizer.update();
-        robotPose = tagLocalizer.getPoseEstimate();
+        tagPose = tagLocalizer.getPoseEstimate();
     }
 
     public void write() {
         drive.write();
     }
 
-    public Pose2d getRobotPose() {
-        return robotPose;
+    public Pose2d getDwPose() {
+        return dwPose;
+    }
+
+    public Pose2d getTagPose() {
+        return tagPose;
     }
 
     public ArrayList<AprilTagDetection> getUsedTags() {
@@ -125,7 +137,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 strafeSpeed,
                 forwardSpeed,
                 turnSpeed,
-                0
+                robot.getHeading()
         );
         mode = DriveMode.ROBOT_CENTRIC;
     }
@@ -144,7 +156,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     public void followTagMode(Pose2d followPose) {
         if (isDetected()) {
             drive.driveFollowTag(
-                    robotPose,
+                    tagPose,
                     followPose
             );
         } else {
@@ -166,7 +178,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
 
     public void followPoseMode(Pose2d targetPose) {
-        drive.driveFollowPose(targetPose, robotPose);
+        drive.driveFollowPose(targetPose, dwPose, robot.getHeading());
+    }
+
+    public boolean stopped() {
+        return dwLocalizer.getVelocity().getMagnitude() <= Constants.VELOCITY_THRESHOLD;
+    }
+
+    public boolean reachedTarget(double tolerance) {
+        return drive.reachedTarget(tolerance, dwPose);
+    }
+
+    public boolean reachedHeading(double toleranceDeg) {
+        return drive.reachedHeading(Math.toRadians(toleranceDeg), dwPose);
     }
 
     //setters

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,6 +15,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.rr.util.Encoder;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
@@ -23,6 +25,7 @@ import org.firstinspires.ftc.teamcode.poofyutils.geometry.EulerAngles;
 
 import java.util.List;
 
+@Config
 public class RobotHardware {
 
     public static boolean USING_IMU = true;
@@ -54,6 +57,9 @@ public class RobotHardware {
     //extra sensors
     public NormalizedColorSensor backCS;
     public NormalizedColorSensor frontCS;
+
+    public Encoder parallelEncoder;
+    public Encoder perpendicularEncoder;
 
     //angles
     public EulerAngles angles;
@@ -111,6 +117,9 @@ public class RobotHardware {
 
         backCS = hwMap.get(NormalizedColorSensor.class, "back");
         frontCS = hwMap.get(NormalizedColorSensor.class, "front");
+
+        parallelEncoder = new Encoder(eleL);
+        perpendicularEncoder = new Encoder(intRMotor);
 
         //imu
         if (USING_IMU) {
