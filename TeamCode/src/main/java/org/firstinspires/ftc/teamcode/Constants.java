@@ -51,7 +51,7 @@ public class Constants {
     public static double INT_THREE = 0.3;
     public static double INT_TWO = 0.35;
     public static double INT_ONE = 0.375;
-    public static double INT_DOWN = 0.425;
+    public static double INT_DOWN = 0.4125;
 
     public static double INT_INCREMENT = 0.005;
 
@@ -92,7 +92,7 @@ public class Constants {
     public static double ARM_WRIST_IN_ANGLE = -90;
     public static double ARM_WRIST_OUT_ANGLE = 90;
 
-    public static double ARM_WRIST_DEPOSIT = 0.9;
+    public static double ARM_WRIST_DEPOSIT = 0.93;
     public static double ARM_WRIST_IDLE = 1;
     public static double ARM_WRIST_TEST = 0.05;
     public static double FLOOR_WRIST = 1;
@@ -121,6 +121,8 @@ public class Constants {
             new Vector3d(7.125, 3.125, 3.5),
             new Rotation3d(0, 0, Math.toRadians(0))
     );
+
+    public static double C920_EXPOSURE = 11;
 
     //backdrop positions
     public static double BLUE_BACKDROP_LEFT = 28;

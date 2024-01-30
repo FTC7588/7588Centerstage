@@ -68,9 +68,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
                         robot.C920,
                         C920_POSE,
                         C920_INTRINSICS,
-                        12,
+                        C920_EXPOSURE,
                         255,
-                        new Size(640, 480),
+                        new Size(1280, 720),
                         VisionPortal.StreamFormat.MJPEG
                 )
         );

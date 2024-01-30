@@ -1,18 +1,18 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
-import static org.firstinspires.ftc.teamcode.Constants.FOLLOW_POSE;
 import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.A;
 
 import android.annotation.SuppressLint;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.commands.drive.PIDToPoint;
-import org.firstinspires.ftc.teamcode.commands.drive.RobotCentric;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import org.firstinspires.ftc.teamcode.poofyutils.AprilTagCustomDatabase;
 import org.firstinspires.ftc.teamcode.poofyutils.PoofyDashboardUtil;
@@ -22,9 +22,13 @@ import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
 @TeleOp
 public class DriveTesting extends BaseOpMode {
 
-    protected PIDToPoint p2pTest;
+    protected PIDToPoint p2pTest1;
+    protected PIDToPoint p2pTest2;
+    protected PIDToPoint p2pTest3;
 
-    protected Pose2d targetPose = new Pose2d(0, 0, 0);
+    protected Pose2d targetPose1 = new Pose2d(0, 0, 0);
+    protected Pose2d targetPose2 = new Pose2d(10, 10, 0);
+    protected Pose2d targetPose3 = new Pose2d(10, 20, 0);
 
     @Override
     public void initialize() {
@@ -34,16 +38,15 @@ public class DriveTesting extends BaseOpMode {
 
         super.initialize();
 
-        p2pTest = new PIDToPoint(driveSS, targetPose, 1, 5);
+        p2pTest1 = new PIDToPoint(driveSS, targetPose1, 2, 2);
+        p2pTest2 = new PIDToPoint(driveSS, targetPose2, 2, 2);
+        p2pTest3 = new PIDToPoint(driveSS, targetPose3, 1, 2);
 
-        gp1(A, 1).whenActive(p2pTest.andThen(new RobotCentric(
-                driveSS,
-                () -> driver.getLeftX(),
-                () -> driver.getLeftY(),
-                () -> driver.getRightX()
-        )));
 
-        robotCentric.schedule();
+        gp1(A, 1).whenActive(new SequentialCommandGroup(p2pTest1, p2pTest2, p2pTest3));
+
+        driveSS.setDefaultCommand(robotCentric);
+
         intakeDown.schedule();
         shoulderPosGrab.schedule();
         wristPosGrab.schedule();
@@ -65,8 +68,8 @@ public class DriveTesting extends BaseOpMode {
         dashboard.sendTelemetryPacket(packet);
 
         telemetry.addData("robot centric scheduled", robotCentric.isScheduled());
-        telemetry.addData("PID to point scheduled", p2pTest.isScheduled());
-        telemetry.addData("PID to point finished", p2pTest.isFinished());
+        telemetry.addData("PID to point scheduled", p2pTest1.isScheduled());
+        telemetry.addData("PID to point finished", p2pTest1.isFinished());
 
         tau();
 
