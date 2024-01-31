@@ -52,6 +52,8 @@ import org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadTrigger;
 
 import static org.firstinspires.ftc.teamcode.Constants.*;
 
+import java.util.function.BooleanSupplier;
+
 public class BaseOpMode extends CommandOpModeEx {
 
     //singletons
@@ -132,7 +134,9 @@ public class BaseOpMode extends CommandOpModeEx {
     protected IncrementWristPosition wristIncUp;
 
     protected SetPivotPosition pivotPosDown;
+    protected SetPivotPosition pivotPosLeftDiag;
     protected SetPivotPosition pivotPosMid;
+    protected SetPivotPosition pivotPosRightDiag;
     protected SetPivotPosition pivotPosUp;
 
     protected SetGrabberPosition grabbersClosed;
@@ -169,6 +173,8 @@ public class BaseOpMode extends CommandOpModeEx {
 
     protected boolean auto = false;
     protected Alliance alliance;
+
+    protected PivotState pivotState = PivotState.REGULAR;
 
     @Override
     public void initialize() {
@@ -282,7 +288,9 @@ public class BaseOpMode extends CommandOpModeEx {
         wristIncUp = new IncrementWristPosition(armSS, -0.01);
 
         pivotPosDown = new SetPivotPosition(armSS, ARM_PIVOT_DOWN);
+        pivotPosLeftDiag = new SetPivotPosition(armSS, ARM_PIVOT_UP_MID);
         pivotPosMid = new SetPivotPosition(armSS, ARM_PIVOT_MID);
+        pivotPosRightDiag = new SetPivotPosition(armSS, ARM_PIVOT_DOWN_MID);
         pivotPosUp = new SetPivotPosition(armSS, ARM_PIVOT_UP);
 
         //grabber
@@ -567,19 +575,35 @@ public class BaseOpMode extends CommandOpModeEx {
         return operator.getGamepadTrigger(trigger);
     }
 
+    protected Trigger gp2(GamepadKeys.Button button, BooleanSupplier state) {
+        if (state.getAsBoolean()) {
+            return operator.getGamepadButton(button);
+        } else {
+            return operator.getGamepadTrigger(GamepadKeys.Trigger.LEFT_TRIGGER).and(gp2(GamepadKeys.Trigger.LEFT_TRIGGER).negate());
+        }
+    }
+
+    protected Trigger gp2(GamepadKeys.Trigger trigger, BooleanSupplier state) {
+        if (state.getAsBoolean()) {
+            return operator.getGamepadTrigger(trigger);
+        } else {
+            return operator.getGamepadTrigger(GamepadKeys.Trigger.LEFT_TRIGGER).and(gp2(GamepadKeys.Trigger.LEFT_TRIGGER).negate());
+        }
+    }
+
     protected Trigger gp2(GamepadKeys.Button button, int layer) {
         if (layer == 1) {
             return operator.getGamepadButton(button)
-                    .and(gp1(Constants.CONTROL_LAYER_2).negate())
-                    .and(gp1(Constants.CONTROL_LAYER_3).negate());
+                    .and(gp2(Constants.CONTROL_LAYER_2).negate())
+                    .and(gp2(Constants.CONTROL_LAYER_3).negate());
         } else if (layer == 2) {
             return operator.getGamepadButton(button)
-                    .and(gp1(Constants.CONTROL_LAYER_2))
-                    .and(gp1(Constants.CONTROL_LAYER_3).negate());
+                    .and(gp2(Constants.CONTROL_LAYER_2))
+                    .and(gp2(Constants.CONTROL_LAYER_3).negate());
         } else if (layer == 3) {
             return operator.getGamepadButton(button)
-                    .and(gp1(Constants.CONTROL_LAYER_2).negate())
-                    .and(gp1(Constants.CONTROL_LAYER_3));
+                    .and(gp2(Constants.CONTROL_LAYER_2).negate())
+                    .and(gp2(Constants.CONTROL_LAYER_3));
         } else {
             return operator.getGamepadButton(button);
         }
@@ -588,16 +612,16 @@ public class BaseOpMode extends CommandOpModeEx {
     protected Trigger gp2(GamepadKeys.Trigger trigger, int layer) {
         if (layer == 1) {
             return operator.getGamepadTrigger(trigger)
-                    .and(gp1(Constants.CONTROL_LAYER_2).negate())
-                    .and(gp1(Constants.CONTROL_LAYER_3).negate());
+                    .and(gp2(Constants.CONTROL_LAYER_2).negate())
+                    .and(gp2(Constants.CONTROL_LAYER_3).negate());
         } else if (layer == 2) {
             return operator.getGamepadTrigger(trigger)
-                    .and(gp1(Constants.CONTROL_LAYER_2))
-                    .and(gp1(Constants.CONTROL_LAYER_3).negate());
+                    .and(gp2(Constants.CONTROL_LAYER_2))
+                    .and(gp2(Constants.CONTROL_LAYER_3).negate());
         } else if (layer == 3) {
             return operator.getGamepadTrigger(trigger)
-                    .and(gp1(Constants.CONTROL_LAYER_2).negate())
-                    .and(gp1(Constants.CONTROL_LAYER_3));
+                    .and(gp2(Constants.CONTROL_LAYER_2).negate())
+                    .and(gp2(Constants.CONTROL_LAYER_3));
         } else {
             return operator.getGamepadTrigger(trigger);
         }
@@ -611,5 +635,14 @@ public class BaseOpMode extends CommandOpModeEx {
     @Override
     public void runOnce() {
 
+    }
+
+    protected enum armState {
+        GRABBED
+    }
+
+    protected enum PivotState {
+        REGULAR,
+        ROTATED
     }
 }

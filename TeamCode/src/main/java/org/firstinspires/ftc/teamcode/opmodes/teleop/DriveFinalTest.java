@@ -7,9 +7,7 @@ import static org.firstinspires.ftc.teamcode.Constants.DEBUG_GENERAL;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_GRABBER;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_INTAKE;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_VISION;
-import static org.firstinspires.ftc.teamcode.Constants.FOLLOW_POSE;
 import static org.firstinspires.ftc.teamcode.Constants.GRABBER_TWO_CLOSED;
-import static org.firstinspires.ftc.teamcode.Constants.GRABBER_TWO_OPEN;
 import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.A;
 import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.B;
 import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.DPAD_DOWN;
@@ -36,12 +34,11 @@ import org.firstinspires.ftc.teamcode.poofyutils.AprilTagCustomDatabase;
 import org.firstinspires.ftc.teamcode.poofyutils.PoofyDashboardUtil;
 import org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
-import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 
 
 @TeleOp
 @Config
-public class DriveFinal extends BaseOpMode {
+public class DriveFinalTest extends BaseOpMode {
 
     @Override
     public void initialize() {
@@ -108,10 +105,14 @@ public class DriveFinal extends BaseOpMode {
         gp2(A).whenActive(armIdle);
         gp2(Y).whenActive(armDepositGroup);
 
-        gp2(B, 1).whenActive(pivotPosDown).whenInactive(pivotPosMid);
-        gp2(X, 1).whenActive(pivotPosUp).whenInactive(pivotPosMid);
-        gp2(GamepadKeys.Trigger.RIGHT_TRIGGER).whenActive(pivotPosRightDiag).whenInactive(pivotPosMid);
-        gp2(GamepadKeys.Trigger.LEFT_TRIGGER).whenActive(pivotPosLeftDiag).whenInactive(pivotPosMid);
+//        gp2(B, 1).whenActive(pivotPosDown).whenInactive(pivotPosMid);
+//        gp2(X, 1).whenActive(pivotPosUp).whenInactive(pivotPosMid);
+//        gp2(GamepadKeys.Trigger.RIGHT_TRIGGER).whenActive(pivotPosRightDiag).whenInactive(pivotPosMid);
+//        gp2(GamepadKeys.Trigger.LEFT_TRIGGER).whenActive(pivotPosLeftDiag).whenInactive(pivotPosMid);
+
+        gp2(B, 1).toggleWhenActive(() -> pivotState = PivotState.REGULAR, () -> pivotState = PivotState.ROTATED);
+
+        gp2(X, () -> pivotState == PivotState.REGULAR).whenActive(pivotPosMid);
 
         gp2(LEFT_BUMPER).toggleWhenActive(grabberLeftOpen, grabberLeftClose);
         gp2(RIGHT_BUMPER).toggleWhenActive(grabberRightOpen, grabberRightClose);

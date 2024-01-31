@@ -52,7 +52,7 @@ public class AprilTagLocalizer2d implements Localizer {
         usedTags = new ArrayList<>();
         consolidateLists();
         if (!tagsWithCamPoses.isEmpty()) {
-            robotPose = averageTagsStrategy(tagsWithCamPoses);
+            robotPose = lowestDecisionMarginStrategy2d(tagsWithCamPoses);
             detected = true;
         } else {
             detected = false;

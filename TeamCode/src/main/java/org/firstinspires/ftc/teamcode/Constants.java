@@ -104,7 +104,9 @@ public class Constants {
     public static double ARM_PIVOT_DOWN_ANGLE = 180;
 
     public static double ARM_PIVOT_UP = 0.77;
+    public static double ARM_PIVOT_UP_MID = 0.58;
     public static double ARM_PIVOT_MID = 0.485;
+    public static double ARM_PIVOT_DOWN_MID = 0.3933;
     public static double ARM_PIVOT_DOWN = 0.21;
 
     //grabber constants
