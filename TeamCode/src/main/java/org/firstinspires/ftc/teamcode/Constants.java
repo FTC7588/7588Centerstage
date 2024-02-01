@@ -109,6 +109,16 @@ public class Constants {
     public static double ARM_PIVOT_DOWN_MID = 0.3933;
     public static double ARM_PIVOT_DOWN = 0.21;
 
+    public static double ARM_PIVOT_NORM_LEFT = 0.85;
+    public static double ARM_PIVOT_NORM_DOWN = 0.77;
+    public static double ARM_PIVOT_NORM_RIGHT = 0.58;
+
+    public static double ARM_PIVOT_NORM_UP = 0.485;
+
+    public static double ARM_PIVOT_ROT_LEFT = 0.3933;
+    public static double ARM_PIVOT_ROT_DOWN = 0.21;
+    public static double ARM_PIVOT_ROT_RIGHT = 0.1;
+
     //grabber constants
     public static double GRABBER_ONE_CLOSED = 0.87;
     public static double GRABBER_ONE_OPEN = 0.65;

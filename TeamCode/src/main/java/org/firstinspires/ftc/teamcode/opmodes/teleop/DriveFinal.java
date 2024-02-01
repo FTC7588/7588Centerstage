@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
+import static org.firstinspires.ftc.teamcode.Constants.ARM_SHOULDER_DEPOSIT;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_ARM;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_DRIVE;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_ELEVATOR;
@@ -108,10 +109,24 @@ public class DriveFinal extends BaseOpMode {
         gp2(A).whenActive(armIdle);
         gp2(Y).whenActive(armDepositGroup);
 
-        gp2(B, 1).whenActive(pivotPosDown).whenInactive(pivotPosMid);
-        gp2(X, 1).whenActive(pivotPosUp).whenInactive(pivotPosMid);
-        gp2(GamepadKeys.Trigger.RIGHT_TRIGGER).whenActive(pivotPosRightDiag).whenInactive(pivotPosMid);
-        gp2(GamepadKeys.Trigger.LEFT_TRIGGER).whenActive(pivotPosLeftDiag).whenInactive(pivotPosMid);
+//        gp2(B, 1).whenActive(pivotPosDown).whenInactive(pivotPosMid);
+//        gp2(X, 1).whenActive(pivotPosUp).whenInactive(pivotPosMid);
+//        gp2(GamepadKeys.Trigger.RIGHT_TRIGGER).whenActive(pivotPosRightDiag).whenInactive(pivotPosMid);
+//        gp2(GamepadKeys.Trigger.LEFT_TRIGGER).whenActive(pivotPosLeftDiag).whenInactive(pivotPosMid);
+
+        gp2(GamepadKeys.Trigger.LEFT_TRIGGER, () -> pivotState == PivotState.NORMAL).whenActive(pivotPosNormLeft);
+        gp2(GamepadKeys.Trigger.RIGHT_TRIGGER, () -> pivotState == PivotState.NORMAL).whenActive(pivotPosNormRight);
+
+        gp2(B, () -> armState == ArmState.RETRACTED).toggleWhenActive(() -> {
+            pivotState = PivotState.NORMAL;
+            pivotPosNormDown.schedule();
+            }, () -> {
+            pivotState = PivotState.ROTATED;
+            pivotPosRotDown.schedule();
+        });
+
+        gp2(GamepadKeys.Trigger.LEFT_TRIGGER, () -> pivotState == PivotState.ROTATED).whenActive(pivotPosRotLeft);
+        gp2(GamepadKeys.Trigger.RIGHT_TRIGGER, () -> pivotState == PivotState.ROTATED).whenActive(pivotPosRotRight);
 
         gp2(LEFT_BUMPER).toggleWhenActive(grabberLeftOpen, grabberLeftClose);
         gp2(RIGHT_BUMPER).toggleWhenActive(grabberRightOpen, grabberRightClose);
@@ -131,6 +146,10 @@ public class DriveFinal extends BaseOpMode {
         CommandScheduler.getInstance().run();
 
         super.run();
+
+        if (armSS.getShoulderPosition() == ARM_SHOULDER_DEPOSIT) {
+            
+        }
 
         if (grabSS.getLeftPos() == Constants.GRABBER_ONE_CLOSED && grabSS.getRightPos() == Constants.GRABBER_TWO_CLOSED) {
             gamepad1.rumble(1, 1, 20);

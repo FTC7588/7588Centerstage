@@ -32,7 +32,6 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import org.firstinspires.ftc.teamcode.poofyutils.AprilTagCustomDatabase;
 import org.firstinspires.ftc.teamcode.poofyutils.PoofyDashboardUtil;
-import org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
 
 
@@ -110,9 +109,9 @@ public class DriveFinalTest extends BaseOpMode {
 //        gp2(GamepadKeys.Trigger.RIGHT_TRIGGER).whenActive(pivotPosRightDiag).whenInactive(pivotPosMid);
 //        gp2(GamepadKeys.Trigger.LEFT_TRIGGER).whenActive(pivotPosLeftDiag).whenInactive(pivotPosMid);
 
-        gp2(B, 1).toggleWhenActive(() -> pivotState = PivotState.REGULAR, () -> pivotState = PivotState.ROTATED);
+        gp2(B, 1).toggleWhenActive(() -> pivotState = PivotState.NORMAL, () -> pivotState = PivotState.ROTATED);
 
-        gp2(X, () -> pivotState == PivotState.REGULAR).whenActive(pivotPosMid);
+        gp2(X, () -> pivotState == PivotState.NORMAL).whenActive(pivotPosMid);
 
         gp2(LEFT_BUMPER).toggleWhenActive(grabberLeftOpen, grabberLeftClose);
         gp2(RIGHT_BUMPER).toggleWhenActive(grabberRightOpen, grabberRightClose);

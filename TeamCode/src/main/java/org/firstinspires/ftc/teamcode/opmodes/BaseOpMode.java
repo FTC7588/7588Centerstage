@@ -139,6 +139,14 @@ public class BaseOpMode extends CommandOpModeEx {
     protected SetPivotPosition pivotPosRightDiag;
     protected SetPivotPosition pivotPosUp;
 
+    protected SetPivotPosition pivotPosNormLeft;
+    protected SetPivotPosition pivotPosNormDown;
+    protected SetPivotPosition pivotPosNormRight;
+    protected SetPivotPosition pivotPosNormUp;
+    protected SetPivotPosition pivotPosRotLeft;
+    protected SetPivotPosition pivotPosRotDown;
+    protected SetPivotPosition pivotPosRotRight;
+
     protected SetGrabberPosition grabbersClosed;
     protected SetGrabberPosition grabbersOpen;
 
@@ -174,7 +182,8 @@ public class BaseOpMode extends CommandOpModeEx {
     protected boolean auto = false;
     protected Alliance alliance;
 
-    protected PivotState pivotState = PivotState.REGULAR;
+    protected PivotState pivotState = PivotState.NORMAL;
+    protected ArmState armState = ArmState.RETRACTED;
 
     @Override
     public void initialize() {
@@ -292,6 +301,16 @@ public class BaseOpMode extends CommandOpModeEx {
         pivotPosMid = new SetPivotPosition(armSS, ARM_PIVOT_MID);
         pivotPosRightDiag = new SetPivotPosition(armSS, ARM_PIVOT_DOWN_MID);
         pivotPosUp = new SetPivotPosition(armSS, ARM_PIVOT_UP);
+
+        pivotPosNormLeft = new SetPivotPosition(armSS, ARM_PIVOT_NORM_LEFT);
+        pivotPosNormDown = new SetPivotPosition(armSS, ARM_PIVOT_NORM_DOWN);
+        pivotPosNormRight = new SetPivotPosition(armSS, ARM_PIVOT_NORM_RIGHT);
+
+        pivotPosNormUp = new SetPivotPosition(armSS, ARM_PIVOT_NORM_UP);
+
+        pivotPosRotLeft = new SetPivotPosition(armSS, ARM_PIVOT_ROT_LEFT);
+        pivotPosRotDown = new SetPivotPosition(armSS, ARM_PIVOT_ROT_DOWN);
+        pivotPosRotRight = new SetPivotPosition(armSS, ARM_PIVOT_ROT_RIGHT);
 
         //grabber
         grabbersClosed = new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED);
@@ -637,12 +656,14 @@ public class BaseOpMode extends CommandOpModeEx {
 
     }
 
-    protected enum armState {
-        GRABBED
+    protected enum ArmState {
+        GRABBED,
+        RETRACTED,
+        EXTENDED
     }
 
     protected enum PivotState {
-        REGULAR,
+        NORMAL,
         ROTATED
     }
 }
