@@ -26,7 +26,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     private final RobotHardware robot;
 
-    private final MecanumDrive drive;
+    public final MecanumDrive drive;
 
     private DriveMode mode;
 
@@ -36,6 +36,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     private double fRCurrent;
     private double rLCurrent;
     private double rRCurrent;
+
+    protected Pose2d targetPose;
 
     private Pose2d dwPose;
     private Pose2d tagPose;
@@ -178,6 +180,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
 
     public void followPoseMode(Pose2d targetPose) {
+        this.targetPose = targetPose;
         drive.driveFollowPose(targetPose, dwPose, robot.getHeading());
     }
 
@@ -211,6 +214,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
 
     //getters
+
+    public Pose2d getTargetPose() {
+        return targetPose;
+    }
     public double getHeading() {
         return Math.toDegrees(heading);
     }

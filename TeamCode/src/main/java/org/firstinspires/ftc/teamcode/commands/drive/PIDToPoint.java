@@ -25,7 +25,13 @@ public class PIDToPoint extends CommandBase {
     }
 
     @Override
+    public void end(boolean interrupted) {
+        drivetrainSubsystem.robotCentricMode(0, 0, 0, false);
+    }
+
+    @Override
     public boolean isFinished() {
+//        return false;
         return (drivetrainSubsystem.reachedTarget(positionTolerance) && drivetrainSubsystem.reachedHeading(headingTolerance));
     }
 }

@@ -13,9 +13,9 @@ public class MecanumDrive {
     private double frontLeftSpeed, frontRightSpeed, backLeftSpeed, backRightSpeed;
     private double maxOutput = 1;
 
-    private final PoofyPIDController xController;
-    private final PoofyPIDController yController;
-    private final PoofyPIDController thetaController;
+    public final PoofyPIDController xController;
+    public final PoofyPIDController yController;
+    public final PoofyPIDController thetaController;
 
     private double turnSpeed;
     private double theta;
@@ -210,7 +210,7 @@ public class MecanumDrive {
                 -strafeSpeed,
                 forwardSpeed,
                 -turnSpeed,
-                gyroAngle
+                currentPose.getTheta()
         );
     }
 

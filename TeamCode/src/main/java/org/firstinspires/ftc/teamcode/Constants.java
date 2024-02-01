@@ -31,9 +31,9 @@ public class Constants {
     public static boolean DEBUG_VISION      = false;
 
     //drive constants
-    public static PoofyPIDCoefficients X_COEFFS = new PoofyPIDCoefficients(0.1, 0, 0);
-    public static PoofyPIDCoefficients Y_COEFFS = new PoofyPIDCoefficients(0.1, 0, 0);
-    public static PoofyPIDCoefficients THETA_COEFFS = new PoofyPIDCoefficients(0.4, 0, 0, 0, 0, 0.075, 0);
+    public static PoofyPIDCoefficients X_COEFFS = new PoofyPIDCoefficients(0.1, 0, 0.01, 0, 0, 0, 0);
+    public static PoofyPIDCoefficients Y_COEFFS = new PoofyPIDCoefficients(0.1, 0, 0.01, 0, 0, 0, 0);
+    public static PoofyPIDCoefficients THETA_COEFFS = new PoofyPIDCoefficients(0.4, 0, 0.04, 0, 0, 0.075, 0);
 
     public static double LOW_SPEED = 0.4;
     public static double HIGH_SPEED = 1;

@@ -16,6 +16,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class AprilTagLocalizer2d implements Localizer {
 
@@ -91,7 +92,7 @@ public class AprilTagLocalizer2d implements Localizer {
             }
         }
 
-        assert lowestMarginTag != null;
+        assert Objects.requireNonNull(lowestMarginTag).metadata != null;
 
         tagPose = new Pose2d(
                 lowestMarginTag.metadata.fieldPosition.get(0),

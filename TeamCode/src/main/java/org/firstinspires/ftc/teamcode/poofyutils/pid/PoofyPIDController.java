@@ -246,6 +246,16 @@ public class PoofyPIDController extends PoofyFeedForwardController {
         this.kD = kD;
     }
 
+    public void setCoefficients(PoofyPIDCoefficients coeffs) {
+        this.kP = coeffs.kP;
+        this.kI = coeffs.kI;
+        this.kD = coeffs.kD;
+        this.kV = coeffs.kV;
+        this.kA = coeffs.kA;
+        this.kS = coeffs.kS;
+        this.kF = coeffs.kF;
+    }
+
     public double getPeriod() {
         return period;
     }

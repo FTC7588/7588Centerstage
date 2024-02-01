@@ -119,7 +119,7 @@ public class RobotHardware {
         frontCS = hwMap.get(NormalizedColorSensor.class, "front");
 
         parallelEncoder = new Encoder(eleL);
-        perpendicularEncoder = new Encoder(intRMotor);
+        perpendicularEncoder = new Encoder(fL);
 
         //imu
         if (USING_IMU) {
