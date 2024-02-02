@@ -123,8 +123,8 @@ public class Constants {
     public static double GRABBER_ONE_CLOSED = 0.87;
     public static double GRABBER_ONE_OPEN = 0.65;
 
-    public static double GRABBER_TWO_CLOSED = 0.87;
-    public static double GRABBER_TWO_OPEN = 0.65;
+    public static double GRABBER_TWO_CLOSED = 0.88;
+    public static double GRABBER_TWO_OPEN = 0.66;
 
 
     //vision constants

@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.commands.arm.IncrementWristPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.SetArmPositions;
 import org.firstinspires.ftc.teamcode.commands.arm.SetEleArmPositions;
 import org.firstinspires.ftc.teamcode.commands.arm.SetPivotPosition;
+import org.firstinspires.ftc.teamcode.commands.arm.SetPivotPositions;
 import org.firstinspires.ftc.teamcode.commands.arm.SetShoulderPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.SetWristPosition;
 import org.firstinspires.ftc.teamcode.commands.drive.EnableHeadingLock;
@@ -147,6 +148,10 @@ public class BaseOpMode extends CommandOpModeEx {
     protected SetPivotPosition pivotPosRotDown;
     protected SetPivotPosition pivotPosRotRight;
 
+    protected SetPivotPosition pivotPosDownDefalt;
+    protected SetPivotPosition pivotPosLeftDefault;
+    protected SetPivotPosition pivotPosRightDefault;
+
     protected SetGrabberPosition grabbersClosed;
     protected SetGrabberPosition grabbersOpen;
 
@@ -168,8 +173,11 @@ public class BaseOpMode extends CommandOpModeEx {
     protected SequentialCommandGroup armGrabGroup;
     protected SequentialCommandGroup armBackGroup;
     protected SequentialCommandGroup autoArmBack;
+    protected SequentialCommandGroup armIdleGroup;
 
     protected ConditionalCommand autoGrab;
+
+//    protected SetPivotPositions pivot
 
     protected PoofyGamepadEx driver;
     protected PoofyGamepadEx operator;
@@ -182,8 +190,8 @@ public class BaseOpMode extends CommandOpModeEx {
     protected boolean auto = false;
     protected Alliance alliance;
 
-    protected PivotState pivotState = PivotState.NORMAL;
-    protected ArmState armState = ArmState.RETRACTED;
+//    protected PivotRotatedState pivotState = PivotRotatedState.NORMAL;
+    protected ArmState armState = ArmState.EXTENDED;
 
     @Override
     public void initialize() {
@@ -312,14 +320,18 @@ public class BaseOpMode extends CommandOpModeEx {
         pivotPosRotDown = new SetPivotPosition(armSS, ARM_PIVOT_ROT_DOWN);
         pivotPosRotRight = new SetPivotPosition(armSS, ARM_PIVOT_ROT_RIGHT);
 
+        pivotPosDownDefalt = pivotPosNormDown;
+        pivotPosLeftDefault = pivotPosNormLeft;
+        pivotPosRightDefault = pivotPosNormRight;
+
         //grabber
         grabbersClosed = new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED);
         grabbersOpen = new SetGrabberPosition(grabSS, GRABBER_ONE_OPEN, GRABBER_TWO_OPEN);
 
         grabberLeftClose = new SetLeftGrabberPosition(grabSS, GRABBER_ONE_CLOSED);
         grabberLeftOpen = new SetLeftGrabberPosition(grabSS, GRABBER_ONE_OPEN);
-        grabberRightClose = new SetRightGrabberPosition(grabSS, GRABBER_ONE_CLOSED);
-        grabberRightOpen = new SetRightGrabberPosition(grabSS, GRABBER_ONE_OPEN);
+        grabberRightClose = new SetRightGrabberPosition(grabSS, GRABBER_TWO_CLOSED);
+        grabberRightOpen = new SetRightGrabberPosition(grabSS, GRABBER_TWO_OPEN);
 
         //macros
         armInit = new SetArmPositions(
@@ -345,6 +357,19 @@ public class BaseOpMode extends CommandOpModeEx {
                 GRAB_SHOULDER,
                 GRAB_WRIST,
                 ARM_PIVOT_MID
+        );
+
+        armIdleGroup = new SequentialCommandGroup(
+                new SetArmPositions(
+                        armSS,
+                        GRAB_SHOULDER,
+                        GRAB_WRIST,
+                        ARM_PIVOT_MID
+                ),
+                new InstantCommand(() -> {
+                    armSS.pivotRotatedState = ArmSubsystem.PivotRotatedState.NORMAL;
+                    armSS.pivotPositionState = ArmSubsystem.PivotPositionState.UP;
+                })
         );
 
         armPoised = new SetEleArmPositions(
@@ -393,7 +418,9 @@ public class BaseOpMode extends CommandOpModeEx {
                 ),
                 new SetWristPosition(armSS, ARM_WRIST_TEST),
                 new WaitCommand(100),
-                new SetWristPosition(armSS, ARM_WRIST_DEPOSIT)
+                new SetWristPosition(armSS, ARM_WRIST_DEPOSIT),
+                new WaitCommand(100),
+                new InstantCommand(() -> armSS.pivotPositionState = ArmSubsystem.PivotPositionState.MID)
         );
 
 
@@ -598,7 +625,8 @@ public class BaseOpMode extends CommandOpModeEx {
         if (state.getAsBoolean()) {
             return operator.getGamepadButton(button);
         } else {
-            return operator.getGamepadTrigger(GamepadKeys.Trigger.LEFT_TRIGGER).and(gp2(GamepadKeys.Trigger.LEFT_TRIGGER).negate());
+            return new Trigger();
+//            return operator.getGamepadTrigger(GamepadKeys.Trigger.LEFT_TRIGGER).and(gp2(GamepadKeys.Trigger.LEFT_TRIGGER).negate());
         }
     }
 
@@ -606,7 +634,7 @@ public class BaseOpMode extends CommandOpModeEx {
         if (state.getAsBoolean()) {
             return operator.getGamepadTrigger(trigger);
         } else {
-            return operator.getGamepadTrigger(GamepadKeys.Trigger.LEFT_TRIGGER).and(gp2(GamepadKeys.Trigger.LEFT_TRIGGER).negate());
+            return new Trigger();
         }
     }
 
@@ -662,8 +690,6 @@ public class BaseOpMode extends CommandOpModeEx {
         EXTENDED
     }
 
-    protected enum PivotState {
-        NORMAL,
-        ROTATED
-    }
+
+
 }

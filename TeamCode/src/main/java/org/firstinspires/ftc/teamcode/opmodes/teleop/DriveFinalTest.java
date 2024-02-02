@@ -109,9 +109,9 @@ public class DriveFinalTest extends BaseOpMode {
 //        gp2(GamepadKeys.Trigger.RIGHT_TRIGGER).whenActive(pivotPosRightDiag).whenInactive(pivotPosMid);
 //        gp2(GamepadKeys.Trigger.LEFT_TRIGGER).whenActive(pivotPosLeftDiag).whenInactive(pivotPosMid);
 
-        gp2(B, 1).toggleWhenActive(() -> pivotState = PivotState.NORMAL, () -> pivotState = PivotState.ROTATED);
-
-        gp2(X, () -> pivotState == PivotState.NORMAL).whenActive(pivotPosMid);
+//        gp2(B, 1).toggleWhenActive(() -> pivotState = PivotRotatedState.NORMAL, () -> pivotState = PivotRotatedState.ROTATED);
+//
+//        gp2(X, () -> pivotState == PivotRotatedState.NORMAL).whenActive(pivotPosMid);
 
         gp2(LEFT_BUMPER).toggleWhenActive(grabberLeftOpen, grabberLeftClose);
         gp2(RIGHT_BUMPER).toggleWhenActive(grabberRightOpen, grabberRightClose);

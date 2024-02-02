@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
-import static org.firstinspires.ftc.teamcode.Constants.ARM_SHOULDER_DEPOSIT;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_ARM;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_DRIVE;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_ELEVATOR;
@@ -8,9 +7,7 @@ import static org.firstinspires.ftc.teamcode.Constants.DEBUG_GENERAL;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_GRABBER;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_INTAKE;
 import static org.firstinspires.ftc.teamcode.Constants.DEBUG_VISION;
-import static org.firstinspires.ftc.teamcode.Constants.FOLLOW_POSE;
 import static org.firstinspires.ftc.teamcode.Constants.GRABBER_TWO_CLOSED;
-import static org.firstinspires.ftc.teamcode.Constants.GRABBER_TWO_OPEN;
 import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.A;
 import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.B;
 import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.DPAD_DOWN;
@@ -37,7 +34,7 @@ import org.firstinspires.ftc.teamcode.poofyutils.AprilTagCustomDatabase;
 import org.firstinspires.ftc.teamcode.poofyutils.PoofyDashboardUtil;
 import org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
-import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
+import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 
 
 @TeleOp
@@ -106,7 +103,7 @@ public class DriveFinal extends BaseOpMode {
 //        gp2(DPAD_LEFT, 2).whenActive(droneHold);
 
 //        gp2(A, 1).whenActive(armIdleGroup);
-        gp2(A).whenActive(armIdle);
+        gp2(A).whenActive(armIdleGroup);
         gp2(Y).whenActive(armDepositGroup);
 
 //        gp2(B, 1).whenActive(pivotPosDown).whenInactive(pivotPosMid);
@@ -114,19 +111,31 @@ public class DriveFinal extends BaseOpMode {
 //        gp2(GamepadKeys.Trigger.RIGHT_TRIGGER).whenActive(pivotPosRightDiag).whenInactive(pivotPosMid);
 //        gp2(GamepadKeys.Trigger.LEFT_TRIGGER).whenActive(pivotPosLeftDiag).whenInactive(pivotPosMid);
 
-        gp2(GamepadKeys.Trigger.LEFT_TRIGGER, () -> pivotState == PivotState.NORMAL).whenActive(pivotPosNormLeft);
-        gp2(GamepadKeys.Trigger.RIGHT_TRIGGER, () -> pivotState == PivotState.NORMAL).whenActive(pivotPosNormRight);
+        gp2(GamepadKeys.Trigger.LEFT_TRIGGER).whenActive(() -> armSS.pivotPositionState = ArmSubsystem.PivotPositionState.LEFT).whenInactive(() -> armSS.pivotPositionState = ArmSubsystem.PivotPositionState.MID);
+        gp2(GamepadKeys.Trigger.RIGHT_TRIGGER).whenActive(() -> armSS.pivotPositionState = ArmSubsystem.PivotPositionState.RIGHT).whenInactive(() -> armSS.pivotPositionState = ArmSubsystem.PivotPositionState.MID);
 
-        gp2(B, () -> armState == ArmState.RETRACTED).toggleWhenActive(() -> {
-            pivotState = PivotState.NORMAL;
-            pivotPosNormDown.schedule();
-            }, () -> {
-            pivotState = PivotState.ROTATED;
-            pivotPosRotDown.schedule();
-        });
+//        gp2(B, () -> armState == ArmState.EXTENDED).toggleWhenActive(() -> {
+//            pivotState = PivotRotatedState.NORMAL;
+//            pivotPosDownDefalt = pivotPosNormDown;
+//            pivotPosLeftDefault = pivotPosNormLeft;
+//            pivotPosRightDefault = pivotPosNormRight;
+//            pivotPosNormDown.schedule();
+//            }, () -> {
+//            pivotState = PivotRotatedState.ROTATED;
+//            pivotPosDownDefalt = pivotPosRotDown;
+//            pivotPosLeftDefault = pivotPosRotLeft;
+//            pivotPosRightDefault = pivotPosRotRight;
+//            pivotPosRotDown.schedule();
+//        });
 
-        gp2(GamepadKeys.Trigger.LEFT_TRIGGER, () -> pivotState == PivotState.ROTATED).whenActive(pivotPosRotLeft);
-        gp2(GamepadKeys.Trigger.RIGHT_TRIGGER, () -> pivotState == PivotState.ROTATED).whenActive(pivotPosRotRight);
+        gp2(B).whenActive(() -> armSS.toggleRotated());
+
+        gp2(X).toggleWhenActive(() -> armState = ArmState.RETRACTED, () -> armState = ArmState.EXTENDED);
+
+
+
+//        gp2(GamepadKeys.Trigger.LEFT_TRIGGER, () -> pivotState == PivotState.ROTATED).whenActive(pivotPosRotLeft).whenInactive(pivotPosDownDefalt);
+//        gp2(GamepadKeys.Trigger.RIGHT_TRIGGER, () -> pivotState == PivotState.ROTATED).whenActive(pivotPosRotRight).whenInactive(pivotPosDownDefalt);
 
         gp2(LEFT_BUMPER).toggleWhenActive(grabberLeftOpen, grabberLeftClose);
         gp2(RIGHT_BUMPER).toggleWhenActive(grabberRightOpen, grabberRightClose);
@@ -147,9 +156,9 @@ public class DriveFinal extends BaseOpMode {
 
         super.run();
 
-        if (armSS.getShoulderPosition() == ARM_SHOULDER_DEPOSIT) {
-            
-        }
+//        if (armSS.getShoulderPosition() == ARM_SHOULDER_DEPOSIT) {
+//            armState = ArmState.EXTENDED;
+//        }
 
         if (grabSS.getLeftPos() == Constants.GRABBER_ONE_CLOSED && grabSS.getRightPos() == Constants.GRABBER_TWO_CLOSED) {
             gamepad1.rumble(1, 1, 20);
@@ -163,6 +172,10 @@ public class DriveFinal extends BaseOpMode {
         }
 
         TelemetryPacket packet = new TelemetryPacket();
+
+        telemetry.addData("Pivot pos State", armSS.pivotPositionState);
+        telemetry.addData("Pivot rot State", armSS.pivotRotatedState);
+        telemetry.addData("Arm State", armState);
 
         PoofyDashboardUtil.drawTags(packet.fieldOverlay(), AprilTagCustomDatabase.getCenterStageTagLibrary());
         PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getDwPose());
