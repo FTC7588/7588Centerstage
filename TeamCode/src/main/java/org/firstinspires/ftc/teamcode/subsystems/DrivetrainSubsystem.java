@@ -17,6 +17,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit.AMPS;
 import static org.firstinspires.ftc.teamcode.Constants.*;
+import static org.firstinspires.ftc.teamcode.RobotHardware.USING_TAGS;
 
 import android.util.Size;
 
@@ -37,7 +38,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     private double rLCurrent;
     private double rRCurrent;
 
-    protected Pose2d targetPose;
+    protected Pose2d targetPose = new Pose2d(0, 0, 0);
 
     private Pose2d dwPose;
     private Pose2d tagPose;
@@ -46,7 +47,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     private final InterpLUT redBackdropLUT;
 
     private final DeadwheelLocalizer dwLocalizer;
-    private final AprilTagLocalizer2d tagLocalizer;
+    private AprilTagLocalizer2d tagLocalizer;
 
     public DrivetrainSubsystem(RobotHardware robot) {
         this.robot = robot;
@@ -65,17 +66,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         dwLocalizer = new DeadwheelLocalizer(robot);
 
-        tagLocalizer = new AprilTagLocalizer2d(
-                new CameraConfig(
-                        robot.C920,
-                        C920_POSE,
-                        C920_INTRINSICS,
-                        C920_EXPOSURE,
-                        255,
-                        new Size(1280, 720),
-                        VisionPortal.StreamFormat.MJPEG
-                )
-        );
+        if (USING_TAGS) {
+            tagLocalizer = new AprilTagLocalizer2d(
+                    new CameraConfig(
+                            robot.C920,
+                            C920_POSE,
+                            C920_INTRINSICS,
+                            C920_EXPOSURE,
+                            255,
+                            new Size(1280, 720),
+                            VisionPortal.StreamFormat.MJPEG
+                    )
+            );
+        }
 
         tagPose = new Pose2d(0, 0, 0);
 
@@ -105,8 +108,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
         heading = robot.getHeading();
         dwLocalizer.update();
         dwPose = dwLocalizer.getPoseEstimate();
-        tagLocalizer.update();
-        tagPose = tagLocalizer.getPoseEstimate();
+        if (USING_TAGS) {
+            tagLocalizer.update();
+            tagPose = tagLocalizer.getPoseEstimate();
+        }
     }
 
     public void write() {
@@ -122,7 +127,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
 
     public ArrayList<AprilTagDetection> getUsedTags() {
-        return tagLocalizer.getUsedTags();
+        if (USING_TAGS) {
+            return tagLocalizer.getUsedTags();
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     public AprilTagLocalizer2d getTagLocalizer() {
@@ -130,7 +139,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
 
     public boolean isDetected() {
-        return tagLocalizer.isDetected();
+        if (USING_TAGS) {
+            return tagLocalizer.isDetected();
+        } else {
+            return false;
+        }
     }
 
     public void robotCentricMode(double strafeSpeed, double forwardSpeed, double turnSpeed, boolean pidTurning) {
@@ -179,9 +192,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
         followTagMode(followPose);
     }
 
-    public void followPoseMode(Pose2d targetPose) {
+    public void followPoseMode(Pose2d targetPose, double posTol, double headingTolDeg) {
         this.targetPose = targetPose;
-        drive.driveFollowPose(targetPose, dwPose, robot.getHeading());
+        drive.driveFollowPose(targetPose, dwPose, robot.getHeading(), posTol, headingTolDeg);
     }
 
     public boolean stopped() {
@@ -252,5 +265,17 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     public double getrRCurrent() {
         return rRCurrent;
+    }
+    
+    public double getXError() {
+        return targetPose.getX()-dwPose.getX();
+    }
+
+    public double getYError() {
+        return targetPose.getY() - dwPose.getY();
+    }
+
+    public double getThetaError() {
+        return Math.toDegrees(targetPose.getTheta() - dwPose.getTheta());
     }
 }

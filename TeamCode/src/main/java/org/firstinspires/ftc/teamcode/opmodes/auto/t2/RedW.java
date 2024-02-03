@@ -12,6 +12,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectorySequenceAsync;
@@ -28,6 +29,7 @@ import java.util.Locale;
 
 @Autonomous
 @Config
+@Disabled
 public class RedW extends BaseOpMode {
 
     public static Paths path = Paths.W_1_C;

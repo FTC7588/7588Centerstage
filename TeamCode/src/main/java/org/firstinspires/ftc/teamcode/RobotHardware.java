@@ -29,6 +29,7 @@ import java.util.List;
 public class RobotHardware {
 
     public static boolean USING_IMU = true;
+    public static boolean USING_TAGS = false;
 
     //drive
     public DcMotorEx fL, fR, rL, rR;
@@ -53,6 +54,7 @@ public class RobotHardware {
 
     //cameras
     public CameraName C920;
+    public CameraName C930;
 
     //extra sensors
     public NormalizedColorSensor backCS;

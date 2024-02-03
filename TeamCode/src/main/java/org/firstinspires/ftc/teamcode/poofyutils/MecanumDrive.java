@@ -187,6 +187,18 @@ public class MecanumDrive {
         return Math.sqrt((targetPose.getX() - currentPose.getX())*(targetPose.getX() - currentPose.getX()) + (targetPose.getY() - currentPose.getY())*(targetPose.getY() - currentPose.getY())) <= tolerance;
     }
 
+    public boolean reachedXTarget(double tolerance, Pose2d currentPose) {
+        return Math.abs(targetPose.getX() - currentPose.getX()) < tolerance;
+    }
+
+    public boolean reachedYTarget(double tolerance, Pose2d currentPose) {
+        return Math.abs(targetPose.getY() - currentPose.getY()) < tolerance;
+    }
+
+    public boolean reachedThetaTarget(double tolerance, Pose2d currentPose) {
+        return Math.abs(Math.toDegrees(targetPose.getTheta() - currentPose.getTheta())) < tolerance;
+    }
+
     public boolean reachedHeading(double tolerance, Pose2d currentPose) {
         double diff = targetPose.getTheta() - currentPose.getTheta();
         while(diff>Math.PI) diff -= Math.PI * 2.0;
@@ -194,17 +206,24 @@ public class MecanumDrive {
         return Math.abs(diff) <= tolerance;
     }
 
-    public void driveFollowPose(Pose2d targetPose, Pose2d currentPose, double gyroAngle) {
+    public void driveFollowPose(Pose2d targetPose, Pose2d currentPose, double gyroAngle, double posTol, double headingTolDeg) {
         this.targetPose = targetPose;
+        double forwardSpeed, strafeSpeed, turnSpeed;
 
         xController.setTargetPosition(targetPose.getX());
-        double forwardSpeed = xController.calculate(currentPose.getX());
+
+//        forwardSpeed = reachedXTarget(posTol, currentPose) ? 0 : xController.calculate(currentPose.getX());
+        forwardSpeed = xController.calculate(currentPose.getX());
 
         yController.setTargetPosition(targetPose.getY());
-        double strafeSpeed = yController.calculate(currentPose.getY());
+
+//        strafeSpeed = reachedYTarget(posTol, currentPose) ? 0 :  yController.calculate(currentPose.getY());
+        strafeSpeed = yController.calculate(currentPose.getY());
 
         thetaController.setTargetPosition(targetPose.getTheta());
-        double turnSpeed = thetaController.calculate(currentPose.getTheta());
+
+//        turnSpeed = reachedThetaTarget(headingTolDeg, currentPose) ? 0 : thetaController.calculate(currentPose.getTheta());
+        turnSpeed = thetaController.calculate(currentPose.getTheta());
 
         driveFieldCentric(
                 -strafeSpeed,

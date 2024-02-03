@@ -52,6 +52,7 @@ import org.firstinspires.ftc.teamcode.poofyutils.filters.MovingAverage;
 import org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadTrigger;
 
 import static org.firstinspires.ftc.teamcode.Constants.*;
+import static org.firstinspires.ftc.teamcode.RobotHardware.USING_TAGS;
 
 import java.util.function.BooleanSupplier;
 
@@ -334,31 +335,6 @@ public class BaseOpMode extends CommandOpModeEx {
         grabberRightOpen = new SetRightGrabberPosition(grabSS, GRABBER_TWO_OPEN);
 
         //macros
-        armInit = new SetArmPositions(
-                armSS,
-                GRAB_SHOULDER,
-                GRAB_WRIST,
-                ARM_PIVOT_MID
-        );
-
-        armDeposit = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                200,
-                ARM_SHOULDER_DEPOSIT,
-                ARM_WRIST_DEPOSIT,
-                ARM_PIVOT_MID
-        );
-
-        armIdle = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                200,
-                GRAB_SHOULDER,
-                GRAB_WRIST,
-                ARM_PIVOT_MID
-        );
-
         armIdleGroup = new SequentialCommandGroup(
                 new SetArmPositions(
                         armSS,
@@ -369,45 +345,23 @@ public class BaseOpMode extends CommandOpModeEx {
                 new InstantCommand(() -> {
                     armSS.pivotRotatedState = ArmSubsystem.PivotRotatedState.NORMAL;
                     armSS.pivotPositionState = ArmSubsystem.PivotPositionState.UP;
-                })
+                }),
+                new SetShoulderPosition(armSS, ARM_SHOULDER_DEPOSIT),
+                new WaitCommand(100),
+                new SetShoulderPosition(armSS, GRAB_SHOULDER)
         );
 
-        armPoised = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                POISED_ELE,
-                POISED_SHOULDER,
-                POISED_WRIST,
-                ARM_PIVOT_MID
+        armBackGroup = new SequentialCommandGroup(
+                new SetArmPositions(
+                        armSS,
+                        FLOOR_SHOULDER,
+                        FLOOR_WRIST,
+                        ARM_PIVOT_MID
+                ),
+                new SetWristPosition(armSS, ARM_WRIST_TEST),
+                new WaitCommand(100),
+                new SetWristPosition(armSS, FLOOR_WRIST)
         );
-
-        armGrab = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                GRAB_ELE,
-                GRAB_SHOULDER,
-                GRAB_WRIST,
-                ARM_PIVOT_MID
-        );
-
-        armBack = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                FLOOR_ELE,
-                FLOOR_SHOULDER,
-                FLOOR_WRIST,
-                ARM_PIVOT_MID
-        );
-
-        armDown = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                0,
-                GRAB_SHOULDER,
-                GRAB_WRIST,
-                ARM_PIVOT_DOWN
-        );
-
 
         armDepositGroup = new SequentialCommandGroup(
                 new SetArmPositions(
@@ -423,26 +377,18 @@ public class BaseOpMode extends CommandOpModeEx {
                 new InstantCommand(() -> armSS.pivotPositionState = ArmSubsystem.PivotPositionState.MID)
         );
 
-
-
-        armBackGroup = new SequentialCommandGroup(
-                new SetArmPositions(
-                        armSS,
-                        FLOOR_SHOULDER,
-                        FLOOR_WRIST,
-                        ARM_PIVOT_MID
-                ),
-                new SetWristPosition(armSS, ARM_WRIST_TEST),
-                new WaitCommand(100),
-                new SetWristPosition(armSS, FLOOR_WRIST)
-        );
         autoArmBack = new SequentialCommandGroup(
                 new SetArmPositions(
-                        armSS, ARM_AUTO, 0, 0.5
+                        armSS,
+                        ARM_AUTO,
+                        0,
+                        ARM_PIVOT_NORM_DOWN
                 ),
                 new SetWristPosition(armSS, ARM_WRIST_TEST),
                 new WaitCommand(100),
-                new SetWristPosition(armSS, FLOOR_WRIST)
+                new SetWristPosition(armSS, FLOOR_WRIST),
+                new WaitCommand(100),
+                new InstantCommand(() -> armSS.pivotPositionState = ArmSubsystem.PivotPositionState.MID)
         );
 
         armGrabGroup = new SequentialCommandGroup(
@@ -452,6 +398,7 @@ public class BaseOpMode extends CommandOpModeEx {
                 new WaitCommand(75),
                 new SetShoulderPosition(armSS, GRAB_SHOULDER)
         );
+
         armPoisedGroup = new SequentialCommandGroup(
                 new SetShoulderPosition(armSS, POISED_SHOULDER),
                 new SetWristPosition(armSS, POISED_WRIST)
@@ -535,7 +482,7 @@ public class BaseOpMode extends CommandOpModeEx {
             tal();
         }
 
-        if (DEBUG_VISION) {
+        if (DEBUG_VISION && USING_TAGS) {
             tal("=== VISION DEBUG INFO ===");
             tad("Tag Pose", driveSS.getTagLocalizer().getTagPose());
             tad("Tag Readings", driveSS.getTagLocalizer().getTagReadings());

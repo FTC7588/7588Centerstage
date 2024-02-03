@@ -31,9 +31,9 @@ public class Constants {
     public static boolean DEBUG_VISION      = false;
 
     //drive constants
-    public static PoofyPIDCoefficients X_COEFFS = new PoofyPIDCoefficients(0.1, 0, 0.01, 0, 0, 0, 0);
-    public static PoofyPIDCoefficients Y_COEFFS = new PoofyPIDCoefficients(0.1, 0, 0.01, 0, 0, 0, 0);
-    public static PoofyPIDCoefficients THETA_COEFFS = new PoofyPIDCoefficients(0.4, 0, 0.04, 0, 0, 0.075, 0);
+    public static PoofyPIDCoefficients X_COEFFS = new PoofyPIDCoefficients(0.06, 0, 0.01, 0, 0, 0.07, 0);
+    public static PoofyPIDCoefficients Y_COEFFS = new PoofyPIDCoefficients(0.06, 0, 0.01, 0, 0, 0.07, 0);
+    public static PoofyPIDCoefficients THETA_COEFFS = new PoofyPIDCoefficients(0.3, 0, 0.08, 0, 0, 0.12, 0);
 
     public static double LOW_SPEED = 0.4;
     public static double HIGH_SPEED = 1;
@@ -86,7 +86,7 @@ public class Constants {
     public static double FLOOR_SHOULDER = 0.25;
     public static double POISED_SHOULDER = 0.91;
     public static double GRAB_SHOULDER = 0.8925;
-    public static double ARM_AUTO = 0.5;
+    public static double ARM_AUTO = 0.45;
 
         //wrist constants
     public static double ARM_WRIST_IN_ANGLE = -90;
@@ -109,7 +109,7 @@ public class Constants {
     public static double ARM_PIVOT_DOWN_MID = 0.3933;
     public static double ARM_PIVOT_DOWN = 0.21;
 
-    public static double ARM_PIVOT_NORM_LEFT = 0.85;
+    public static double ARM_PIVOT_NORM_LEFT = 0.95;
     public static double ARM_PIVOT_NORM_DOWN = 0.77;
     public static double ARM_PIVOT_NORM_RIGHT = 0.58;
 
@@ -117,7 +117,7 @@ public class Constants {
 
     public static double ARM_PIVOT_ROT_LEFT = 0.3933;
     public static double ARM_PIVOT_ROT_DOWN = 0.21;
-    public static double ARM_PIVOT_ROT_RIGHT = 0.1;
+    public static double ARM_PIVOT_ROT_RIGHT = 0;
 
     //grabber constants
     public static double GRABBER_ONE_CLOSED = 0.87;
