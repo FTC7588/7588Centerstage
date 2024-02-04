@@ -22,9 +22,11 @@ public class ArmSubsystem extends SubsystemBase {
 
     public PivotRotatedState pivotRotatedState = PivotRotatedState.NORMAL;
     public PivotPositionState pivotPositionState = PivotPositionState.UP;
+    public ShoulderState shoulderState = ShoulderState.IDLE;
 
     public PivotRotatedState lastPivotRotated;
     public PivotPositionState lastPivotPosition;
+    public ShoulderState lastArmState;
 
     public ArmSubsystem(RobotHardware robot) {
         this.robot = robot;
@@ -140,6 +142,17 @@ public class ArmSubsystem extends SubsystemBase {
         MID,
         RIGHT,
         UP
+    }
+
+    public enum ShoulderState {
+        IDLE,
+        GRAB,
+        DEPOSIT,
+        AUTO
+    }
+
+    public enum WristState {
+
     }
 
 }

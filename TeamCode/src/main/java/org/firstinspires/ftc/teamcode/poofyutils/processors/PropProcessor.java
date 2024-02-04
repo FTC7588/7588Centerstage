@@ -34,13 +34,13 @@ public class PropProcessor implements VisionProcessor {
     public Rect centerROIBox;
     public Rect rightROIBox;
 
-    public Rect blueBD_redW_LeftROIBox = new Rect(525, 20, 30, 25);
-    public Rect blueBD_redWCenterROIBox = new Rect(530, 240, 30, 25);
+    public Rect blueBD_redW_LeftROIBox = new Rect(140, 20, 30, 25);
+    public Rect blueBD_redWCenterROIBox = new Rect(400, 20, 30, 25);
     public Rect blueBD_redWRightROIBox = new Rect(0, 265, 30, 25);
 
     public Rect redBD_blueWLeftROIBox = new Rect(0,265,30,25);
-    public Rect redBD_BlueWCenterROIBox = new Rect(560, 50, 30, 25);
-    public Rect redBD_blueWRightROIBox = new Rect(500, 345, 30, 25);
+    public Rect redBD_BlueWCenterROIBox = new Rect(220, 10, 30, 25);
+    public Rect redBD_blueWRightROIBox = new Rect(475, 20, 30, 25);
 
     public Mat leftMat = new Mat();
     public Mat centerMat = new Mat();
@@ -54,20 +54,20 @@ public class PropProcessor implements VisionProcessor {
 
     public boolean tuneBlue = false;
     public boolean tuneRed = false;
-
-    public PropProcessor(Alliance alliance) {
-        this.alliance = alliance;
-    }
-
-//    public PropProcessor() {
-//        if (tuneBlue) {
-//            this.alliance = Alliance.BLUE;
-//        } else if (tuneRed) {
-//            this.alliance = Alliance.RED;
-//        } else {
-//            this.alliance = Alliance.RED;
-//        }
+//
+//    public PropProcessor(Alliance alliance) {
+//        this.alliance = alliance;
 //    }
+
+    public PropProcessor() {
+        if (tuneBlue) {
+            this.alliance = Alliance.BLUE;
+        } else if (tuneRed) {
+            this.alliance = Alliance.RED;
+        } else {
+            this.alliance = Alliance.BLUE;
+        }
+    }
 
 
     @Override
