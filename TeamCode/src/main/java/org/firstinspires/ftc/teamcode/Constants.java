@@ -97,7 +97,7 @@ public class Constants {
     public static double ARM_WRIST_TEST = 0.05;
     public static double FLOOR_WRIST = 1;
     public static double POISED_WRIST = 0.19;
-    public static double GRAB_WRIST = 0.18;
+    public static double GRAB_WRIST = 0.16;
 
         //pivot constants
     public static double ARM_PIVOT_UP_ANGLE = 0;

@@ -24,23 +24,23 @@ public class PropProcessor implements VisionProcessor {
 
     private Scalar purpleColor = new Scalar(50,50,3);
 
-    public Scalar blueLower = new Scalar(82.2,60.9,133.2);
-    public Scalar blueUpper = new Scalar(111.9, 208.3, 255.0);
+    public Scalar blueLower = new Scalar(75.2,53.9,126.2);
+    public Scalar blueUpper = new Scalar(110.9, 207.3, 255.0);
 
-    public Scalar redLower = new Scalar(153, 140.3, 87.8);
-    public Scalar redUpper = new Scalar(208.3, 229.5, 255);
+    public Scalar redLower = new Scalar(150.1, 85, 84.8);
+    public Scalar redUpper = new Scalar(201.2, 232.5, 255);
 
     public Rect leftROIBox;
     public Rect centerROIBox;
     public Rect rightROIBox;
 
-    public Rect blueBD_redW_LeftROIBox = new Rect(140, 20, 30, 25);
-    public Rect blueBD_redWCenterROIBox = new Rect(400, 20, 30, 25);
+    public Rect blueBD_redW_LeftROIBox = new Rect(140, 40, 30, 25);
+    public Rect blueBD_redWCenterROIBox = new Rect(395, 45, 30, 25);
     public Rect blueBD_redWRightROIBox = new Rect(0, 265, 30, 25);
 
     public Rect redBD_blueWLeftROIBox = new Rect(0,265,30,25);
-    public Rect redBD_BlueWCenterROIBox = new Rect(220, 10, 30, 25);
-    public Rect redBD_blueWRightROIBox = new Rect(475, 20, 30, 25);
+    public Rect redBD_BlueWCenterROIBox = new Rect(220, 40, 30, 25);
+    public Rect redBD_blueWRightROIBox = new Rect(475, 60, 30, 25);
 
     public Mat leftMat = new Mat();
     public Mat centerMat = new Mat();
@@ -54,20 +54,20 @@ public class PropProcessor implements VisionProcessor {
 
     public boolean tuneBlue = false;
     public boolean tuneRed = false;
-//
-//    public PropProcessor(Alliance alliance) {
-//        this.alliance = alliance;
-//    }
 
-    public PropProcessor() {
-        if (tuneBlue) {
-            this.alliance = Alliance.BLUE;
-        } else if (tuneRed) {
-            this.alliance = Alliance.RED;
-        } else {
-            this.alliance = Alliance.BLUE;
-        }
+    public PropProcessor(Alliance alliance) {
+        this.alliance = alliance;
     }
+
+//    public PropProcessor() {
+//        if (tuneBlue) {
+//            this.alliance = Alliance.BLUE;
+//        } else if (tuneRed) {
+//            this.alliance = Alliance.RED;
+//        } else {
+//            this.alliance = Alliance.BLUE;
+//        }
+//    }
 
 
     @Override
@@ -246,12 +246,6 @@ public class PropProcessor implements VisionProcessor {
         Imgproc.putText(input, Integer.toString(contours.size()), new Point(rightROIBox.x,400), Imgproc.FONT_HERSHEY_COMPLEX, 1, new Scalar(255,255,255));
         contours.clear();
 
-        if (spike == 0 && (alliance == Alliance.BLUE_BD || alliance == Alliance.RED_W)) {
-            spike = 3;
-        } else if (spike == 0 && (alliance == Alliance.RED_BD || alliance == Alliance.BLUE_W)) {
-            spike = 1;
-        }
-
         //clear the ROI mats
         ROIs.clear();
 
@@ -274,6 +268,12 @@ public class PropProcessor implements VisionProcessor {
     }
 
     public int getSpike() {
-        return spike;
+        if (spike == 0 && (alliance == Alliance.BLUE_BD || alliance == Alliance.RED_W)) {
+            return 3;
+        } else if (spike == 0 && (alliance == Alliance.RED_BD || alliance == Alliance.BLUE_W)) {
+            return 1;
+        } else {
+            return spike;
+        }
     }
 }

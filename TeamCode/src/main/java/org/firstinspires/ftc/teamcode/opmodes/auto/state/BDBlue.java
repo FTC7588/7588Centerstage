@@ -4,6 +4,7 @@ import android.util.Size;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.PropProcessor;
+import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.Locale;
@@ -34,6 +36,7 @@ public class BDBlue extends BaseOpMode {
     public static Pose2d targetPose3;
     public static Pose2d targetPose4;
 
+    private InstantCommand pivot;
 
     private PropProcessor propProcessor;
 
@@ -49,10 +52,10 @@ public class BDBlue extends BaseOpMode {
         RobotHardware.USING_IMU = true;
         Constants.ELE_PID = false;
         auto = false;
-        alliance = Alliance.BLUE;
+        alliance = Alliance.BLUE_BD;
         super.initialize();
 
-        propProcessor = new PropProcessor(Alliance.BLUE);
+        propProcessor = new PropProcessor(Alliance.BLUE_BD);
 
         visionPortal = new VisionPortal.Builder()
                 .setCamera(robot.C920)
@@ -83,7 +86,9 @@ public class BDBlue extends BaseOpMode {
 
         CommandScheduler.getInstance().run();
 
-        while (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) proppos = 3;
+        while (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING);
+
+        proppos = propProcessor.getSpike();
 
         if (gamepad1.x && !pastX) {
             visionPortal.saveNextFrameRaw(String.format(Locale.US, "CameraFrameCapture-%06d", 1));
@@ -102,32 +107,37 @@ public class BDBlue extends BaseOpMode {
                 targetPose2 = AutoConstantsState.BlueBD.SPIKE_1_BACK;
                 targetPose3 = AutoConstantsState.BlueBD.BD_1;
                 targetPose4 = AutoConstantsState.BlueBD.PARK;
+                pivot = new InstantCommand(() -> armSS.pivotRotatedState = ArmSubsystem.PivotRotatedState.NORMAL);
                 break;
             case (2):
                 targetPose1 = AutoConstantsState.BlueBD.SPIKE_2;
                 targetPose2 = AutoConstantsState.BlueBD.SPIKE_2_BACK;
                 targetPose3 = AutoConstantsState.BlueBD.BD_2;
                 targetPose4 = AutoConstantsState.BlueBD.PARK;
+                pivot = new InstantCommand(() -> armSS.pivotRotatedState = ArmSubsystem.PivotRotatedState.NORMAL);
                 break;
             case (3):
                 targetPose1 = AutoConstantsState.BlueBD.SPIKE_3;
                 targetPose2 = AutoConstantsState.BlueBD.SPIKE_3_BACK;
                 targetPose3 = AutoConstantsState.BlueBD.BD_3;
                 targetPose4 = AutoConstantsState.BlueBD.PARK;
+                pivot = new InstantCommand(() -> armSS.pivotRotatedState = ArmSubsystem.PivotRotatedState.NORMAL);
                 break;
         }
 
 
 
-        p2pTest1 = new PIDToPoint(driveSS, targetPose1, 1, 1);
+        p2pTest1 = new PIDToPoint(driveSS, targetPose1, 1.25, 5);
         p2pTest2 = new PIDToPoint(driveSS, targetPose2, 3, 5);
-        p2pTest3 = new PIDToPoint(driveSS, targetPose3, 0.75, 2);
-        p2pTest4 = new PIDToPoint(driveSS, targetPose4, 2, 2);
+        p2pTest3 = new PIDToPoint(driveSS, targetPose3, 1.25, 5);
+        p2pTest4 = new PIDToPoint(driveSS, targetPose4, 2, 5);
 
         schedule(new SequentialCommandGroup(
                 p2pTest1,
                 p2pTest2,
                 autoArmBack,
+                new WaitCommand(100),
+                pivot,
                 p2pTest3,
                 new WaitCommand(50),
                 grabbersOpen,

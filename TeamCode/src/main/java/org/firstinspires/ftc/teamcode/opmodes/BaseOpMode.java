@@ -349,6 +349,7 @@ public class BaseOpMode extends CommandOpModeEx {
                 new SetShoulderPosition(armSS, ARM_SHOULDER_DEPOSIT),
                 new WaitCommand(100),
                 new SetShoulderPosition(armSS, GRAB_SHOULDER)
+//                new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED)
         );
 
         armBackGroup = new SequentialCommandGroup(
