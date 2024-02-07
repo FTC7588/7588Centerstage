@@ -56,8 +56,8 @@ public class MecanumDrive {
         this.backLeft = backLeft;
         this.backRight = backRight;
 
-        xController = new CluelessPID(xCoeffs.kP, xCoeffs.kI, 50);
-        yController = new CluelessPID(yCoeffs.kP, yCoeffs.kI, 50);
+        xController = new CluelessPID(xCoeffs.kP, xCoeffs.kI, xCoeffs.kD);
+        yController = new CluelessPID(yCoeffs.kP, yCoeffs.kI, yCoeffs.kD);
 
         thetaController = new PoofyPIDController(thetaCoeffs);
         thetaController.setInputBounds(-Math.PI, Math.PI);

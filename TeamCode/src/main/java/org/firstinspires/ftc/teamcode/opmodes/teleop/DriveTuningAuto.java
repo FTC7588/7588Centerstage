@@ -110,8 +110,8 @@ public class DriveTuningAuto extends BaseOpMode {
 
 //        new SequentialCommandGroup(p2pTest1, p2pTest2).schedule();
 
-//        driveSS.drive.xController.updatePID(Constants.X_COEFFS.kP, Constants.X_COEFFS.kI, Constants.X_COEFFS.kD);
-//        driveSS.drive.yController.updatePID(Constants.Y_COEFFS.kP, Constants.Y_COEFFS.kI, Constants.Y_COEFFS.kD);
+        driveSS.drive.xController.updatePID(Constants.X_COEFFS.kP, Constants.X_COEFFS.kI, Constants.X_COEFFS.kD);
+        driveSS.drive.yController.updatePID(Constants.Y_COEFFS.kP, Constants.Y_COEFFS.kI, Constants.Y_COEFFS.kD);
         driveSS.drive.thetaController.setCoefficients(Constants.THETA_COEFFS);
 
         TelemetryPacket packet = new TelemetryPacket();

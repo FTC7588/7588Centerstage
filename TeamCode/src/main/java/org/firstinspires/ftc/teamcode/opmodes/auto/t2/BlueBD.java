@@ -284,7 +284,7 @@ public class BlueBD extends BaseOpMode {
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromSpike),
                                 grabberLeftOpen,
                                 new WaitCommand(500),
-                                armGrabGroup,
+                                armIdleGroup,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, park)
                         )
                 );
@@ -325,7 +325,7 @@ public class BlueBD extends BaseOpMode {
                                 new WaitCommand(400),
                                 grabbersOpen,
                                 new WaitCommand(400),
-                                armGrabGroup
+                                armIdleGroup
                         )
                 );
                 break;

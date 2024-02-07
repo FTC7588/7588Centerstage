@@ -25,8 +25,11 @@ public class AutoConstantsState {
         public static Pose2d SPIKE_3_BACK = new Pose2d(SPIKE_3.x - 3, 2, Math.toRadians(-90));
 
         public static Pose2d BD_1 = new Pose2d(21.5, 36, Math.toRadians(-90));
+        public static Pose2d BD_1_OFF = new Pose2d(BD_1.x, BD_1.y - 6, BD_1.theta);
         public static Pose2d BD_2 = new Pose2d(30, 36, Math.toRadians(-90));
+        public static Pose2d BD_2_OFF = new Pose2d(BD_2.x, BD_2.y - 6, BD_2.theta);
         public static Pose2d BD_3 = new Pose2d(33.5, 36, Math.toRadians(-90));
+        public static Pose2d BD_3_OFF = new Pose2d(BD_3.x, BD_3.y - 6, BD_3.theta);
 
         public static Pose2d PARK = new Pose2d(6, 28, Math.toRadians(-90));
     }
