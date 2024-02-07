@@ -62,8 +62,8 @@ public class DriveTuningAuto extends BaseOpMode {
         p2pTest4 = new PIDToPoint(driveSS, targetPose4, posTol, headingTol);
         p2pTest5 = new PIDToPoint(driveSS, targetPose5, posTol, headingTol);
 
-        driveSS.drive.xController.setPID(Constants.X_COEFFS.kP, Constants.X_COEFFS.kI, Constants.X_COEFFS.kD);
-        driveSS.drive.yController.setPID(Constants.Y_COEFFS.kP, Constants.Y_COEFFS.kI, Constants.Y_COEFFS.kD);
+//        driveSS.drive.xController.setPID(Constants.X_COEFFS.kP, Constants.X_COEFFS.kI, Constants.X_COEFFS.kD);
+//        driveSS.drive.yController.setPID(Constants.Y_COEFFS.kP, Constants.Y_COEFFS.kI, Constants.Y_COEFFS.kD);
         driveSS.drive.thetaController.setCoefficients(Constants.THETA_COEFFS);
 
 
@@ -110,8 +110,8 @@ public class DriveTuningAuto extends BaseOpMode {
 
 //        new SequentialCommandGroup(p2pTest1, p2pTest2).schedule();
 
-        driveSS.drive.xController.setPID(Constants.X_COEFFS.kP, Constants.X_COEFFS.kI, Constants.X_COEFFS.kD);
-        driveSS.drive.yController.setPID(Constants.Y_COEFFS.kP, Constants.Y_COEFFS.kI, Constants.Y_COEFFS.kD);
+//        driveSS.drive.xController.updatePID(Constants.X_COEFFS.kP, Constants.X_COEFFS.kI, Constants.X_COEFFS.kD);
+//        driveSS.drive.yController.updatePID(Constants.Y_COEFFS.kP, Constants.Y_COEFFS.kI, Constants.Y_COEFFS.kD);
         driveSS.drive.thetaController.setCoefficients(Constants.THETA_COEFFS);
 
         TelemetryPacket packet = new TelemetryPacket();
@@ -128,7 +128,7 @@ public class DriveTuningAuto extends BaseOpMode {
         telemetry.addData("Y error", driveSS.getYError());
         telemetry.addData("Theta error", driveSS.getThetaError());
 
-        telemetry.addData("velo error", driveSS.drive.xController.getVelocityError());
+//        telemetry.addData("velo error", driveSS.drive.xController.getVelocityError());
 
         tal();
         tad("reachedd x", driveSS.drive.reachedXTarget(posTol, driveSS.getDwPose()));

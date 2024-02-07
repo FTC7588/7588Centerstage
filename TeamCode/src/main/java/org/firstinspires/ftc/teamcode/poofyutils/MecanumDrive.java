@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Vector2d;
+import org.firstinspires.ftc.teamcode.poofyutils.pid.CluelessPID;
 import org.firstinspires.ftc.teamcode.poofyutils.pid.PoofyPIDCoefficients;
 import org.firstinspires.ftc.teamcode.poofyutils.pid.PoofyPIDController;
 
@@ -14,8 +15,8 @@ public class MecanumDrive {
     private double frontLeftSpeed, frontRightSpeed, backLeftSpeed, backRightSpeed;
     private double maxOutput = 1;
 
-    public final PIDController xController;
-    public final PIDController yController;
+    public final CluelessPID xController;
+    public final CluelessPID yController;
     public final PoofyPIDController thetaController;
 
     private double turnSpeed;
@@ -34,8 +35,8 @@ public class MecanumDrive {
         this.frontRight = frontRight;
         this.backLeft = backLeft;
         this.backRight = backRight;
-        xController = new PIDController(0, 0, 0);
-        yController = new PIDController(0, 0, 0);
+        xController = new CluelessPID(0, 0, 0);
+        yController = new CluelessPID(0, 0, 0);
         thetaController = new PoofyPIDController.Builder().build();
         currentPose = new Pose2d(0, 0, 0);
 
@@ -55,8 +56,8 @@ public class MecanumDrive {
         this.backLeft = backLeft;
         this.backRight = backRight;
 
-        xController = new PIDController(xCoeffs.kP, xCoeffs.kI, xCoeffs.kD);
-        yController = new PIDController(yCoeffs.kP, yCoeffs.kI, yCoeffs.kD);
+        xController = new CluelessPID(xCoeffs.kP, xCoeffs.kI, 50);
+        yController = new CluelessPID(yCoeffs.kP, yCoeffs.kI, 50);
 
         thetaController = new PoofyPIDController(thetaCoeffs);
         thetaController.setInputBounds(-Math.PI, Math.PI);
@@ -178,19 +179,19 @@ public class MecanumDrive {
     public void driveFollowTag(Pose2d tagPose,
                                Pose2d targetFollowingPose
     ) {
-        xController.setSetPoint(targetFollowingPose.getY());
-        double strafeSpeed = xController.calculate(tagPose.getY());
-
-        yController.setSetPoint(targetFollowingPose.getX());
-        double forwardSpeed = yController.calculate(tagPose.getX());
+//        xController.setSetPoint(targetFollowingPose.getY());
+//        double strafeSpeed = xController.calculate(tagPose.getY());
+//
+//        yController.setSetPoint(targetFollowingPose.getX());
+//        double forwardSpeed = yController.calculate(tagPose.getX());
 
         double turnSpeed = thetaController.calculate(Math.toRadians(targetFollowingPose.getTheta()), Math.toRadians(tagPose.getTheta()));
 
-        driveRobotCentric(
-                strafeSpeed,
-                -forwardSpeed,
-                turnSpeed
-        );
+//        driveRobotCentric(
+//                strafeSpeed,
+//                -forwardSpeed,
+//                turnSpeed
+//        );
     }
 
 
@@ -290,14 +291,14 @@ public class MecanumDrive {
         this.targetPose = targetPose;
         double forwardSpeed, strafeSpeed, turnSpeed;
 
-        xController.setSetPoint(targetPose.getX());
+//        xController.setSetPoint(targetPose.getX());
 
-        forwardSpeed = reachedXTarget(posTol, currentPose) ? 0 : xController.calculate(currentPose.getX());
+        forwardSpeed = reachedXTarget(posTol, currentPose) ? 0 : xController.update(targetPose.getX() - currentPose.x, -1, 1);
 //        forwardSpeed = xController.calculate(currentPose.getX());
 
-        yController.setSetPoint(targetPose.getY());
+//        yController.setSetPoint(targetPose.getY());
 
-        strafeSpeed = reachedYTarget(posTol, currentPose) ? 0 :  yController.calculate(currentPose.getY());
+        strafeSpeed = reachedYTarget(posTol, currentPose) ? 0 :  yController.update(targetPose.getY() - currentPose.y, -1, 1);
 //        strafeSpeed = yController.calculate(currentPose.getY());
 
         thetaController.setTargetPosition(targetPose.getTheta());

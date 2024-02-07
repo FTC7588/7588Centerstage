@@ -27,7 +27,6 @@ import static org.firstinspires.ftc.teamcode.Constants.*;
 
 @Autonomous
 @Config
-@Disabled
 public class BlueW extends BaseOpMode {
 
     public static Paths path = Paths.W_1_C;
