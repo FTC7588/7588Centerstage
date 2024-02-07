@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.util.InterpLUT;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.opmodes.auto.state.AutoConstantsState;
 import org.firstinspires.ftc.teamcode.poofyutils.MecanumDrive;
 import org.firstinspires.ftc.teamcode.poofyutils.localizers.butgood.DeadwheelLocalizer;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
@@ -40,7 +41,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     protected Pose2d targetPose = new Pose2d(0, 0, 0);
 
-    private Pose2d dwPose;
+    private Pose2d dwPose = new Pose2d(0, 0, 0);
     private Pose2d tagPose;
 
     private final InterpLUT blueBackdropLUT;
@@ -194,7 +195,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     public void followPoseMode(Pose2d targetPose, double posTol, double headingTolDeg) {
         this.targetPose = targetPose;
-        drive.driveFollowPose(targetPose, dwPose, robot.getHeading(), posTol, headingTolDeg);
+        drive.driveFollowPose(targetPose, dwPose, robot.getHeading(), posTol, headingTolDeg, AutoConstantsState.FL_STATIC, AutoConstantsState.FR_STATIC, AutoConstantsState.RL_STATIC, AutoConstantsState.RR_STATIC);
     }
 
     public boolean stopped() {

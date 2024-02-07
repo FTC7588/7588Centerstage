@@ -442,6 +442,10 @@ public class BaseOpMode extends CommandOpModeEx {
             tad("Front Right Current", driveSS.getfRCurrent());
             tad("Rear Left Current", driveSS.getrLCurrent());
             tad("Rear Right Current", driveSS.getrRCurrent());
+            tad("Front Left Power", driveSS.drive.getFrontLeftSpeed());
+            tad("Front Right Power", driveSS.drive.getFrontRightSpeed());
+            tad("Rear Left Current", driveSS.drive.getBackLeftSpeed());
+            tad("Rear Right Current", driveSS.drive.getBackRightSpeed());
             tal();
         }
 

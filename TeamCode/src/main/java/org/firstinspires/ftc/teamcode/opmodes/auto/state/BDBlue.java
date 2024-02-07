@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auto.state;
 import android.util.Size;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
@@ -14,6 +15,8 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.commands.drive.PIDToPoint;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
+import org.firstinspires.ftc.teamcode.poofyutils.AprilTagCustomDatabase;
+import org.firstinspires.ftc.teamcode.poofyutils.PoofyDashboardUtil;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.PropProcessor;
@@ -164,17 +167,25 @@ public class BDBlue extends BaseOpMode {
 
         robot.clearBulkCache();
 
-        driveSS.drive.xController.setCoefficients(Constants.X_COEFFS);
-        driveSS.drive.yController.setCoefficients(Constants.Y_COEFFS);
+        driveSS.drive.xController.setPID(Constants.X_COEFFS.kP, Constants.X_COEFFS.kI, Constants.X_COEFFS.kD);
+        driveSS.drive.yController.setPID(Constants.Y_COEFFS.kP, Constants.Y_COEFFS.kI, Constants.Y_COEFFS.kD);
         driveSS.drive.thetaController.setCoefficients(Constants.THETA_COEFFS);
 
         tad("target", driveSS.getTargetPose());
-        telemetry.addData("target pose", driveSS.getTargetPose());
+        telemetry.addData("current pose", driveSS.getDwPose());
         tal();
         tad("reachedd x", driveSS.drive.reachedXTarget(0.5, driveSS.getDwPose()));
         tad("reachedd y", driveSS.drive.reachedYTarget(0.5, driveSS.getDwPose()));
         tad("reachedd theta", driveSS.drive.reachedThetaTarget(2, driveSS.getDwPose()));
 
         tau();
+
+        TelemetryPacket packet = new TelemetryPacket();
+
+        PoofyDashboardUtil.drawTags(packet.fieldOverlay(), AprilTagCustomDatabase.getCenterStageTagLibrary());
+        PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getDwPose());
+        PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getTargetPose());
+
+        dashboard.sendTelemetryPacket(packet);
     }
 }

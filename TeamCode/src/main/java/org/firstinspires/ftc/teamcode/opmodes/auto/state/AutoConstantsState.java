@@ -7,6 +7,11 @@ import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 @Config
 public class AutoConstantsState {
 
+    public static double FL_STATIC = 0.007;
+    public static double FR_STATIC = 0.0085;
+    public static double RL_STATIC = 0.0087;
+    public static double RR_STATIC = 0.0075;
+
     public static class BlueBD {
         public static Pose2d START = new Pose2d(0, 0, 0);
 

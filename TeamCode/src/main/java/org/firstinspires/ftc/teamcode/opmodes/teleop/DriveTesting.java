@@ -53,8 +53,8 @@ public class DriveTesting extends BaseOpMode {
         p2pTest3 = new PIDToPoint(driveSS, targetPose3, 0.5, 2);
         p2pTest4 = new PIDToPoint(driveSS, targetPose4, 0.5, 2);
 
-        driveSS.drive.xController.setCoefficients(Constants.X_COEFFS);
-        driveSS.drive.yController.setCoefficients(Constants.Y_COEFFS);
+        driveSS.drive.xController.setPID(Constants.X_COEFFS.kP, Constants.X_COEFFS.kI, Constants.X_COEFFS.kD);
+        driveSS.drive.yController.setPID(Constants.Y_COEFFS.kP, Constants.Y_COEFFS.kI, Constants.Y_COEFFS.kD);
         driveSS.drive.thetaController.setCoefficients(Constants.THETA_COEFFS);
 
 
@@ -104,8 +104,8 @@ public class DriveTesting extends BaseOpMode {
 
         super.run();
 
-        driveSS.drive.xController.setCoefficients(Constants.X_COEFFS);
-        driveSS.drive.yController.setCoefficients(Constants.Y_COEFFS);
+        driveSS.drive.xController.setPID(Constants.X_COEFFS.kP, Constants.X_COEFFS.kI, Constants.X_COEFFS.kD);
+        driveSS.drive.yController.setPID(Constants.Y_COEFFS.kP, Constants.Y_COEFFS.kI, Constants.Y_COEFFS.kD);
         driveSS.drive.thetaController.setCoefficients(Constants.THETA_COEFFS);
 
         TelemetryPacket packet = new TelemetryPacket();

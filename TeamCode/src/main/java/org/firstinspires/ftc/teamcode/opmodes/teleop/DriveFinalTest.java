@@ -25,6 +25,7 @@ import android.annotation.SuppressLint;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Constants;
@@ -37,6 +38,7 @@ import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
 
 @TeleOp
 @Config
+@Disabled
 public class DriveFinalTest extends BaseOpMode {
 
     @Override

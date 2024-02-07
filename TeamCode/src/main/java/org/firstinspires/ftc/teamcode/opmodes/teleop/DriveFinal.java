@@ -160,9 +160,9 @@ public class DriveFinal extends BaseOpMode {
 //            armState = ArmState.EXTENDED;
 //        }
 
-        if (intakeSS.getPower() != 0) {
-            grabbersOpen.schedule();
-        }
+//        if (intakeSS.getPower() != 0) {
+//            grabbersOpen.schedule();
+//        }
 
         if (grabSS.getLeftPos() == Constants.GRABBER_ONE_CLOSED && grabSS.getRightPos() == Constants.GRABBER_TWO_CLOSED) {
             gamepad1.rumble(1, 1, 20);
