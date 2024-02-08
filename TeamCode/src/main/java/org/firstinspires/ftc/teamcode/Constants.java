@@ -17,6 +17,9 @@ public class Constants {
     //pid to point
     public static double VELOCITY_THRESHOLD = 0.25;
 
+    public static double INTAKE_JAM_CURRENT = 10;
+    public static double INTAKE_JAM_REVERSE_TIME = 0.5;
+
     //control layer buttons
     public static GamepadKeys.Trigger CONTROL_LAYER_2 = GamepadKeys.Trigger.LEFT_TRIGGER;
     public static GamepadKeys.Trigger CONTROL_LAYER_3 = GamepadKeys.Trigger.RIGHT_TRIGGER;

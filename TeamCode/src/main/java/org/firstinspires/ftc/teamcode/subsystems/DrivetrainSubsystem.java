@@ -44,6 +44,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     private Pose2d dwPose = new Pose2d(0, 0, 0);
     private Pose2d tagPose;
 
+    private double posTol = 1;
+    private double headingTolDeg = 5;
+
     private final InterpLUT blueBackdropLUT;
     private final InterpLUT redBackdropLUT;
 
@@ -193,8 +196,26 @@ public class DrivetrainSubsystem extends SubsystemBase {
         followTagMode(followPose);
     }
 
+    public void followPoseMode() {
+        drive.driveFollowPose(targetPose, dwPose, robot.getHeading(), posTol, headingTolDeg, AutoConstantsState.FL_STATIC, AutoConstantsState.FR_STATIC, AutoConstantsState.RL_STATIC, AutoConstantsState.RR_STATIC);
+    }
+
+    public void setTargetPose(Pose2d targetPose) {
+        this.targetPose = targetPose;
+    }
+
+    public void setPositionTolerance(double tolerance) {
+        this.posTol = tolerance;
+    }
+
+    public void setHeadingTolerance(double toleranceDeg) {
+        this.headingTolDeg = toleranceDeg;
+    }
+
     public void followPoseMode(Pose2d targetPose, double posTol, double headingTolDeg) {
         this.targetPose = targetPose;
+        this.posTol = posTol;
+        this.headingTolDeg = headingTolDeg;
         drive.driveFollowPose(targetPose, dwPose, robot.getHeading(), posTol, headingTolDeg, AutoConstantsState.FL_STATIC, AutoConstantsState.FR_STATIC, AutoConstantsState.RL_STATIC, AutoConstantsState.RR_STATIC);
     }
 

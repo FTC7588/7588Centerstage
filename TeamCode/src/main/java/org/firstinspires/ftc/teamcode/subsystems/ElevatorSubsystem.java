@@ -98,4 +98,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void setPower(double power) {
         this.power = power;
     }
+
+    public enum ElevatorState {
+        DOWN,
+        IN_MOTION,
+        UP
+    }
 }

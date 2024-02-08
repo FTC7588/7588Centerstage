@@ -79,6 +79,12 @@ public class BlueBD extends BaseOpMode {
 
     @Override
     public void initLoop() {
+
+        if (propProcessor.getSpike() != 0) {
+            propPos = propProcessor.getSpike();
+        }
+
+
         intakeUp.schedule();
         armPoisedGroup.schedule();
         grabberLeftClose.schedule();

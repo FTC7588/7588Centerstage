@@ -20,8 +20,15 @@ public class PIDToPoint extends CommandBase {
     }
 
     @Override
+    public void initialize() {
+        drivetrainSubsystem.setTargetPose(targetPose);
+        drivetrainSubsystem.setPositionTolerance(positionTolerance);
+        drivetrainSubsystem.setHeadingTolerance(headingTolerance);
+    }
+
+    @Override
     public void execute() {
-        drivetrainSubsystem.followPoseMode(targetPose, positionTolerance, headingTolerance);
+        drivetrainSubsystem.followPoseMode();
     }
 
     @Override

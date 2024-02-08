@@ -30,6 +30,7 @@ public class RobotHardware {
 
     public static boolean USING_IMU = true;
     public static boolean USING_TAGS = false;
+    public static boolean SMART_INTAKE = false;
 
     //drive
     public DcMotorEx fL, fR, rL, rR;
