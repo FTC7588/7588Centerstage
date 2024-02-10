@@ -75,7 +75,7 @@ public class AutoConstantsState {
     public static class BlueW {
         public static Pose2d START = new Pose2d(-39.5, 63, Math.toRadians(-90));
 
-        public static Pose2d SPIKE_1 = new Pose2d(-39, 37, Math.toRadians(-45));
+        public static Pose2d SPIKE_1 = new Pose2d(-39, 32, Math.toRadians(-30));
         public static Pose2d SPIKE_1_BACK = new Pose2d(-45, 35, Math.toRadians(-90));
 
         public static Pose2d SPIKE_2 = new Pose2d(-48, 25, Math.toRadians(-90));
@@ -94,9 +94,9 @@ public class AutoConstantsState {
         public static Pose2d BD_2 = new Pose2d(53, 32, Math.toRadians(180));
         public static Pose2d BD_3 = new Pose2d(53, 32, Math.toRadians(180));
 
-        public static Pose2d BD_1_OFF = new Pose2d(BD_1.x - 4, BD_1.y, BD_1.theta);
-        public static Pose2d BD_2_OFF = new Pose2d(BD_2.x - 4, BD_2.y, BD_2.theta);
-        public static Pose2d BD_3_OFF = new Pose2d(BD_3.x - 4, BD_3.y, BD_3.theta);
+        public static Pose2d BD_1_OFF = new Pose2d(BD_1.x - 4, BD_1.y + 0.5, BD_1.theta);
+        public static Pose2d BD_2_OFF = new Pose2d(BD_2.x - 4, BD_2.y + 0.5, BD_2.theta);
+        public static Pose2d BD_3_OFF = new Pose2d(BD_3.x - 4, BD_3.y + 0.5, BD_3.theta);
 
         public static Pose2d PARK = new Pose2d(48, 16, Math.toRadians(180));
     }

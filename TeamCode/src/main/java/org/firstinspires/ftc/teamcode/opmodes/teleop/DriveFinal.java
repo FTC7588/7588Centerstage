@@ -140,8 +140,8 @@ public class DriveFinal extends BaseOpMode {
         gp2(LEFT_BUMPER).toggleWhenActive(grabberLeftOpen, grabberLeftClose);
         gp2(RIGHT_BUMPER).toggleWhenActive(grabberRightOpen, grabberRightClose);
 
-        gp1(LEFT_BUMPER, 3).whenActive(droneHold);
-        gp1(RIGHT_BUMPER, 3).whenActive(droneRelease);
+//        gp1(LEFT_BUMPER, 3).whenActive(droneHold);
+        gp1(RIGHT_BUMPER, 3).whenActive(droneRelease).whenInactive(droneHold);
 
         robotCentric.schedule();
         intakeDown.schedule();

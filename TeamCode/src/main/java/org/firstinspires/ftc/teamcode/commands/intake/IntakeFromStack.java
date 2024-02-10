@@ -15,15 +15,20 @@ public class IntakeFromStack extends CommandBase {
     private double topPosition;
 
     private boolean jammed = false;
+    private double giveUpTime;
 
     private ElapsedTime failTime;
     private ElapsedTime jamTimer;
+    private ElapsedTime loadedTimer;
 
-    public IntakeFromStack(IntakeSubsystem intakeSubsystem, int topPixel) {
+    public IntakeFromStack(IntakeSubsystem intakeSubsystem, int topPixel, double giveUpSeconds) {
         this.intakeSubsystem = intakeSubsystem;
         addRequirements(intakeSubsystem);
         this.topPixel = topPixel;
         failTime = new ElapsedTime();
+        jamTimer = new ElapsedTime();
+        loadedTimer = new ElapsedTime();
+        this.giveUpTime = giveUpSeconds;
     }
 
     @Override
@@ -31,6 +36,8 @@ public class IntakeFromStack extends CommandBase {
         updateIntakeHeight();
         intakeSubsystem.setPower(-1);
         failTime.reset();
+        jamTimer.reset();
+        loadedTimer.reset();
     }
 
     @Override
@@ -47,6 +54,9 @@ public class IntakeFromStack extends CommandBase {
             intakeSubsystem.setPower(-1);
             jammed = false;
         }
+        if (!intakeSubsystem.isLoaded()) {
+            loadedTimer.reset();
+        }
     }
 
     @Override
@@ -57,7 +67,7 @@ public class IntakeFromStack extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return intakeSubsystem.isLoaded();
+        return ((intakeSubsystem.isLoaded() && loadedTimer.milliseconds() > 100) || jamTimer.seconds() > giveUpTime);
     }
 
     public void updateIntakeHeight() {
