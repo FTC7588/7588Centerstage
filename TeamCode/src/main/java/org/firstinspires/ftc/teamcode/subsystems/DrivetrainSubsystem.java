@@ -248,6 +248,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
         robot.drone.setPosition(pos);
     }
 
+    public void setDwPose(Pose2d pose) {
+        dwLocalizer.setPose(pose);
+    }
+
     //getters
 
     public Pose2d getTargetPose() {

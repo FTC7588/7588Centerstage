@@ -346,7 +346,7 @@ public class BaseOpMode extends CommandOpModeEx {
                     armSS.pivotRotatedState = ArmSubsystem.PivotRotatedState.NORMAL;
                     armSS.pivotPositionState = ArmSubsystem.PivotPositionState.UP;
                 }),
-                new SetShoulderPosition(armSS, ARM_SHOULDER_DEPOSIT),
+                new SetShoulderPosition(armSS, ARM_SHOULDER_IDLE),
                 new WaitCommand(100),
                 new SetShoulderPosition(armSS, GRAB_SHOULDER)
 //                new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED)

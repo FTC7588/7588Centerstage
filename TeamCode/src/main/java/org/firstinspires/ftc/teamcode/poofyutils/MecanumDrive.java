@@ -293,18 +293,18 @@ public class MecanumDrive {
 
 //        xController.setSetPoint(targetPose.getX());
 
-        forwardSpeed = reachedXTarget(posTol, currentPose) ? 0 : xController.update(targetPose.getX() - currentPose.x, -1, 1);
-//        forwardSpeed = xController.calculate(currentPose.getX());
+//        forwardSpeed = reachedXTarget(posTol, currentPose) ? 0 : xController.update(targetPose.getX() - currentPose.x, -1, 1);
+        forwardSpeed = xController.update(targetPose.getX() - currentPose.getX(), -1, 1);
 
 //        yController.setSetPoint(targetPose.getY());
 
-        strafeSpeed = reachedYTarget(posTol, currentPose) ? 0 :  yController.update(targetPose.getY() - currentPose.y, -1, 1);
-//        strafeSpeed = yController.calculate(currentPose.getY());
+//        strafeSpeed = reachedYTarget(posTol, currentPose) ? 0 :  yController.update(targetPose.getY() - currentPose.y, -1, 1);
+        strafeSpeed = yController.update(targetPose.getY() - currentPose.getY(), -1, 1);
 
         thetaController.setTargetPosition(targetPose.getTheta());
 
-        turnSpeed = reachedHeading(Math.toRadians(headingTolDeg), currentPose) ? 0 : thetaController.calculate(currentPose.getTheta());
-//        turnSpeed = thetaController.calculate(currentPose.getTheta());
+//        turnSpeed = reachedHeading(Math.toRadians(headingTolDeg), currentPose) ? 0 : thetaController.calculate(currentPose.getTheta());
+        turnSpeed = thetaController.calculate(currentPose.getTheta());
 
         driveFieldCentric(
                 -strafeSpeed,

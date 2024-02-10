@@ -123,6 +123,10 @@ public class IntakeSubsystem extends SubsystemBase {
         return (isBackPixelLoaded() && isFrontPixelLoaded());
     }
 
+    public double getAverageCurrent() {
+        return (lCurrent + rCurrent) / 2;
+    }
+
     public void hasBeenLoaded(double millis) {
         if (isLoaded()) {
             if (!loadOnce) {

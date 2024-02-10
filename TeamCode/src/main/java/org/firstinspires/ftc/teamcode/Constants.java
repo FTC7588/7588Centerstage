@@ -17,7 +17,7 @@ public class Constants {
     //pid to point
     public static double VELOCITY_THRESHOLD = 0.25;
 
-    public static double INTAKE_JAM_CURRENT = 10;
+    public static double INTAKE_JAM_CURRENT = 2.5;
     public static double INTAKE_JAM_REVERSE_TIME = 0.5;
 
     //control layer buttons
@@ -34,9 +34,9 @@ public class Constants {
     public static boolean DEBUG_VISION      = false;
 
     //drive constants
-    public static PoofyPIDCoefficients X_COEFFS = new PoofyPIDCoefficients(0.08, 0, 0.014, 0, 0, 0.01, 0);
-    public static PoofyPIDCoefficients Y_COEFFS = new PoofyPIDCoefficients(0.08, 0, 0.014, 0, 0, 0.01, 0);
-    public static PoofyPIDCoefficients THETA_COEFFS = new PoofyPIDCoefficients(0.6, 0, 0.08, 0, 0, 0.0, 0);
+    public static PoofyPIDCoefficients X_COEFFS = new PoofyPIDCoefficients(0.08, 0, 0.01, 0, 0, 0.01, 0);
+    public static PoofyPIDCoefficients Y_COEFFS = new PoofyPIDCoefficients(0.08, 0, 0.01, 0, 0, 0.01, 0);
+    public static PoofyPIDCoefficients THETA_COEFFS = new PoofyPIDCoefficients(1, 0, 0.08, 0, 0, 0.0, 0);
 
     public static double LOW_SPEED = 0.4;
     public static double HIGH_SPEED = 1;

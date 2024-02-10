@@ -133,23 +133,23 @@ public class WRed extends BaseOpMode {
         p2pTest3 = new PIDToPoint(driveSS, targetPose3, 1, 5);
         p2pTest4 = new PIDToPoint(driveSS, targetPose4, 2, 5);
 
-//        schedule(new SequentialCommandGroup(
-//                p2pTest1,
-//                p2pTest2,
-//                autoArmBack,
-//                new WaitCommand(100),
-//                pivot,
-//                p2pTest3,
-////                new WaitCommand(50),
-//                grabbersOpen,
-//                new WaitCommand(150),
-//                new ParallelCommandGroup(
-//                        new SequentialCommandGroup(
-//                                new WaitCommand(100),
-//                                armIdleGroup
-//                        )
-//                )
-//        ));
+        schedule(new SequentialCommandGroup(
+                p2pTest1,
+                p2pTest2,
+                autoArmBack,
+                new WaitCommand(100),
+                pivot,
+                p2pTest3,
+//                new WaitCommand(50),
+                grabbersOpen,
+                new WaitCommand(150),
+                new ParallelCommandGroup(
+                        new SequentialCommandGroup(
+                                new WaitCommand(100),
+                                armIdleGroup
+                        )
+                )
+        ));
 
         schedule(
                 new SequentialCommandGroup(
