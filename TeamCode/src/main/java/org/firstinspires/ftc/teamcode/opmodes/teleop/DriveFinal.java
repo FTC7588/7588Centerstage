@@ -46,6 +46,7 @@ public class DriveFinal extends BaseOpMode {
 
         RobotHardware.USING_IMU = true;
         Constants.ELE_PID = false;
+        RobotHardware.USING_SENSORS = false;
         alliance = Alliance.BLUE;
 
         super.initialize();
@@ -111,8 +112,12 @@ public class DriveFinal extends BaseOpMode {
 //        gp2(GamepadKeys.Trigger.RIGHT_TRIGGER).whenActive(pivotPosRightDiag).whenInactive(pivotPosMid);
 //        gp2(GamepadKeys.Trigger.LEFT_TRIGGER).whenActive(pivotPosLeftDiag).whenInactive(pivotPosMid);
 
-        gp2(GamepadKeys.Trigger.LEFT_TRIGGER).whenActive(() -> armSS.pivotPositionState = ArmSubsystem.PivotPositionState.LEFT).whenInactive(() -> armSS.pivotPositionState = ArmSubsystem.PivotPositionState.MID);
-        gp2(GamepadKeys.Trigger.RIGHT_TRIGGER).whenActive(() -> armSS.pivotPositionState = ArmSubsystem.PivotPositionState.RIGHT).whenInactive(() -> armSS.pivotPositionState = ArmSubsystem.PivotPositionState.MID);
+//        gp2(GamepadKeys.Trigger.LEFT_TRIGGER).whenActive(() -> armSS.pivotPositionState = ArmSubsystem.PivotPositionState.LEFT).whenInactive(() -> armSS.pivotPositionState = ArmSubsystem.PivotPositionState.MID);
+//        gp2(GamepadKeys.Trigger.RIGHT_TRIGGER).whenActive(() -> armSS.pivotPositionState = ArmSubsystem.PivotPositionState.RIGHT).whenInactive(() -> armSS.pivotPositionState = ArmSubsystem.PivotPositionState.MID);
+
+        gp2(GamepadKeys.Trigger.LEFT_TRIGGER).whenActive(() -> armSS.setPivotPositionState(ArmSubsystem.PivotPositionState.LEFT)).whenInactive(() -> armSS.setPivotPositionState(ArmSubsystem.PivotPositionState.MID));
+        gp2(GamepadKeys.Trigger.RIGHT_TRIGGER).whenActive(() -> armSS.setPivotPositionState(ArmSubsystem.PivotPositionState.RIGHT)).whenInactive(() -> armSS.setPivotPositionState(ArmSubsystem.PivotPositionState.MID));
+
 
 //        gp2(B, () -> armState == ArmState.EXTENDED).toggleWhenActive(() -> {
 //            pivotState = PivotRotatedState.NORMAL;

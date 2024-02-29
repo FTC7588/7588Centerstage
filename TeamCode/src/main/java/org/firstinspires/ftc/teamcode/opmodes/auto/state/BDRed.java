@@ -9,6 +9,7 @@ import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -24,6 +25,7 @@ import java.util.Locale;
 
 @Config
 @Autonomous
+@Disabled
 public class BDRed extends BaseOpMode {
 
     protected PIDToPoint p2pTest1;

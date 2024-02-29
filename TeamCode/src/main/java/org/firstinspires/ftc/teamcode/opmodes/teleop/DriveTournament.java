@@ -108,9 +108,9 @@ public class DriveTournament extends BaseOpMode {
         super.run();
 
         telemetry.addData("touch x", driver.getTouchX());
-        telemetry.addData("front", ((DistanceSensor) robot.frontCS).getDistance(DistanceUnit.CM));
-        telemetry.addData("back", ((DistanceSensor) robot.backCS).getDistance(DistanceUnit.CM));
-        telemetry.addData("front and back", intakeSS.isLoaded());
+//        telemetry.addData("front", ((DistanceSensor) robot.frontCS).getDistance(DistanceUnit.CM));
+//        telemetry.addData("back", ((DistanceSensor) robot.backCS).getDistance(DistanceUnit.CM));
+//        telemetry.addData("front and back", intakeSS.isLoaded());
 
         TelemetryPacket packet = new TelemetryPacket();
 

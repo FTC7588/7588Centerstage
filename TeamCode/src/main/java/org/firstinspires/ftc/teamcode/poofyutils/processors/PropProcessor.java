@@ -34,13 +34,13 @@ public class PropProcessor implements VisionProcessor {
     public Rect centerROIBox;
     public Rect rightROIBox;
 
-    public Rect blueBD_redW_LeftROIBox = new Rect(140, 40, 30, 25);
-    public Rect blueBD_redWCenterROIBox = new Rect(395, 45, 30, 25);
-    public Rect blueBD_redWRightROIBox = new Rect(0, 265, 30, 25);
+    public Rect blueBD_redW_LeftROIBox = new Rect(115, 35, 30, 25);
+    public Rect blueBD_redWCenterROIBox = new Rect(395, 10, 30, 25);
+    public Rect blueBD_redWRightROIBox = new Rect(630, 20, 10, 25);
 
-    public Rect redBD_blueWLeftROIBox = new Rect(0,265,30,25);
-    public Rect redBD_BlueWCenterROIBox = new Rect(220, 40, 30, 25);
-    public Rect redBD_blueWRightROIBox = new Rect(475, 60, 30, 25);
+    public Rect redBD_blueWLeftROIBox = new Rect(5,40,10,25);
+    public Rect redBD_BlueWCenterROIBox = new Rect(220, 30, 30, 25);
+    public Rect redBD_blueWRightROIBox = new Rect(480, 40, 30, 25);
 
     public Mat leftMat = new Mat();
     public Mat centerMat = new Mat();
@@ -49,11 +49,16 @@ public class PropProcessor implements VisionProcessor {
     public ArrayList<Mat> ROIs;
 
     public int spike;
+    public int pastSpike;
 
     public Alliance alliance;
 
     public boolean tuneBlue = false;
     public boolean tuneRed = false;
+
+    public ArrayList<Double> pastDetections;
+
+    public int zeroes, ones, twos, threes;
 
     public PropProcessor(Alliance alliance) {
         this.alliance = alliance;
@@ -61,11 +66,11 @@ public class PropProcessor implements VisionProcessor {
 
 //    public PropProcessor() {
 //        if (tuneBlue) {
-//            this.alliance = Alliance.BLUE;
+//            this.alliance = Alliance.BLUE_W;
 //        } else if (tuneRed) {
-//            this.alliance = Alliance.RED;
+//            this.alliance = Alliance.RED_W;
 //        } else {
-//            this.alliance = Alliance.BLUE;
+//            this.alliance = Alliance.BLUE_W;
 //        }
 //    }
 
@@ -73,6 +78,7 @@ public class PropProcessor implements VisionProcessor {
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
         ROIs = new ArrayList<>();
+        pastDetections = new ArrayList<>(20);
     }
 
     @Override
@@ -275,5 +281,55 @@ public class PropProcessor implements VisionProcessor {
         } else {
             return spike;
         }
+    }
+
+    public int getSpikePast() {
+//        pastDetections.add((double) spike);
+//        if (pastDetections.size() > 30) {
+//            pastDetections.remove(0);
+//        }
+//
+//        for (int i = 0; i < pastDetections.size(); i++) {
+//            double current = pastDetections.get(i);
+//            if (current == 0) {
+//                zeroes++;
+//            } else if (current == 1) {
+//                ones++;
+//            } else if (current == 2) {
+//                twos++;
+//            } else if (current == 3) {
+//                threes++;
+//            }
+//        }
+//
+//        double max = Math.max(Math.max(zeroes, ones), Math.max(twos, threes));
+//
+//        if (max == zeroes) {
+//            spike = 0;
+//        } else if (max == ones) {
+//            spike = 1;
+//        } else if (max == twos) {
+//            spike = 2;
+//        } else if (max == threes) {
+//            spike = 3;
+//        }
+//
+//        zeroes = ones = twos = threes = 0;
+
+//        if (spike == 0 && (alliance == Alliance.BLUE_BD || alliance == Alliance.RED_W)) {
+//            return 3;
+//        } else if (spike == 0 && (alliance == Alliance.RED_BD || alliance == Alliance.BLUE_W)) {
+//            return 1;
+//        } else {
+//            return spike;
+//        }
+        if (spike != 0) {
+            pastSpike = spike;
+        }
+
+        return pastSpike;
+
+
+
     }
 }

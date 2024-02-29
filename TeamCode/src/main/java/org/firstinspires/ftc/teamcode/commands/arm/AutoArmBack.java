@@ -43,7 +43,7 @@ public class AutoArmBack extends CommandBase {
 
         armSS.setShoulderPosition(ARM_AUTO);
         armSS.setWristPosition(ARM_WRIST_TEST);
-        armSS.pivotPositionState = ArmSubsystem.PivotPositionState.MID;
+//        armSS.pivotPositionState = ArmSubsystem.PivotPositionState.MID;
         timer1.reset();
     }
 
@@ -51,6 +51,7 @@ public class AutoArmBack extends CommandBase {
     public void execute() {
         if (timer1.milliseconds() > 100) {
             armSS.setWristPosition(FLOOR_WRIST);
+            armSS.pivotPositionState = ArmSubsystem.PivotPositionState.MID;
             done = true;
         }
     }

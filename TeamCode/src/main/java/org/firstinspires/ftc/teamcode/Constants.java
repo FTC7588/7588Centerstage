@@ -38,7 +38,7 @@ public class Constants {
     public static PoofyPIDCoefficients Y_COEFFS = new PoofyPIDCoefficients(0.08, 0, 0.01, 0, 0, 0.01, 0);
     public static PoofyPIDCoefficients THETA_COEFFS = new PoofyPIDCoefficients(1, 0, 0.08, 0, 0, 0.0, 0);
 
-    public static double LOW_SPEED = 0.4;
+    public static double LOW_SPEED = 0.55;
     public static double HIGH_SPEED = 1;
 
     public static double DRONE_RELEASE = 0;

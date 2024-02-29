@@ -406,7 +406,7 @@ public class BaseOpMode extends CommandOpModeEx {
         );
 
 
-        autoGrab = new ConditionalCommand(new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED), new SetGrabberPosition(grabSS, GRABBER_ONE_OPEN, GRABBER_TWO_OPEN), () -> intakeSS.isLoaded());
+        autoGrab = new ConditionalCommand(new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED), new SetGrabberPosition(grabSS, GRABBER_ONE_OPEN, GRABBER_TWO_OPEN), () -> true);
 
         //gamepads
         driver = new PoofyGamepadEx(gamepad1);
@@ -456,8 +456,9 @@ public class BaseOpMode extends CommandOpModeEx {
             tad("Intake Motor Position", intakeSS.getIntakePosition());
             tad("Intake Mod Position", intakeSS.getModPosition());
             tad("Intake Target", intakeSS.getTarget());
-            tad("Intake Back Pixel Loaded", intakeSS.isBackPixelLoaded());
-            tad("Intake Front Pixel Loaded", intakeSS.isFrontPixelLoaded());
+            if (RobotHardware.USING_SENSORS) {
+
+            }
             tad("Intake Left Motor Current", intakeSS.getlCurrent());
             tad("Intake Right Motor Current", intakeSS.getrCurrent());
             tal();

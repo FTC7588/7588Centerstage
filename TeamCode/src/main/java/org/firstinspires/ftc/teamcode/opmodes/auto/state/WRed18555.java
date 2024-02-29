@@ -7,7 +7,6 @@ import static org.firstinspires.ftc.teamcode.Constants.GRABBER_TWO_CLOSED;
 import static org.firstinspires.ftc.teamcode.Constants.GRABBER_TWO_OPEN;
 import static org.firstinspires.ftc.teamcode.Constants.GRAB_SHOULDER;
 import static org.firstinspires.ftc.teamcode.Constants.GRAB_WRIST;
-import static org.firstinspires.ftc.teamcode.Constants.INT_THREE;
 import static org.firstinspires.ftc.teamcode.Constants.INT_TWO;
 import static org.firstinspires.ftc.teamcode.Constants.INT_UP;
 
@@ -52,7 +51,7 @@ import java.util.Locale;
 
 @Config
 @Autonomous
-public class WRed extends BaseOpMode {
+public class WRed18555 extends BaseOpMode {
 
     public static double xOffset = 0;
     public static double yOffset = 0;
@@ -255,7 +254,6 @@ public class WRed extends BaseOpMode {
                 new PIDToPoint(driveSS, offPurplePose, 3, 10),
                 new PIDToPoint(driveSS, stackAlignedPose, 2, 7.5),
                 new PIDToPoint(driveSS, stackPose, defaultPosTol, defaultHeadingTol).withTimeout(2000),
-                new WaitCommand(4000),
 
 //                //intake at stack
 //                new IntakeFromStack(intakeSS, 5, 5),
@@ -333,83 +331,101 @@ public class WRed extends BaseOpMode {
                 ),
 
                 //align with backdrop
+//                new ParallelCommandGroup(
+//                        new PIDToPoint(driveSS, backdropAlignPose2, defaultPosTol, defaultHeadingTol),
+//                        new SequentialCommandGroup(
+//                                new SetIntakePower(intakeSS, 0),
+//                                new WaitCommand(250),
+//                                new AutoArmBack(armSS),
+//                                new WaitCommand(300),
+//                                new SetElevatorPowerForTime(eleSS, -1, 400)
+//                        )
+//                ),
+
                 new ParallelCommandGroup(
-                        new PIDToPoint(driveSS, backdropAlignPose2, defaultPosTol, defaultHeadingTol),
+                        new PIDToPoint(driveSS, parkPose, defaultPosTol, defaultHeadingTol),
                         new SequentialCommandGroup(
                                 new SetIntakePower(intakeSS, 0),
                                 new WaitCommand(250),
+                                new SetElevatorPowerForTime(eleSS, -1, 300),
+                                new WaitCommand(100),
                                 new AutoArmBack(armSS),
-                                new WaitCommand(300),
-                                new SetElevatorPowerForTime(eleSS, -1, 400)
+                                new WaitCommand(700)
                         )
                 ),
 
                 //shtuff
-                new PIDToPoint(driveSS, backdrop2Pose, 1, 5).withTimeout(400),
-                grabbersOpen,
-                new PIDToPoint(driveSS, backdropAlignPose2, defaultPosTol, defaultHeadingTol),
+                new SetGrabberPosition(grabSS, GRABBER_ONE_OPEN, GRABBER_TWO_OPEN),
+                new WaitCommand(100),
+                new ArmIdle(armSS),
+                new LowerElevator(eleSS),
 
-                new PIDToPoint(driveSS, parkPose, defaultPosTol, defaultHeadingTol),
+                //shtuff
+//                new PIDToPoint(driveSS, backdrop2Pose, 1, 5).withTimeout(400),
+//                grabbersOpen,
+//                new PIDToPoint(driveSS, backdropAlignPose2, defaultPosTol, defaultHeadingTol),
 
-                                        new SequentialCommandGroup(
-                                new WaitCommand(100),
-                                new ArmIdle(armSS),
-                                new LowerElevator(eleSS)
-                        )
-
-//                //cycle 3
-//                new ParallelCommandGroup(
-//                        new PIDToPoint(driveSS, crossFieldPose, 5, defaultPosTol),
-//                        new SequentialCommandGroup(
-//                                new WaitCommand(100),
-//                                new ArmIdle(armSS),
-//                                new LowerElevator(eleSS),
-//                                new InstantCommand(() -> driveSS.setDwPose(new Pose2d(driveSS.getDwPose().x + xOffset, driveSS.getDwPose().y + yOffset, driveSS.getDwPose().theta)))
-//                        )
-//                ),
+//                new PIDToPoint(driveSS, parkPose, defaultPosTol, defaultHeadingTol),
 //
-//                new PIDToPoint(driveSS, stackAlignedPose, 5, 5),
-//                new PIDToPoint(driveSS, stackPose, defaultPosTol, defaultHeadingTol).withTimeout(800),
-//
-//                //intake at stack
-//                new IntakeFromStack(intakeSS, 2, 5),
-//                new WaitCommand(100),
-//                new ParallelCommandGroup(
-//                        new PIDToPoint(driveSS, crossFieldPose, 5, defaultHeadingTol),
-//                        new SequentialCommandGroup(
-//                                new ArmPoised(armSS),
-//                                new WaitCommand(200),
-//                                new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED),
-//                                new SetIntakePower(intakeSS, 1),
-//                                new WaitCommand(400),
-//                                new SetIntakePower(intakeSS, 0)
-//                        )
-//                ),
-//
-//                //align with backdrop
-//                new ConditionalCommand(
-//                        new SequentialCommandGroup(
-//                                new ParallelCommandGroup(
-//                                        new PIDToPoint(driveSS, parkPose, defaultPosTol, defaultHeadingTol),
 //                                        new SequentialCommandGroup(
-//                                                new SetIntakePower(intakeSS, 0),
-//                                                new WaitCommand(250),
-//                                                new SetElevatorPowerForTime(eleSS, -1, 300),
-//                                                new WaitCommand(100),
-//                                                new AutoArmBack(armSS),
-//                                                new WaitCommand(700)
-//                                        )
-//                                ),
-//
-//                                //shtuff
-//                                new SetGrabberPosition(grabSS, GRABBER_ONE_OPEN, GRABBER_TWO_OPEN),
 //                                new WaitCommand(100),
 //                                new ArmIdle(armSS),
 //                                new LowerElevator(eleSS)
 //                        ),
-//                        new PIDToPoint(driveSS, parkPose, defaultPosTol, defaultHeadingTol),
-//                        () -> time.seconds() < 26
-//                )
+
+                //cycle 3
+                new ParallelCommandGroup(
+                        new PIDToPoint(driveSS, crossFieldPose, 5, defaultPosTol),
+                        new SequentialCommandGroup(
+                                new WaitCommand(100),
+                                new ArmIdle(armSS),
+                                new LowerElevator(eleSS),
+                                new InstantCommand(() -> driveSS.setDwPose(new Pose2d(driveSS.getDwPose().x + xOffset, driveSS.getDwPose().y + yOffset, driveSS.getDwPose().theta)))
+                        )
+                ),
+
+                new PIDToPoint(driveSS, stackAlignedPose, 5, 5),
+                new PIDToPoint(driveSS, stackPose, defaultPosTol, defaultHeadingTol).withTimeout(800),
+
+                //intake at stack
+                new IntakeFromStack(intakeSS, 2, 5),
+                new WaitCommand(100),
+                new ParallelCommandGroup(
+                        new PIDToPoint(driveSS, crossFieldPose, 5, defaultHeadingTol),
+                        new SequentialCommandGroup(
+                                new ArmPoised(armSS),
+                                new WaitCommand(200),
+                                new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED),
+                                new SetIntakePower(intakeSS, 1),
+                                new WaitCommand(400),
+                                new SetIntakePower(intakeSS, 0)
+                        )
+                ),
+
+                //align with backdrop
+                new ConditionalCommand(
+                        new SequentialCommandGroup(
+                                new ParallelCommandGroup(
+                                        new PIDToPoint(driveSS, parkPose, defaultPosTol, defaultHeadingTol),
+                                        new SequentialCommandGroup(
+                                                new SetIntakePower(intakeSS, 0),
+                                                new WaitCommand(250),
+                                                new SetElevatorPowerForTime(eleSS, -1, 300),
+                                                new WaitCommand(100),
+                                                new AutoArmBack(armSS),
+                                                new WaitCommand(700)
+                                        )
+                                ),
+
+                                //shtuff
+                                new SetGrabberPosition(grabSS, GRABBER_ONE_OPEN, GRABBER_TWO_OPEN),
+                                new WaitCommand(100),
+                                new ArmIdle(armSS),
+                                new LowerElevator(eleSS)
+                        ),
+                        new PIDToPoint(driveSS, parkPose, defaultPosTol, defaultHeadingTol),
+                        () -> time.seconds() < 26
+                )
         ));
     }
 

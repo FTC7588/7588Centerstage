@@ -29,6 +29,7 @@ import java.util.Locale;
 
 @Autonomous
 @Config
+@Disabled
 public class BlueBD extends BaseOpMode {
 
     public static Paths path = Paths.BS_0;

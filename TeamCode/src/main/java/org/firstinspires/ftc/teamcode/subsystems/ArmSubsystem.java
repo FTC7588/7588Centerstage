@@ -81,6 +81,11 @@ public class ArmSubsystem extends SubsystemBase {
         lastPivotPosition = pivotPositionState;
         lastPivotRotated = pivotRotatedState;
 
+        if (shoulderPos == POISED_SHOULDER || shoulderPos == GRAB_SHOULDER) {
+            pivotPositionState = PivotPositionState.UP;
+            pivotRotatedState = PivotRotatedState.NORMAL;
+        }
+
     }
 
     public void write() {
@@ -119,15 +124,31 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void setPivotStates(PivotRotatedState rot, PivotPositionState pos) {
-        pivotPositionState = pos;
-        pivotRotatedState = rot;
+//        if (shoulderPos < 0.75) {
+            pivotPositionState = pos;
+            pivotRotatedState = rot;
+//        }
+    }
+
+    public void setPivotRotationState(PivotRotatedState rot) {
+        if (shoulderPos < 0.75) {
+            pivotRotatedState = rot;
+        }
+    }
+
+    public void setPivotPositionState(PivotPositionState pos) {
+        if (shoulderPos < 0.75) {
+            pivotPositionState = pos;
+        }
     }
 
     public void toggleRotated() {
-        if (pivotRotatedState == PivotRotatedState.NORMAL) {
-            pivotRotatedState = PivotRotatedState.ROTATED;
-        } else if (pivotRotatedState == PivotRotatedState.ROTATED) {
-            pivotRotatedState = PivotRotatedState.NORMAL;
+        if (shoulderPos < 0.75) {
+            if (pivotRotatedState == PivotRotatedState.NORMAL) {
+                pivotRotatedState = PivotRotatedState.ROTATED;
+            } else if (pivotRotatedState == PivotRotatedState.ROTATED) {
+                pivotRotatedState = PivotRotatedState.NORMAL;
+            }
         }
     }
 

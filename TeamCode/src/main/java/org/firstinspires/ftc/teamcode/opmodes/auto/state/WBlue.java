@@ -1,19 +1,22 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto.state;
 
 import static org.firstinspires.ftc.teamcode.Constants.ARM_PIVOT_MID;
-import static org.firstinspires.ftc.teamcode.Constants.ARM_SHOULDER_DEPOSIT;
-import static org.firstinspires.ftc.teamcode.Constants.ARM_SHOULDER_IDLE;
 import static org.firstinspires.ftc.teamcode.Constants.GRABBER_ONE_CLOSED;
+import static org.firstinspires.ftc.teamcode.Constants.GRABBER_ONE_OPEN;
 import static org.firstinspires.ftc.teamcode.Constants.GRABBER_TWO_CLOSED;
+import static org.firstinspires.ftc.teamcode.Constants.GRABBER_TWO_OPEN;
 import static org.firstinspires.ftc.teamcode.Constants.GRAB_SHOULDER;
 import static org.firstinspires.ftc.teamcode.Constants.GRAB_WRIST;
 import static org.firstinspires.ftc.teamcode.Constants.INT_THREE;
+import static org.firstinspires.ftc.teamcode.Constants.INT_TWO;
+import static org.firstinspires.ftc.teamcode.Constants.INT_UP;
 
 import android.util.Size;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
@@ -29,8 +32,8 @@ import org.firstinspires.ftc.teamcode.commands.arm.AutoArmBack;
 import org.firstinspires.ftc.teamcode.commands.arm.SetArmPositions;
 import org.firstinspires.ftc.teamcode.commands.arm.SetShoulderPosition;
 import org.firstinspires.ftc.teamcode.commands.drive.PIDToPoint;
+import org.firstinspires.ftc.teamcode.commands.drive.PIDToPointSpeed;
 import org.firstinspires.ftc.teamcode.commands.elevator.LowerElevator;
-import org.firstinspires.ftc.teamcode.commands.elevator.SetElevatorPower;
 import org.firstinspires.ftc.teamcode.commands.elevator.SetElevatorPowerForTime;
 import org.firstinspires.ftc.teamcode.commands.grabber.SetGrabberPosition;
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeFromStack;
@@ -56,8 +59,10 @@ public class WBlue extends BaseOpMode {
 
     public static double defaultPosTol = 1;
     public static double defaultHeadingTol = 5;
+    public static double slowSpeed = 0.75;
 
     protected PIDToPoint purple;
+    protected PIDToPoint prePurple;
     protected PIDToPoint offPurple;
     protected PIDToPoint stackAligned;
     protected PIDToPoint stack;
@@ -70,6 +75,7 @@ public class WBlue extends BaseOpMode {
     protected PIDToPoint backdrop3;
     protected PIDToPoint park;
 
+    public static Pose2d prePurplePose;
     public static Pose2d purplePose;
     public static Pose2d offPurplePose;
     public static Pose2d stackAlignedPose;
@@ -100,6 +106,7 @@ public class WBlue extends BaseOpMode {
         CommandScheduler.getInstance().reset();
         RobotHardware.USING_TAGS = false;
         RobotHardware.USING_IMU = true;
+        RobotHardware.USING_SENSORS = true;
         Constants.ELE_PID = false;
         auto = false;
         alliance = Alliance.RED;
@@ -137,7 +144,7 @@ public class WBlue extends BaseOpMode {
         ).schedule();
         grabberLeftOpen.schedule();
         grabberRightOpen.schedule();
-        intakeUp.schedule();
+        new SetIntakeAngle(intakeSS, INT_TWO).schedule();
     }
 
     @Override
@@ -152,11 +159,11 @@ public class WBlue extends BaseOpMode {
 
         while (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING);
 
-//        proppos = propProcessor.getSpike();
-        proppos = 1;
+        proppos = propProcessor.getSpike();
+//        proppos = 3;
 
         if (gamepad1.x && !pastX) {
-            visionPortal.saveNextFrameRaw(String.format(Locale.US, "CameraFrameCapture-%06d", 1));
+            visionPortal.saveNextFrameRaw(String.format(Locale.US, "CameraFrameCaptureBlueW-%06d", System.currentTimeMillis()));
         }
         pastX = gamepad1.x;
 
@@ -171,9 +178,10 @@ public class WBlue extends BaseOpMode {
         switch (proppos) {
             case (1):
                 purplePose = AutoConstantsState.BlueW.SPIKE_1;
+                prePurplePose = AutoConstantsState.BlueW.SPIKE_1_PREP;
                 offPurplePose = AutoConstantsState.BlueW.SPIKE_1_BACK;
-                stackAlignedPose = AutoConstantsState.BlueW.STACK_ALIGN;
-                stackPose = AutoConstantsState.BlueW.STACK;
+                stackAlignedPose = AutoConstantsState.BlueW.STACK_ALIGN_1;
+                stackPose = AutoConstantsState.BlueW.STACK_1;
                 crossFieldPose = AutoConstantsState.BlueW.INTERMEDIAN;
                 backdropAlignPose1 = AutoConstantsState.BlueW.BD_1_OFF;
                 backdropAlignPose2 = AutoConstantsState.BlueW.BD_2_OFF;
@@ -182,14 +190,17 @@ public class WBlue extends BaseOpMode {
                 backdrop2Pose = AutoConstantsState.BlueW.BD_2;
                 backdrop3Pose = AutoConstantsState.BlueW.BD_3;
                 parkPose = AutoConstantsState.BlueW.PARK;
-
                 pivot = new InstantCommand(() -> armSS.pivotRotatedState = ArmSubsystem.PivotRotatedState.NORMAL);
+                slowSpeed = 0.75;
+                xOffset = 1.2;
+                yOffset = -1.5;
                 break;
             case (2):
                 purplePose = AutoConstantsState.BlueW.SPIKE_2;
+                prePurplePose = AutoConstantsState.BlueW.SPIKE_2_PREP;
                 offPurplePose = AutoConstantsState.BlueW.SPIKE_2_BACK;
-                stackAlignedPose = AutoConstantsState.BlueW.STACK_ALIGN;
-                stackPose = AutoConstantsState.BlueW.STACK;
+                stackAlignedPose = AutoConstantsState.BlueW.STACK_ALIGN_2;
+                stackPose = AutoConstantsState.BlueW.STACK_2;
                 crossFieldPose = AutoConstantsState.BlueW.INTERMEDIAN;
                 backdropAlignPose1 = AutoConstantsState.BlueW.BD_2_OFF;
                 backdropAlignPose2 = AutoConstantsState.BlueW.BD_3_OFF;
@@ -199,26 +210,33 @@ public class WBlue extends BaseOpMode {
                 backdrop3Pose = AutoConstantsState.BlueW.BD_1;
                 parkPose = AutoConstantsState.BlueW.PARK;
                 pivot = new InstantCommand(() -> armSS.pivotRotatedState = ArmSubsystem.PivotRotatedState.NORMAL);
+                slowSpeed = 0.625;
+                xOffset = 1.2;
+                yOffset = -1.5;
                 break;
             case (3):
                 purplePose = AutoConstantsState.BlueW.SPIKE_3;
+                prePurplePose = AutoConstantsState.BlueW.SPIKE_3_PREP;
                 offPurplePose = AutoConstantsState.BlueW.SPIKE_3_BACK;
-                stackAlignedPose = AutoConstantsState.BlueW.STACK_ALIGN;
-                stackPose = AutoConstantsState.BlueW.STACK;
+                stackAlignedPose = AutoConstantsState.BlueW.STACK_ALIGN_3;
+                stackPose = AutoConstantsState.BlueW.STACK_3;
                 crossFieldPose = AutoConstantsState.BlueW.INTERMEDIAN;
                 backdropAlignPose1 = AutoConstantsState.BlueW.BD_3_OFF;
-                backdropAlignPose2 = AutoConstantsState.BlueW.BD_2_OFF;
-                backdropAlignPose3 = AutoConstantsState.BlueW.BD_1_OFF;
+                backdropAlignPose2 = AutoConstantsState.BlueW.BD_1_OFF;
+                backdropAlignPose3 = AutoConstantsState.BlueW.BD_2_OFF;
                 backdrop1Pose = AutoConstantsState.BlueW.BD_3;
-                backdrop2Pose = AutoConstantsState.BlueW.BD_2;
-                backdrop3Pose = AutoConstantsState.BlueW.BD_1;
+                backdrop2Pose = AutoConstantsState.BlueW.BD_1;
+                backdrop3Pose = AutoConstantsState.BlueW.BD_2;
                 parkPose = AutoConstantsState.BlueW.PARK;
-                pivot = new InstantCommand(() -> armSS.pivotRotatedState = ArmSubsystem.PivotRotatedState.NORMAL);
+                pivot = new InstantCommand(() -> armSS.pivotRotatedState = ArmSubsystem.PivotRotatedState.ROTATED);
+                slowSpeed = 1;
+                xOffset = 1.2;
+                yOffset = -1.5;
                 break;
         }
 
 
-
+        prePurple = new PIDToPoint(driveSS, prePurplePose, 1, 5);
         purple = new PIDToPoint(driveSS, purplePose, 1, 5);
         offPurple = new PIDToPoint(driveSS, offPurplePose, 1.25, 5);
         stackAligned = new PIDToPoint(driveSS, stackAlignedPose, 2, 5);
@@ -231,10 +249,13 @@ public class WBlue extends BaseOpMode {
 
 
         schedule(new SequentialCommandGroup(
-                purple,
-                offPurple,
-                stackAligned,
-                stack,
+                new PIDToPointSpeed(driveSS, prePurplePose, 1.25, defaultHeadingTol, slowSpeed).withTimeout(2500),
+                new PIDToPoint(driveSS, purplePose, 1.25, defaultHeadingTol),
+                new PIDToPoint(driveSS, offPurplePose, 3, 10),
+                new SetIntakeAngle(intakeSS, INT_UP),
+                new PIDToPoint(driveSS, stackAlignedPose, 2, 7.5),
+                new PIDToPoint(driveSS, stackPose, defaultPosTol, defaultHeadingTol).withTimeout(2000),
+//                new WaitCommand(6000),
 
 //                //intake at stack
 //                new IntakeFromStack(intakeSS, 5, 5),
@@ -257,6 +278,7 @@ public class WBlue extends BaseOpMode {
 
                 new IntakeFromStack(intakeSS, 5, 5),
                 new WaitCommand(100),
+
                 new ParallelCommandGroup(
                         new PIDToPoint(driveSS, crossFieldPose, 5, defaultHeadingTol),
                         new SequentialCommandGroup(
@@ -270,8 +292,10 @@ public class WBlue extends BaseOpMode {
                 ),
 
                 new ParallelCommandGroup(
-                        new PIDToPoint(driveSS, backdropAlignPose1, defaultPosTol, defaultHeadingTol),
+                        new PIDToPointSpeed(driveSS, backdropAlignPose1, defaultPosTol, defaultHeadingTol, 0.95),
                         new AutoArmBack(armSS),
+                        new WaitCommand(100),
+                        pivot,
                         new SetElevatorPowerForTime(eleSS, -1, 200)
                 ),
 
@@ -281,7 +305,7 @@ public class WBlue extends BaseOpMode {
                 new PIDToPoint(driveSS, backdropAlignPose1, defaultPosTol, defaultHeadingTol),
 
                 new ParallelCommandGroup(
-                        new PIDToPoint(driveSS, crossFieldPose, 5, defaultPosTol),
+                        new PIDToPointSpeed(driveSS, crossFieldPose, 5, defaultPosTol, 0.95),
                         new SequentialCommandGroup(
                                 new WaitCommand(100),
                                 new ArmIdle(armSS),
@@ -292,76 +316,94 @@ public class WBlue extends BaseOpMode {
 
             //cycle 2
                 new PIDToPoint(driveSS, stackAlignedPose, 5, 5),
-                new PIDToPoint(driveSS, stackPose, defaultPosTol, defaultHeadingTol),
+                new PIDToPoint(driveSS, stackPose, defaultPosTol, defaultHeadingTol).withTimeout(2000),
 
                 //intake at stack
                 new IntakeFromStack(intakeSS, 4, 5),
-                new WaitCommand(400),
-                new ArmPoised(armSS),
-                new WaitCommand(200),
-                grabbersClosed,
-
-                //run away and eject
-                new SetIntakePower(intakeSS, 1),
-                new PIDToPoint(driveSS, crossFieldPose, 5, defaultPosTol),
+                new WaitCommand(100),
+                new ParallelCommandGroup(
+                        new PIDToPoint(driveSS, crossFieldPose, 5, defaultHeadingTol),
+                        new SequentialCommandGroup(
+                                new ArmPoised(armSS),
+                                new WaitCommand(200),
+                                new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED),
+                                new SetIntakePower(intakeSS, 1),
+                                new WaitCommand(200),
+                                new SetIntakePower(intakeSS, 0)
+                        )
+                ),
 
                 //align with backdrop
                 new ParallelCommandGroup(
-                        new PIDToPoint(driveSS, backdropAlignPose2, defaultPosTol, defaultHeadingTol),
+                        new PIDToPointSpeed(driveSS, backdropAlignPose2, defaultPosTol, defaultHeadingTol, 0.95),
                         new SequentialCommandGroup(
                                 new SetIntakePower(intakeSS, 0),
                                 new WaitCommand(250),
                                 new AutoArmBack(armSS),
-                                new SetElevatorPowerForTime(eleSS, -1, 200)
+                                new WaitCommand(300),
+                                new SetElevatorPowerForTime(eleSS, -1, 400)
                         )
                 ),
 
                 //shtuff
                 new PIDToPoint(driveSS, backdrop2Pose, 1, 5).withTimeout(400),
                 grabbersOpen,
+//                new PIDToPoint(driveSS, backdropAlignPose2, 2, 5),
 
                 //cycle 3
-                new ParallelCommandGroup(
-                        new PIDToPoint(driveSS, crossFieldPose, 5, defaultPosTol),
+                    new ParallelCommandGroup(
+                            new PIDToPoint(driveSS, crossFieldPose, 5, defaultPosTol),
+                            new SequentialCommandGroup(
+                                    new WaitCommand(100),
+                                    new ArmIdle(armSS),
+                                    new LowerElevator(eleSS),
+                                    new InstantCommand(() -> driveSS.setDwPose(new Pose2d(driveSS.getDwPose().x + xOffset, driveSS.getDwPose().y + yOffset, driveSS.getDwPose().theta)))
+                            )
+                    ),
+
+                    new PIDToPoint(driveSS, stackAlignedPose, 5, 5),
+                    new PIDToPoint(driveSS, stackPose, defaultPosTol, defaultHeadingTol).withTimeout(2000),
+
+                    //intake at stack
+                    new IntakeFromStack(intakeSS, 2, 5),
+                    new WaitCommand(100),
+                    new ParallelCommandGroup(
+                            new PIDToPoint(driveSS, crossFieldPose, 5, defaultHeadingTol),
+                            new SequentialCommandGroup(
+                                    new ArmPoised(armSS),
+                                    new WaitCommand(200),
+                                    new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED),
+                                    new SetIntakePower(intakeSS, 1),
+                                    new WaitCommand(400),
+                                    new SetIntakePower(intakeSS, 0)
+                            )
+                    ),
+
+                    //align with backdrop
+                //align with backdrop
+                new ConditionalCommand(
                         new SequentialCommandGroup(
+                                new ParallelCommandGroup(
+                                        new PIDToPoint(driveSS, parkPose, defaultPosTol, defaultHeadingTol),
+                                        new SequentialCommandGroup(
+                                                new SetIntakePower(intakeSS, 0),
+                                                new WaitCommand(250),
+                                                new SetElevatorPowerForTime(eleSS, -1, 300),
+                                                new WaitCommand(100),
+                                                new AutoArmBack(armSS),
+                                                new WaitCommand(700)
+                                        )
+                                ),
+
+                                //shtuff
+                                new SetGrabberPosition(grabSS, GRABBER_ONE_OPEN, GRABBER_TWO_OPEN),
                                 new WaitCommand(100),
                                 new ArmIdle(armSS),
-                                new LowerElevator(eleSS),
-                                new InstantCommand(() -> driveSS.setDwPose(new Pose2d(driveSS.getDwPose().x + xOffset, driveSS.getDwPose().y + yOffset, driveSS.getDwPose().theta)))
-                        )
-                ),
-
-                new PIDToPoint(driveSS, stackAlignedPose, 5, 5),
-                new PIDToPoint(driveSS, stackPose, defaultPosTol, defaultHeadingTol),
-
-                //intake at stack
-                new IntakeFromStack(intakeSS, 2, 3),
-                new WaitCommand(400),
-                new ArmPoised(armSS),
-                new WaitCommand(200),
-                grabbersClosed,
-
-                //run away and eject
-                new SetIntakePower(intakeSS, 1),
-                new PIDToPoint(driveSS, crossFieldPose, 5, defaultPosTol),
-
-                //align with backdrop
-                new ParallelCommandGroup(
+                                new LowerElevator(eleSS)
+                        ),
                         new PIDToPoint(driveSS, parkPose, defaultPosTol, defaultHeadingTol),
-                        new SequentialCommandGroup(
-                                new SetIntakePower(intakeSS, 0),
-                                new WaitCommand(250),
-                                new SetElevatorPowerForTime(eleSS, -1, 300),
-                                new WaitCommand(100),
-                                new AutoArmBack(armSS)
-                        )
-                ),
-
-                //shtuff
-                grabbersOpen,
-                new WaitCommand(100),
-                new ArmIdle(armSS),
-                new LowerElevator(eleSS)
+                        () -> time.seconds() < 26
+                )
         ));
     }
 

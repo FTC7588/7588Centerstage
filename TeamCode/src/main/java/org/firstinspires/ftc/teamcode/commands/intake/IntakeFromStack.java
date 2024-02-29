@@ -67,7 +67,7 @@ public class IntakeFromStack extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return ((intakeSubsystem.isLoaded() && loadedTimer.milliseconds() > 100) || jamTimer.seconds() > giveUpTime);
+        return ((intakeSubsystem.isLoaded() && loadedTimer.milliseconds() > 200) || jamTimer.seconds() > giveUpTime);
     }
 
     public void updateIntakeHeight() {

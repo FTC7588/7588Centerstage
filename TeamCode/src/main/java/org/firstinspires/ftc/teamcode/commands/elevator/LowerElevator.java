@@ -30,6 +30,6 @@ public class LowerElevator extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return elevatorSubsystem.getAvgCurrent() > 3;
+        return elevatorSubsystem.getAvgCurrent() > 3.25;
     }
 }
