@@ -5,12 +5,14 @@ import static org.firstinspires.ftc.teamcode.opmodes.auto.t2.AutoConstants.Blue.
 import android.util.Size;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.commands._rr.FollowTrajectorySequenceAsync;
 import org.firstinspires.ftc.teamcode.commands.arm.SetPivotPosition;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
@@ -56,6 +58,8 @@ public class BlueBD extends BaseOpMode {
 
     @Override
     public void initialize() {
+        RobotHardware.USING_TAGS = false;
+        RobotHardware.USING_IMU = false;
         Constants.ELE_PID = false;
         auto = true;
         super.initialize();
@@ -76,10 +80,16 @@ public class BlueBD extends BaseOpMode {
 
     @Override
     public void initLoop() {
+
+        if (propProcessor.getSpike() != 0) {
+            propPos = propProcessor.getSpike();
+        }
+
+
         intakeUp.schedule();
-        armGrab.schedule();
-        grabberLeftOpen.schedule();
-        grabberRightClose.schedule();
+        armPoisedGroup.schedule();
+        grabberLeftClose.schedule();
+        grabberRightOpen.schedule();
 
         robot.read(intakeSS, eleSS, armSS, grabSS);
 
@@ -204,7 +214,7 @@ public class BlueBD extends BaseOpMode {
                                 .build();
 
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
-                                .lineToLinearHeading(PARK_CORNER)
+                                .lineToLinearHeading(PARK_CORNER.plus(new Pose2d(0, 0.5, 0)))
                                 .build();
                         pivotPosition = pivotPosUp;
                         break;
@@ -232,7 +242,7 @@ public class BlueBD extends BaseOpMode {
                                 .build();
 
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
-                                .lineToLinearHeading(PARK_CORNER)
+                                .lineToLinearHeading(PARK_CORNER.plus(new Pose2d(0, 0.5, 0)))
                                 .build();
                         pivotPosition = pivotPosUp;
                         break;
@@ -260,7 +270,7 @@ public class BlueBD extends BaseOpMode {
                                 .build();
 
                         park = autoDriveSS.trajectorySequenceBuilder(toBDFromCStackB.end())
-                                .lineToLinearHeading(PARK_CORNER)
+                                .lineToLinearHeading(PARK_CORNER.plus(new Pose2d(0, 0.5, 0)))
                                 .build();
                         pivotPosition = pivotPosDown;
                         break;
@@ -279,9 +289,9 @@ public class BlueBD extends BaseOpMode {
                                 new WaitCommand(250),
                                 autoArmBack,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromSpike),
-                                grabberRightOpen,
+                                grabberLeftOpen,
                                 new WaitCommand(500),
-                                armGrab,
+                                armIdleGroup,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, park)
                         )
                 );
@@ -296,9 +306,10 @@ public class BlueBD extends BaseOpMode {
                                 new WaitCommand(250),
                                 autoArmBack,
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toBDFromSpike),
-                                grabberRightOpen,
+                                grabberLeftOpen,
                                 new WaitCommand(500),
-                                armGrab,
+                                armIdleGroup,
+                                new WaitCommand(100),
                                 new FollowTrajectorySequenceAsync(autoDriveSS, toCStackFromBD),
                                 new WaitCommand(100),
                                 new SetIntakePower(intakeSS, -1),
@@ -306,7 +317,9 @@ public class BlueBD extends BaseOpMode {
                                 new SetIntakeAngle(intakeSS, INT_FIVE),
                                 new WaitCommand(1250),
                                 new SetIntakeAngle(intakeSS, INT_FOUR),
-                                new WaitCommand(1500),
+                                new WaitCommand(1250),
+                                armPoisedGroup,
+                                new WaitCommand(100),
                                 grabbersClosed,
                                 new WaitCommand(250),
                                 intakeIdle,
@@ -319,7 +332,7 @@ public class BlueBD extends BaseOpMode {
                                 new WaitCommand(400),
                                 grabbersOpen,
                                 new WaitCommand(400),
-                                armGrab
+                                armIdleGroup
                         )
                 );
                 break;

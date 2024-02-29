@@ -19,6 +19,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private double lCurrent;
     private double rCurrent;
+    private double avgCurrent;
 
     private double target;
 
@@ -39,9 +40,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void read() {
         pos = robot.eleR.getCurrentPosition();
-        if (DEBUG_ELEVATOR) {
+        if (DEBUG_ELEVATOR || RobotHardware.SMART_ELEVATOR) {
             lCurrent = robot.eleL.getCurrent(CurrentUnit.AMPS);
             rCurrent = robot.eleR.getCurrent(CurrentUnit.AMPS);
+            avgCurrent = (lCurrent + rCurrent) / 2;
         }
     }
 
@@ -68,6 +70,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public double getRightCurrent() {
         return rCurrent;
+    }
+
+    public double getAvgCurrent() {
+        return avgCurrent;
     }
 
     public double getTarget() {
@@ -97,5 +103,11 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void setPower(double power) {
         this.power = power;
+    }
+
+    public enum ElevatorState {
+        DOWN,
+        IN_MOTION,
+        UP
     }
 }

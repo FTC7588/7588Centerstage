@@ -30,6 +30,9 @@ public class RobotHardware {
 
     public static boolean USING_IMU = true;
     public static boolean USING_TAGS = false;
+    public static boolean SMART_INTAKE = false;
+    public static boolean SMART_ELEVATOR = true;
+    public static boolean USING_SENSORS = true;
 
     //drive
     public DcMotorEx fL, fR, rL, rR;
@@ -117,8 +120,7 @@ public class RobotHardware {
 
         C920 = hwMap.get(WebcamName.class, "Webcam 1");
 
-        backCS = hwMap.get(NormalizedColorSensor.class, "back");
-        frontCS = hwMap.get(NormalizedColorSensor.class, "front");
+
 
         parallelEncoder = new Encoder(eleL);
         perpendicularEncoder = new Encoder(fL);
@@ -178,8 +180,12 @@ public class RobotHardware {
         //grabber
         grab2.setDirection(Servo.Direction.REVERSE);
 
-        backCS.setGain(2);
-        frontCS.setGain(2);
+        if (USING_SENSORS) {
+            backCS = hwMap.get(NormalizedColorSensor.class, "back");
+            frontCS = hwMap.get(NormalizedColorSensor.class, "front");
+            backCS.setGain(2);
+            frontCS.setGain(2);
+        }
 
     }
 

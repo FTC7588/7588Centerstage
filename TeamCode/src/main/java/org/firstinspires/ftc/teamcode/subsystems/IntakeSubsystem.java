@@ -22,8 +22,8 @@ public class IntakeSubsystem extends SubsystemBase {
     private double power;
     private double pidPower;
     private double servoPos;
-    private double elePos;
-    private double eleTarget;
+    private double intPos;
+    private double intTarget;
 
     private PoofyPIDController controller;
 
@@ -36,6 +36,10 @@ public class IntakeSubsystem extends SubsystemBase {
     private boolean loadOnce = false;
     private boolean isEnabled = true;
 
+
+    private boolean isJammed = false;
+    private ElapsedTime jamTimer = new ElapsedTime();
+
     public IntakeSubsystem(RobotHardware robot) {
         this.robot = robot;
         controller = new PoofyPIDController(new PoofyPIDCoefficients(0.01, 0, 0));
@@ -43,25 +47,51 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void read() {
-        if (Constants.DEBUG_INTAKE) {
+        if (Constants.DEBUG_INTAKE || RobotHardware.SMART_INTAKE) {
             lCurrent = robot.intLMotor.getCurrent(AMPS);
             rCurrent = robot.intRMotor.getCurrent(AMPS);
         }
     }
 
     public void loop() {
-        elePos = robot.intLMotor.getCurrentPosition();
-        modPos = elePos % mod;
-        if (power == 0 && runOnce) {
-            eleTarget = elePos + (mod-modPos);
-            controller.setTargetPosition(eleTarget);
-            runOnce = false;
-        } else if (runOnce) {
-            runOnce = false;
-        }
-        pidPower = controller.calculate(elePos);
+        if (!RobotHardware.SMART_INTAKE) {
+            intPos = robot.intLMotor.getCurrentPosition();
+            modPos = intPos % mod;
+            if (power == 0 && runOnce) {
+                intTarget = intPos + (mod-modPos);
+                controller.setTargetPosition(intTarget);
+                runOnce = false;
+            } else if (runOnce) {
+                runOnce = false;
+            }
+            pidPower = controller.calculate(intPos);
+        } else {
+            //jam logic
+            if (isJammed) {
+                if (jamTimer.seconds() < Constants.INTAKE_JAM_REVERSE_TIME) {
+                    power = Constants.INTAKE_POWER;
+                } else {
+                    isJammed = false;
+                    power = -Constants.INTAKE_POWER;
+                }
+            } else {
+                intPos = robot.intLMotor.getCurrentPosition();
+                modPos = intPos % mod;
+                if (power == 0 && runOnce) {
+                    intTarget = intPos + (mod-modPos);
+                    controller.setTargetPosition(intTarget);
+                    runOnce = false;
+                } else if (runOnce) {
+                    runOnce = false;
+                }
+                pidPower = controller.calculate(intPos);
+            }
 
-//        disableIfLoaded();
+            if ((lCurrent + rCurrent) / 2 >= Constants.INTAKE_JAM_CURRENT && !isJammed) {
+                isJammed = true;
+                jamTimer.reset();
+            }
+        }
     }
 
     public void write() {
@@ -93,6 +123,10 @@ public class IntakeSubsystem extends SubsystemBase {
         return (isBackPixelLoaded() && isFrontPixelLoaded());
     }
 
+    public double getAverageCurrent() {
+        return (lCurrent + rCurrent) / 2;
+    }
+
     public void hasBeenLoaded(double millis) {
         if (isLoaded()) {
             if (!loadOnce) {
@@ -116,7 +150,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public double getIntakePosition() {
-        return elePos;
+        return intPos;
     }
 
     public double getModPosition() {
@@ -124,7 +158,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public double getTarget() {
-        return eleTarget;
+        return intTarget;
     }
 
     public double getlCurrent() {

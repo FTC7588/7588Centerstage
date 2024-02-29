@@ -9,12 +9,14 @@ import android.annotation.SuppressLint;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
+import com.arcrobotics.ftclib.command.PerpetualCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.commands.drive.HoldTargetPosition;
 import org.firstinspires.ftc.teamcode.commands.drive.PIDToPoint;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import org.firstinspires.ftc.teamcode.poofyutils.AprilTagCustomDatabase;
@@ -23,7 +25,7 @@ import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
 
 @TeleOp
-public class DriveTuning extends BaseOpMode {
+public class DriveTuningAuto extends BaseOpMode {
 
     protected PIDToPoint p2pTest1;
     protected PIDToPoint p2pTest2;
@@ -31,14 +33,18 @@ public class DriveTuning extends BaseOpMode {
     protected PIDToPoint p2pTest4;
     protected PIDToPoint p2pTest5;
 
+    protected SequentialCommandGroup p2pTests;
+
+    protected HoldTargetPosition holdTarget;
+
     protected Pose2d targetPose1 = new Pose2d(0, 0, 0);
-    protected Pose2d targetPose2 = new Pose2d(10, 7, Math.toRadians(0));
+    protected Pose2d targetPose2 = new Pose2d(40, 0, Math.toRadians(0));
     protected Pose2d targetPose3 = new Pose2d(30, 30, Math.toRadians(-90));
     protected Pose2d targetPose4 = new Pose2d(10, 25, Math.toRadians(-90));
     protected Pose2d targetPose5 = new Pose2d(10, 26, Math.toRadians(-90));
 
-    double posTol = 0.2;
-    double headingTol = 0.25;
+    double posTol = 1;
+    double headingTol = 3;
 
     @Override
     public void initialize() {
@@ -48,6 +54,7 @@ public class DriveTuning extends BaseOpMode {
 
         super.initialize();
 
+        holdTarget = new HoldTargetPosition(driveSS);
 
         p2pTest1 = new PIDToPoint(driveSS, targetPose1, posTol, headingTol);
         p2pTest2 = new PIDToPoint(driveSS, targetPose2, posTol, headingTol);
@@ -55,8 +62,8 @@ public class DriveTuning extends BaseOpMode {
         p2pTest4 = new PIDToPoint(driveSS, targetPose4, posTol, headingTol);
         p2pTest5 = new PIDToPoint(driveSS, targetPose5, posTol, headingTol);
 
-        driveSS.drive.xController.updatePID(Constants.X_COEFFS.kP, Constants.X_COEFFS.kI, Constants.X_COEFFS.kD);
-        driveSS.drive.yController.updatePID(Constants.Y_COEFFS.kP, Constants.Y_COEFFS.kI, Constants.Y_COEFFS.kD);
+//        driveSS.drive.xController.setPID(Constants.X_COEFFS.kP, Constants.X_COEFFS.kI, Constants.X_COEFFS.kD);
+//        driveSS.drive.yController.setPID(Constants.Y_COEFFS.kP, Constants.Y_COEFFS.kI, Constants.Y_COEFFS.kD);
         driveSS.drive.thetaController.setCoefficients(Constants.THETA_COEFFS);
 
 
@@ -72,12 +79,17 @@ public class DriveTuning extends BaseOpMode {
 //                p2pTest5
 //        ));
 
-        gp1(A, 1).whenActive(p2pTest1);
-        gp1(B, 1).whenActive(p2pTest2);
-        gp1(X, 1).whenActive(p2pTest3);
-        gp1(Y, 1).whenActive(p2pTest4);
+//        gp1(A, 1).whenActive(p2pTest1);
+//        gp1(B, 1).whenActive(p2pTest2);
+//        gp1(X, 1).whenActive(p2pTest3);
+//        gp1(Y, 1).whenActive(p2pTest4);
 
-        driveSS.setDefaultCommand(robotCentric);
+//        p2pTests = new SequentialCommandGroup(p2pTest2, p2pTest1);
+
+        gp1(A, 1).whenActive(p2pTest1);
+        gp1(Y, 1).whenActive(p2pTest2);
+
+        driveSS.setDefaultCommand(holdTarget);
 
         intakeDown.schedule();
         shoulderPosGrab.schedule();
@@ -96,6 +108,8 @@ public class DriveTuning extends BaseOpMode {
 
         super.run();
 
+//        new SequentialCommandGroup(p2pTest1, p2pTest2).schedule();
+
         driveSS.drive.xController.updatePID(Constants.X_COEFFS.kP, Constants.X_COEFFS.kI, Constants.X_COEFFS.kD);
         driveSS.drive.yController.updatePID(Constants.Y_COEFFS.kP, Constants.Y_COEFFS.kI, Constants.Y_COEFFS.kD);
         driveSS.drive.thetaController.setCoefficients(Constants.THETA_COEFFS);
@@ -104,7 +118,7 @@ public class DriveTuning extends BaseOpMode {
 
         PoofyDashboardUtil.drawTags(packet.fieldOverlay(), AprilTagCustomDatabase.getCenterStageTagLibrary());
         PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getDwPose());
-//        PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getTagPose());
+        PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getTargetPose());
 
         dashboard.sendTelemetryPacket(packet);
 
@@ -113,6 +127,8 @@ public class DriveTuning extends BaseOpMode {
         telemetry.addData("X error", driveSS.getXError());
         telemetry.addData("Y error", driveSS.getYError());
         telemetry.addData("Theta error", driveSS.getThetaError());
+
+//        telemetry.addData("velo error", driveSS.drive.xController.getVelocityError());
 
         tal();
         tad("reachedd x", driveSS.drive.reachedXTarget(posTol, driveSS.getDwPose()));

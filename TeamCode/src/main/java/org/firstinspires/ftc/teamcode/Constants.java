@@ -17,6 +17,9 @@ public class Constants {
     //pid to point
     public static double VELOCITY_THRESHOLD = 0.25;
 
+    public static double INTAKE_JAM_CURRENT = 2.5;
+    public static double INTAKE_JAM_REVERSE_TIME = 0.5;
+
     //control layer buttons
     public static GamepadKeys.Trigger CONTROL_LAYER_2 = GamepadKeys.Trigger.LEFT_TRIGGER;
     public static GamepadKeys.Trigger CONTROL_LAYER_3 = GamepadKeys.Trigger.RIGHT_TRIGGER;
@@ -31,14 +34,14 @@ public class Constants {
     public static boolean DEBUG_VISION      = false;
 
     //drive constants
-    public static PoofyPIDCoefficients X_COEFFS = new PoofyPIDCoefficients(0.06, 0, 0.01, 0, 0, 0.07, 0);
-    public static PoofyPIDCoefficients Y_COEFFS = new PoofyPIDCoefficients(0.06, 0, 0.01, 0, 0, 0.07, 0);
-    public static PoofyPIDCoefficients THETA_COEFFS = new PoofyPIDCoefficients(0.3, 0, 0.08, 0, 0, 0.12, 0);
+    public static PoofyPIDCoefficients X_COEFFS = new PoofyPIDCoefficients(0.08, 0, 0.01, 0, 0, 0.01, 0);
+    public static PoofyPIDCoefficients Y_COEFFS = new PoofyPIDCoefficients(0.08, 0, 0.01, 0, 0, 0.01, 0);
+    public static PoofyPIDCoefficients THETA_COEFFS = new PoofyPIDCoefficients(1, 0, 0.08, 0, 0, 0.0, 0);
 
-    public static double LOW_SPEED = 0.4;
+    public static double LOW_SPEED = 0.55;
     public static double HIGH_SPEED = 1;
 
-    public static double DRONE_RELEASE = 0.5;
+    public static double DRONE_RELEASE = 0;
     public static double DRONE_HOLD = 1;
 
     //intake constants
@@ -49,9 +52,9 @@ public class Constants {
     public static double INT_FIVE = 0.18;
     public static double INT_FOUR = 0.235;
     public static double INT_THREE = 0.3;
-    public static double INT_TWO = 0.35;
-    public static double INT_ONE = 0.375;
-    public static double INT_DOWN = 0.4125;
+    public static double INT_TWO = 0.375;
+    public static double INT_ONE = 0.435;
+    public static double INT_DOWN = 0.42;
 
     public static double INT_INCREMENT = 0.005;
 
@@ -85,8 +88,9 @@ public class Constants {
     public static double ARM_SHOULDER_IDLE = 0.71;
     public static double FLOOR_SHOULDER = 0.25;
     public static double POISED_SHOULDER = 0.91;
-    public static double GRAB_SHOULDER = 0.8925;
+    public static double GRAB_SHOULDER = 0.892;
     public static double ARM_AUTO = 0.45;
+//    public static double GRAB_SHOULDER = 0.89;
 
         //wrist constants
     public static double ARM_WRIST_IN_ANGLE = -90;
@@ -97,7 +101,7 @@ public class Constants {
     public static double ARM_WRIST_TEST = 0.05;
     public static double FLOOR_WRIST = 1;
     public static double POISED_WRIST = 0.19;
-    public static double GRAB_WRIST = 0.18;
+    public static double GRAB_WRIST = 0.16;
 
         //pivot constants
     public static double ARM_PIVOT_UP_ANGLE = 0;

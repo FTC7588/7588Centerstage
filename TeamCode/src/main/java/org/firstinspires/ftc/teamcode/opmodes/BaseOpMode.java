@@ -346,9 +346,10 @@ public class BaseOpMode extends CommandOpModeEx {
                     armSS.pivotRotatedState = ArmSubsystem.PivotRotatedState.NORMAL;
                     armSS.pivotPositionState = ArmSubsystem.PivotPositionState.UP;
                 }),
-                new SetShoulderPosition(armSS, ARM_SHOULDER_DEPOSIT),
+                new SetShoulderPosition(armSS, ARM_SHOULDER_IDLE),
                 new WaitCommand(100),
                 new SetShoulderPosition(armSS, GRAB_SHOULDER)
+//                new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED)
         );
 
         armBackGroup = new SequentialCommandGroup(
@@ -405,7 +406,7 @@ public class BaseOpMode extends CommandOpModeEx {
         );
 
 
-        autoGrab = new ConditionalCommand(new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED), new SetGrabberPosition(grabSS, GRABBER_ONE_OPEN, GRABBER_TWO_OPEN), () -> intakeSS.isLoaded());
+        autoGrab = new ConditionalCommand(new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED), new SetGrabberPosition(grabSS, GRABBER_ONE_OPEN, GRABBER_TWO_OPEN), () -> true);
 
         //gamepads
         driver = new PoofyGamepadEx(gamepad1);
@@ -441,6 +442,10 @@ public class BaseOpMode extends CommandOpModeEx {
             tad("Front Right Current", driveSS.getfRCurrent());
             tad("Rear Left Current", driveSS.getrLCurrent());
             tad("Rear Right Current", driveSS.getrRCurrent());
+            tad("Front Left Power", driveSS.drive.getFrontLeftSpeed());
+            tad("Front Right Power", driveSS.drive.getFrontRightSpeed());
+            tad("Rear Left Current", driveSS.drive.getBackLeftSpeed());
+            tad("Rear Right Current", driveSS.drive.getBackRightSpeed());
             tal();
         }
 
@@ -451,8 +456,9 @@ public class BaseOpMode extends CommandOpModeEx {
             tad("Intake Motor Position", intakeSS.getIntakePosition());
             tad("Intake Mod Position", intakeSS.getModPosition());
             tad("Intake Target", intakeSS.getTarget());
-            tad("Intake Back Pixel Loaded", intakeSS.isBackPixelLoaded());
-            tad("Intake Front Pixel Loaded", intakeSS.isFrontPixelLoaded());
+            if (RobotHardware.USING_SENSORS) {
+
+            }
             tad("Intake Left Motor Current", intakeSS.getlCurrent());
             tad("Intake Right Motor Current", intakeSS.getrCurrent());
             tal();

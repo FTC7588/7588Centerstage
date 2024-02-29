@@ -70,7 +70,9 @@ public class PoofyPIDController extends PoofyFeedForwardController {
     public double calculate(double measuredPosition) {
 
         double currentTimeStamp = (double) System.nanoTime() / 1E9;
-        if (lastTimeStamp == 0) lastTimeStamp = currentTimeStamp;
+        if (lastTimeStamp == 0) {
+            lastTimeStamp = currentTimeStamp;
+        }
         period = currentTimeStamp - lastTimeStamp;
         lastTimeStamp = currentTimeStamp;
 

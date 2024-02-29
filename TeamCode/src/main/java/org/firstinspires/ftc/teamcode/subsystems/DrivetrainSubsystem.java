@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.util.InterpLUT;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.opmodes.auto.state.AutoConstantsState;
 import org.firstinspires.ftc.teamcode.poofyutils.MecanumDrive;
 import org.firstinspires.ftc.teamcode.poofyutils.localizers.butgood.DeadwheelLocalizer;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
@@ -40,8 +41,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     protected Pose2d targetPose = new Pose2d(0, 0, 0);
 
-    private Pose2d dwPose;
+    private Pose2d dwPose = new Pose2d(0, 0, 0);
     private Pose2d tagPose;
+
+    private double posTol = 1;
+    private double headingTolDeg = 5;
 
     private final InterpLUT blueBackdropLUT;
     private final InterpLUT redBackdropLUT;
@@ -192,9 +196,27 @@ public class DrivetrainSubsystem extends SubsystemBase {
         followTagMode(followPose);
     }
 
+    public void followPoseMode() {
+        drive.driveFollowPose(targetPose, dwPose, robot.getHeading(), posTol, headingTolDeg, AutoConstantsState.FL_STATIC, AutoConstantsState.FR_STATIC, AutoConstantsState.RL_STATIC, AutoConstantsState.RR_STATIC);
+    }
+
+    public void setTargetPose(Pose2d targetPose) {
+        this.targetPose = targetPose;
+    }
+
+    public void setPositionTolerance(double tolerance) {
+        this.posTol = tolerance;
+    }
+
+    public void setHeadingTolerance(double toleranceDeg) {
+        this.headingTolDeg = toleranceDeg;
+    }
+
     public void followPoseMode(Pose2d targetPose, double posTol, double headingTolDeg) {
         this.targetPose = targetPose;
-        drive.driveFollowPose(targetPose, dwPose, robot.getHeading(), posTol, headingTolDeg);
+        this.posTol = posTol;
+        this.headingTolDeg = headingTolDeg;
+        drive.driveFollowPose(targetPose, dwPose, robot.getHeading(), posTol, headingTolDeg, AutoConstantsState.FL_STATIC, AutoConstantsState.FR_STATIC, AutoConstantsState.RL_STATIC, AutoConstantsState.RR_STATIC);
     }
 
     public boolean stopped() {
@@ -224,6 +246,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     public void setDronePosition(double pos) {
         robot.drone.setPosition(pos);
+    }
+
+    public void setDwPose(Pose2d pose) {
+        dwLocalizer.setPose(pose);
     }
 
     //getters
