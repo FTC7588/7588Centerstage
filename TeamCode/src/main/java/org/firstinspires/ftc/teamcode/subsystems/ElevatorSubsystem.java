@@ -19,8 +19,11 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private double lCurrent;
     private double rCurrent;
+    private double avgCurrent;
 
     private double target;
+
+    private double eleOffset = 0;
 
     private final PoofyPIDController controller;
 
@@ -37,15 +40,16 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void read() {
         pos = robot.eleR.getCurrentPosition();
-        if (DEBUG_ELEVATOR) {
+        if (DEBUG_ELEVATOR || RobotHardware.SMART_ELEVATOR) {
             lCurrent = robot.eleL.getCurrent(CurrentUnit.AMPS);
             rCurrent = robot.eleR.getCurrent(CurrentUnit.AMPS);
+            avgCurrent = (lCurrent + rCurrent) / 2;
         }
     }
 
     public void loop() {
         if (ELE_PID) {
-            controller.setTargetPosition(target);
+            controller.setTargetPosition(target + eleOffset);
             power = controller.calculate(pos);
         }
     }
@@ -68,12 +72,20 @@ public class ElevatorSubsystem extends SubsystemBase {
         return rCurrent;
     }
 
+    public double getAvgCurrent() {
+        return avgCurrent;
+    }
+
     public double getTarget() {
         return target;
     }
 
     public double getPower() {
         return power;
+    }
+
+    public void addOffset(double added) {
+        eleOffset += added;
     }
 
     public void setTarget(double target) {
@@ -91,5 +103,11 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void setPower(double power) {
         this.power = power;
+    }
+
+    public enum ElevatorState {
+        DOWN,
+        IN_MOTION,
+        UP
     }
 }

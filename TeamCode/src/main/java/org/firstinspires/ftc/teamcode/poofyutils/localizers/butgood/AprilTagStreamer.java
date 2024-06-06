@@ -71,4 +71,8 @@ public class AprilTagStreamer {
     public Pose3d getCamToRobot() {
         return camToRobot;
     }
+
+    public void setStreamerEnabled(boolean enabled) {
+        visionPortal.setProcessorEnabled(tagProcessor, enabled);
+    }
 }

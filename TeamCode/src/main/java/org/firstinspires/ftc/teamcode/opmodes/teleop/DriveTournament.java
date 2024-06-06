@@ -14,21 +14,21 @@ import android.annotation.SuppressLint;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
-import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.opmodes.BaseOpMode;
 import org.firstinspires.ftc.teamcode.poofyutils.AprilTagCustomDatabase;
 import org.firstinspires.ftc.teamcode.poofyutils.PoofyDashboardUtil;
-import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
+import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 
 import static org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys.Button.*;
 
 
+@Disabled
 @TeleOp
 @Config
 public class DriveTournament extends BaseOpMode {
@@ -108,14 +108,14 @@ public class DriveTournament extends BaseOpMode {
         super.run();
 
         telemetry.addData("touch x", driver.getTouchX());
-        telemetry.addData("front", ((DistanceSensor) robot.frontCS).getDistance(DistanceUnit.CM));
-        telemetry.addData("back", ((DistanceSensor) robot.backCS).getDistance(DistanceUnit.CM));
-        telemetry.addData("front and back", intakeSS.isLoaded());
+//        telemetry.addData("front", ((DistanceSensor) robot.frontCS).getDistance(DistanceUnit.CM));
+//        telemetry.addData("back", ((DistanceSensor) robot.backCS).getDistance(DistanceUnit.CM));
+//        telemetry.addData("front and back", intakeSS.isLoaded());
 
         TelemetryPacket packet = new TelemetryPacket();
 
         PoofyDashboardUtil.drawTags(packet.fieldOverlay(), AprilTagCustomDatabase.getCenterStageTagLibrary());
-        PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getRobotPose());
+        PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), driveSS.getTagPose());
         PoofyDashboardUtil.drawRobotPose(packet.fieldOverlay(), FOLLOW_POSE);
 
         PoofyDashboardUtil.drawPoint(packet.fieldOverlay(), new Pose2d(60, 60, 0));

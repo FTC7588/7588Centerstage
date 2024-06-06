@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
@@ -13,29 +13,33 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.commands.arm.IncrementShoulderPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.IncrementWristPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.SetArmPositions;
+import org.firstinspires.ftc.teamcode.commands.arm.SetArmState;
 import org.firstinspires.ftc.teamcode.commands.arm.SetEleArmPositions;
 import org.firstinspires.ftc.teamcode.commands.arm.SetPivotPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.SetShoulderPosition;
 import org.firstinspires.ftc.teamcode.commands.arm.SetWristPosition;
-import org.firstinspires.ftc.teamcode.commands.drive.BackdropTagSlide;
+import org.firstinspires.ftc.teamcode.commands.arm.ToggleArmStates;
 import org.firstinspires.ftc.teamcode.commands.drive.EnableHeadingLock;
 import org.firstinspires.ftc.teamcode.commands.drive.FieldCentric;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowTag;
 import org.firstinspires.ftc.teamcode.commands.drive.RobotCentric;
+import org.firstinspires.ftc.teamcode.commands.drive.SetDronePosition;
 import org.firstinspires.ftc.teamcode.commands.drive.SetHeadingLock;
 import org.firstinspires.ftc.teamcode.commands.drive.SetMaxSpeed;
+import org.firstinspires.ftc.teamcode.commands.elevator.IncrementElevatorOffset;
 import org.firstinspires.ftc.teamcode.commands.elevator.IncrementElevatorTarget;
 import org.firstinspires.ftc.teamcode.commands.elevator.SetElevatorPower;
 import org.firstinspires.ftc.teamcode.commands.elevator.SetElevatorTarget;
 import org.firstinspires.ftc.teamcode.commands.grabber.SetGrabberPosition;
 import org.firstinspires.ftc.teamcode.commands.grabber.SetLeftGrabberPosition;
 import org.firstinspires.ftc.teamcode.commands.grabber.SetRightGrabberPosition;
+import org.firstinspires.ftc.teamcode.commands.grabber.ToggleGrabbers;
 import org.firstinspires.ftc.teamcode.commands.intake.IncrementIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakePower;
 import org.firstinspires.ftc.teamcode.commands.intake.VariableIntakeAngle;
 import org.firstinspires.ftc.teamcode.poofyutils.CommandOpModeEx;
-import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
+import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadKeys;
 import org.firstinspires.ftc.teamcode.poofyutils.gamepads.PoofyGamepadEx;
 import org.firstinspires.ftc.teamcode.poofyutils.gamepads.readers.GamepadButton;
@@ -50,6 +54,9 @@ import org.firstinspires.ftc.teamcode.poofyutils.filters.MovingAverage;
 import org.firstinspires.ftc.teamcode.poofyutils.gamepads.GamepadTrigger;
 
 import static org.firstinspires.ftc.teamcode.Constants.*;
+import static org.firstinspires.ftc.teamcode.RobotHardware.USING_TAGS;
+
+import java.util.function.BooleanSupplier;
 
 public class BaseOpMode extends CommandOpModeEx {
 
@@ -70,7 +77,6 @@ public class BaseOpMode extends CommandOpModeEx {
     protected RobotCentric robotCentric;
     protected FieldCentric fieldCentric;
     protected FollowTag followTag;
-    protected BackdropTagSlide followBackdrop;
 
     protected SetMaxSpeed lowSpeed;
     protected SetMaxSpeed highSpeed;
@@ -82,6 +88,11 @@ public class BaseOpMode extends CommandOpModeEx {
     protected SetHeadingLock leftLock;
     protected SetHeadingLock backLock;
     protected SetHeadingLock rightLock;
+
+    protected InstantCommand resetIMU;
+
+    protected SetDronePosition droneRelease;
+    protected SetDronePosition droneHold;
 
     protected SetIntakePower intakeIn;
     protected SetIntakePower intakeIdle;
@@ -107,6 +118,9 @@ public class BaseOpMode extends CommandOpModeEx {
     protected IncrementElevatorTarget eleIncUp;
     protected IncrementElevatorTarget eleIncDown;
 
+    protected IncrementElevatorOffset eleIncOffsetUp;
+    protected IncrementElevatorOffset eleIncOffsetDown;
+
     protected SetShoulderPosition shoulderPosDeposit;
     protected SetShoulderPosition shoulderPosPoised;
     protected SetShoulderPosition shoulderPosGrab;
@@ -124,11 +138,27 @@ public class BaseOpMode extends CommandOpModeEx {
     protected IncrementWristPosition wristIncUp;
 
     protected SetPivotPosition pivotPosDown;
+    protected SetPivotPosition pivotPosLeftDiag;
     protected SetPivotPosition pivotPosMid;
+    protected SetPivotPosition pivotPosRightDiag;
     protected SetPivotPosition pivotPosUp;
+
+    protected SetPivotPosition pivotPosNormLeft;
+    protected SetPivotPosition pivotPosNormDown;
+    protected SetPivotPosition pivotPosNormRight;
+    protected SetPivotPosition pivotPosNormUp;
+    protected SetPivotPosition pivotPosRotLeft;
+    protected SetPivotPosition pivotPosRotDown;
+    protected SetPivotPosition pivotPosRotRight;
+
+    protected SetPivotPosition pivotPosDownDefalt;
+    protected SetPivotPosition pivotPosLeftDefault;
+    protected SetPivotPosition pivotPosRightDefault;
 
     protected SetGrabberPosition grabbersClosed;
     protected SetGrabberPosition grabbersOpen;
+
+    protected ToggleGrabbers toggleGrabbers;
 
     protected SetLeftGrabberPosition grabberLeftClose;
     protected SetLeftGrabberPosition grabberLeftOpen;
@@ -143,10 +173,24 @@ public class BaseOpMode extends CommandOpModeEx {
     protected SetEleArmPositions armGrab;
     protected SetEleArmPositions armBack;
 
+
+    protected ToggleArmStates toggleArmStates;
+    protected SetArmState setArmIdle;
+    protected SetArmState setArmDeposit;
+    protected SetArmState setArmGrab;
+
+
+    protected SequentialCommandGroup armAutoGrab;
     protected SequentialCommandGroup armDepositGroup;
+    protected SequentialCommandGroup armPoisedGroup;
+    protected SequentialCommandGroup armGrabGroup;
+    protected SequentialCommandGroup armBackGroup;
+    protected SequentialCommandGroup autoArmBack;
     protected SequentialCommandGroup armIdleGroup;
 
     protected ConditionalCommand autoGrab;
+
+//    protected SetPivotPositions pivot
 
     protected PoofyGamepadEx driver;
     protected PoofyGamepadEx operator;
@@ -158,6 +202,8 @@ public class BaseOpMode extends CommandOpModeEx {
 
     protected boolean auto = false;
     protected Alliance alliance;
+
+//    protected PivotRotatedState pivotState = PivotRotatedState.NORMAL;
 
     @Override
     public void initialize() {
@@ -214,6 +260,11 @@ public class BaseOpMode extends CommandOpModeEx {
         backLock = new SetHeadingLock(driveSS, -90);
         rightLock = new SetHeadingLock(driveSS, 0);
 
+        resetIMU = new InstantCommand(robot::resetIMU);
+
+        droneHold = new SetDronePosition(driveSS, DRONE_HOLD);
+        droneRelease = new SetDronePosition(driveSS, DRONE_RELEASE);
+
         //intake
         intakeIn = new SetIntakePower(intakeSS, INTAKE_POWER);
         intakeIdle = new SetIntakePower(intakeSS, 0);
@@ -233,9 +284,9 @@ public class BaseOpMode extends CommandOpModeEx {
         );
 
         //elevator
-        eleUp = new SetElevatorPower(eleSS, ELE_POWER);
+        eleUp = new SetElevatorPower(eleSS, -ELE_POWER);
         eleIdle = new SetElevatorPower(eleSS, 0);
-        eleDown = new SetElevatorPower(eleSS, -ELE_POWER);
+        eleDown = new SetElevatorPower(eleSS, ELE_POWER);
 
         eleTargetUp = new SetElevatorTarget(eleSS, ELE_UP);
         eleTargetMid = new SetElevatorTarget(eleSS, ELE_MID);
@@ -244,6 +295,9 @@ public class BaseOpMode extends CommandOpModeEx {
 
         eleIncUp = new IncrementElevatorTarget(eleSS, ELE_INCREMENT);
         eleIncDown = new IncrementElevatorTarget(eleSS, -ELE_INCREMENT);
+
+        eleIncOffsetUp = new IncrementElevatorOffset(eleSS, ELE_INCREMENT);
+        eleIncOffsetDown = new IncrementElevatorOffset(eleSS, -ELE_INCREMENT);
 
         //arm
         shoulderPosDeposit = new SetShoulderPosition(armSS, ARM_SHOULDER_DEPOSIT);
@@ -263,80 +317,65 @@ public class BaseOpMode extends CommandOpModeEx {
         wristIncUp = new IncrementWristPosition(armSS, -0.01);
 
         pivotPosDown = new SetPivotPosition(armSS, ARM_PIVOT_DOWN);
+        pivotPosLeftDiag = new SetPivotPosition(armSS, ARM_PIVOT_UP_MID);
         pivotPosMid = new SetPivotPosition(armSS, ARM_PIVOT_MID);
+        pivotPosRightDiag = new SetPivotPosition(armSS, ARM_PIVOT_DOWN_MID);
         pivotPosUp = new SetPivotPosition(armSS, ARM_PIVOT_UP);
 
-        //grabber
-        grabbersClosed = new SetGrabberPosition(grabSS, GRABBER_CLOSED);
-        grabbersOpen = new SetGrabberPosition(grabSS, GRABBER_OPEN);
+        pivotPosNormLeft = new SetPivotPosition(armSS, ARM_PIVOT_NORM_LEFT);
+        pivotPosNormDown = new SetPivotPosition(armSS, ARM_PIVOT_NORM_DOWN);
+        pivotPosNormRight = new SetPivotPosition(armSS, ARM_PIVOT_NORM_RIGHT);
 
-        grabberLeftClose = new SetLeftGrabberPosition(grabSS, GRABBER_CLOSED);
-        grabberLeftOpen = new SetLeftGrabberPosition(grabSS, GRABBER_OPEN);
-        grabberRightClose = new SetRightGrabberPosition(grabSS, GRABBER_CLOSED);
-        grabberRightOpen = new SetRightGrabberPosition(grabSS, GRABBER_OPEN);
+        pivotPosNormUp = new SetPivotPosition(armSS, ARM_PIVOT_NORM_UP);
+
+        pivotPosRotLeft = new SetPivotPosition(armSS, ARM_PIVOT_ROT_LEFT);
+        pivotPosRotDown = new SetPivotPosition(armSS, ARM_PIVOT_ROT_DOWN);
+        pivotPosRotRight = new SetPivotPosition(armSS, ARM_PIVOT_ROT_RIGHT);
+
+        pivotPosDownDefalt = pivotPosNormDown;
+        pivotPosLeftDefault = pivotPosNormLeft;
+        pivotPosRightDefault = pivotPosNormRight;
+
+        //grabber
+        grabbersClosed = new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED);
+        grabbersOpen = new SetGrabberPosition(grabSS, GRABBER_ONE_OPEN, GRABBER_TWO_OPEN);
+
+        grabberLeftClose = new SetLeftGrabberPosition(grabSS, GRABBER_ONE_CLOSED);
+        grabberLeftOpen = new SetLeftGrabberPosition(grabSS, GRABBER_ONE_OPEN);
+        grabberRightClose = new SetRightGrabberPosition(grabSS, GRABBER_TWO_CLOSED);
+        grabberRightOpen = new SetRightGrabberPosition(grabSS, GRABBER_TWO_OPEN);
+
+        toggleGrabbers = new ToggleGrabbers(grabSS);
 
         //macros
-        armInit = new SetArmPositions(
-                armSS,
-                GRAB_SHOULDER,
-                GRAB_WRIST,
-                ARM_PIVOT_MID
+        armIdleGroup = new SequentialCommandGroup(
+                new SetArmPositions(
+                        armSS,
+                        GRAB_SHOULDER,
+                        GRAB_WRIST,
+                        ARM_PIVOT_MID
+                ),
+                new InstantCommand(() -> {
+                    armSS.pivotRotatedState = ArmSubsystem.PivotRotatedState.NORMAL;
+                    armSS.pivotPositionState = ArmSubsystem.PivotPositionState.UP;
+                }),
+                new SetShoulderPosition(armSS, ARM_SHOULDER_IDLE),
+                new WaitCommand(100),
+                new SetShoulderPosition(armSS, GRAB_SHOULDER)
+//                new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED)
         );
 
-        armDeposit = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                200,
-                ARM_SHOULDER_DEPOSIT,
-                ARM_WRIST_DEPOSIT,
-                ARM_PIVOT_MID
+        armBackGroup = new SequentialCommandGroup(
+                new SetArmPositions(
+                        armSS,
+                        FLOOR_SHOULDER,
+                        FLOOR_WRIST,
+                        ARM_PIVOT_MID
+                ),
+                new SetWristPosition(armSS, ARM_WRIST_TEST),
+                new WaitCommand(100),
+                new SetWristPosition(armSS, FLOOR_WRIST)
         );
-
-        armIdle = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                200,
-                GRAB_SHOULDER,
-                GRAB_WRIST,
-                ARM_PIVOT_MID
-        );
-
-        armPoised = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                POISED_ELE,
-                POISED_SHOULDER,
-                POISED_WRIST,
-                ARM_PIVOT_MID
-        );
-
-        armGrab = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                GRAB_ELE,
-                GRAB_SHOULDER,
-                GRAB_WRIST,
-                ARM_PIVOT_MID
-        );
-
-        armBack = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                FLOOR_ELE,
-                FLOOR_SHOULDER,
-                FLOOR_WRIST,
-                ARM_PIVOT_MID
-        );
-
-        armDown = new SetEleArmPositions(
-                eleSS,
-                armSS,
-                0,
-                GRAB_SHOULDER,
-                GRAB_WRIST,
-                ARM_PIVOT_DOWN
-        );
-
 
         armDepositGroup = new SequentialCommandGroup(
                 new SetArmPositions(
@@ -347,19 +386,54 @@ public class BaseOpMode extends CommandOpModeEx {
                 ),
                 new SetWristPosition(armSS, ARM_WRIST_TEST),
                 new WaitCommand(100),
-                new SetWristPosition(armSS, ARM_WRIST_DEPOSIT)
+                new SetWristPosition(armSS, ARM_WRIST_DEPOSIT),
+                new WaitCommand(100),
+                new InstantCommand(() -> armSS.pivotPositionState = ArmSubsystem.PivotPositionState.MID)
         );
 
-        armIdleGroup = new SequentialCommandGroup(
+        autoArmBack = new SequentialCommandGroup(
+                new SetArmPositions(
+                        armSS,
+                        ARM_AUTO,
+                        0,
+                        ARM_PIVOT_NORM_DOWN
+                ),
+                new SetWristPosition(armSS, ARM_WRIST_TEST),
+                new WaitCommand(100),
+                new SetWristPosition(armSS, FLOOR_WRIST),
+                new WaitCommand(100),
+                new InstantCommand(() -> armSS.pivotPositionState = ArmSubsystem.PivotPositionState.MID)
+        );
+
+        armGrabGroup = new SequentialCommandGroup(
                 new SetShoulderPosition(armSS, ARM_SHOULDER_IDLE),
-                new WaitCommand(50),
+                new WaitCommand(75),
                 new SetWristPosition(armSS, ARM_WRIST_IDLE),
-                new WaitCommand(50),
+                new WaitCommand(75),
                 new SetShoulderPosition(armSS, GRAB_SHOULDER)
         );
 
+        armPoisedGroup = new SequentialCommandGroup(
+                new SetShoulderPosition(armSS, POISED_SHOULDER),
+                new SetWristPosition(armSS, POISED_WRIST)
+        );
 
-        autoGrab = new ConditionalCommand(grabbersClosed, grabbersOpen, () -> intakeSS.isLoaded());
+        toggleArmStates = new ToggleArmStates(armSS);
+
+        setArmDeposit = new SetArmState(armSS, ArmSubsystem.ArmState.DEPOSIT);
+        setArmGrab = new SetArmState(armSS, ArmSubsystem.ArmState.GRAB);
+        setArmIdle = new SetArmState(armSS, ArmSubsystem.ArmState.IDLE);
+
+        armAutoGrab = new SequentialCommandGroup(
+                new SetArmState(armSS, ArmSubsystem.ArmState.GRAB),
+                new WaitCommand(100),
+                new ToggleGrabbers(grabSS),
+                new WaitCommand(100),
+                new SetArmState(armSS, ArmSubsystem.ArmState.IDLE)
+        );
+
+
+        autoGrab = new ConditionalCommand(new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED), new SetGrabberPosition(grabSS, GRABBER_ONE_OPEN, GRABBER_TWO_OPEN), () -> true);
 
         //gamepads
         driver = new PoofyGamepadEx(gamepad1);
@@ -395,6 +469,10 @@ public class BaseOpMode extends CommandOpModeEx {
             tad("Front Right Current", driveSS.getfRCurrent());
             tad("Rear Left Current", driveSS.getrLCurrent());
             tad("Rear Right Current", driveSS.getrRCurrent());
+            tad("Front Left Power", driveSS.drive.getFrontLeftSpeed());
+            tad("Front Right Power", driveSS.drive.getFrontRightSpeed());
+            tad("Rear Left Current", driveSS.drive.getBackLeftSpeed());
+            tad("Rear Right Current", driveSS.drive.getBackRightSpeed());
             tal();
         }
 
@@ -405,8 +483,9 @@ public class BaseOpMode extends CommandOpModeEx {
             tad("Intake Motor Position", intakeSS.getIntakePosition());
             tad("Intake Mod Position", intakeSS.getModPosition());
             tad("Intake Target", intakeSS.getTarget());
-            tad("Intake Back Pixel Loaded", intakeSS.isBackPixelLoaded());
-            tad("Intake Front Pixel Loaded", intakeSS.isFrontPixelLoaded());
+            if (RobotHardware.USING_SENSORS) {
+
+            }
             tad("Intake Left Motor Current", intakeSS.getlCurrent());
             tad("Intake Right Motor Current", intakeSS.getrCurrent());
             tal();
@@ -436,19 +515,21 @@ public class BaseOpMode extends CommandOpModeEx {
             tal();
         }
 
-        if (DEBUG_VISION) {
+        if (DEBUG_VISION && USING_TAGS) {
             tal("=== VISION DEBUG INFO ===");
-            tad("Tag Pose", driveSS.getTagLocalizer().getTagPose());
-            tad("Tag Readings", driveSS.getTagLocalizer().getTagReadings());
-            tad("Camera Pose", driveSS.getTagLocalizer().getCameraPose());
-            tad("Robot Pose", driveSS.getRobotPose());
+            tad("Tag Pose", driveSS.getFrontLocalizer().getTagPose());
+            tad("Tag Readings", driveSS.getFrontLocalizer().getTagReadings());
+            tad("Camera Pose", driveSS.getFrontLocalizer().getCameraPose());
+            tad("Robot Pose", driveSS.getTagPose());
         }
 
-        robot.read(driveSS, intakeSS, eleSS, armSS, grabSS);
+        if (!auto) {
+            robot.read(driveSS, intakeSS, eleSS, armSS, grabSS);
 
-        robot.loop(driveSS, intakeSS, eleSS, armSS, grabSS);
+            robot.loop(driveSS, intakeSS, eleSS, armSS, grabSS);
 
-        robot.write(driveSS, intakeSS, eleSS, armSS, grabSS);
+            robot.write(driveSS, intakeSS, eleSS, armSS, grabSS);
+        }
     }
 
 
@@ -520,19 +601,36 @@ public class BaseOpMode extends CommandOpModeEx {
         return operator.getGamepadTrigger(trigger);
     }
 
+    protected Trigger gp2(GamepadKeys.Button button, BooleanSupplier state) {
+        if (state.getAsBoolean()) {
+            return operator.getGamepadButton(button);
+        } else {
+            return new Trigger();
+//            return operator.getGamepadTrigger(GamepadKeys.Trigger.LEFT_TRIGGER).and(gp2(GamepadKeys.Trigger.LEFT_TRIGGER).negate());
+        }
+    }
+
+    protected Trigger gp2(GamepadKeys.Trigger trigger, BooleanSupplier state) {
+        if (state.getAsBoolean()) {
+            return operator.getGamepadTrigger(trigger);
+        } else {
+            return new Trigger();
+        }
+    }
+
     protected Trigger gp2(GamepadKeys.Button button, int layer) {
         if (layer == 1) {
             return operator.getGamepadButton(button)
-                    .and(gp1(Constants.CONTROL_LAYER_2).negate())
-                    .and(gp1(Constants.CONTROL_LAYER_3).negate());
+                    .and(gp2(Constants.CONTROL_LAYER_2).negate())
+                    .and(gp2(Constants.CONTROL_LAYER_3).negate());
         } else if (layer == 2) {
             return operator.getGamepadButton(button)
-                    .and(gp1(Constants.CONTROL_LAYER_2))
-                    .and(gp1(Constants.CONTROL_LAYER_3).negate());
+                    .and(gp2(Constants.CONTROL_LAYER_2))
+                    .and(gp2(Constants.CONTROL_LAYER_3).negate());
         } else if (layer == 3) {
             return operator.getGamepadButton(button)
-                    .and(gp1(Constants.CONTROL_LAYER_2).negate())
-                    .and(gp1(Constants.CONTROL_LAYER_3));
+                    .and(gp2(Constants.CONTROL_LAYER_2).negate())
+                    .and(gp2(Constants.CONTROL_LAYER_3));
         } else {
             return operator.getGamepadButton(button);
         }
@@ -541,16 +639,16 @@ public class BaseOpMode extends CommandOpModeEx {
     protected Trigger gp2(GamepadKeys.Trigger trigger, int layer) {
         if (layer == 1) {
             return operator.getGamepadTrigger(trigger)
-                    .and(gp1(Constants.CONTROL_LAYER_2).negate())
-                    .and(gp1(Constants.CONTROL_LAYER_3).negate());
+                    .and(gp2(Constants.CONTROL_LAYER_2).negate())
+                    .and(gp2(Constants.CONTROL_LAYER_3).negate());
         } else if (layer == 2) {
             return operator.getGamepadTrigger(trigger)
-                    .and(gp1(Constants.CONTROL_LAYER_2))
-                    .and(gp1(Constants.CONTROL_LAYER_3).negate());
+                    .and(gp2(Constants.CONTROL_LAYER_2))
+                    .and(gp2(Constants.CONTROL_LAYER_3).negate());
         } else if (layer == 3) {
             return operator.getGamepadTrigger(trigger)
-                    .and(gp1(Constants.CONTROL_LAYER_2).negate())
-                    .and(gp1(Constants.CONTROL_LAYER_3));
+                    .and(gp2(Constants.CONTROL_LAYER_2).negate())
+                    .and(gp2(Constants.CONTROL_LAYER_3));
         } else {
             return operator.getGamepadTrigger(trigger);
         }
@@ -560,4 +658,12 @@ public class BaseOpMode extends CommandOpModeEx {
     public void initLoop() {
 
     }
+
+    @Override
+    public void runOnce() {
+
+    }
+
+
+
 }

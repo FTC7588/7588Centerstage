@@ -16,6 +16,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class AprilTagLocalizer2d implements Localizer {
 
@@ -52,7 +53,7 @@ public class AprilTagLocalizer2d implements Localizer {
         usedTags = new ArrayList<>();
         consolidateLists();
         if (!tagsWithCamPoses.isEmpty()) {
-            robotPose = averageTagsStrategy(tagsWithCamPoses);
+            robotPose = lowestDecisionMarginStrategy2d(tagsWithCamPoses);
             detected = true;
         } else {
             detected = false;
@@ -91,7 +92,7 @@ public class AprilTagLocalizer2d implements Localizer {
             }
         }
 
-        assert lowestMarginTag != null;
+        assert Objects.requireNonNull(lowestMarginTag).metadata != null;
 
         tagPose = new Pose2d(
                 lowestMarginTag.metadata.fieldPosition.get(0),
@@ -114,27 +115,27 @@ public class AprilTagLocalizer2d implements Localizer {
         double y = 0;
         double yaw = 0;
 
-        double num = 0;
+        double num = 1;
 
         for (Map.Entry<AprilTagDetection, Pose3d> entry : detections.entrySet()) {
-            Pose2d tagPose = new Pose2d(
-                    entry.getKey().metadata.fieldPosition.get(0),
-                    entry.getKey().metadata.fieldPosition.get(1),
-                    MathUtil.quaternionToEuler(entry.getKey().metadata.fieldOrientation).yaw + Math.toRadians(90)
-            );
-
-            Transform2d camToTag = new Transform2d(
-                    entry.getKey().ftcPose.x,
-                    entry.getKey().ftcPose.y,
-                    Math.toRadians(entry.getKey().ftcPose.yaw - 90)
-            );
-
-            Pose2d robotPose = getRobotToTagPose2dAxes(tagPose, camToTag, entry.getValue());
-
-            x += robotPose.getX();
-            y += robotPose.getY();
-            yaw += robotPose.getTheta();
-            num++;
+//            Pose2d tagPose = new Pose2d(
+//                    entry.getKey().metadata.fieldPosition.get(0),
+//                    entry.getKey().metadata.fieldPosition.get(1),
+//                    MathUtil.quaternionToEuler(entry.getKey().metadata.fieldOrientation).yaw + Math.toRadians(90)
+//            );
+//
+//            Transform2d camToTag = new Transform2d(
+//                    entry.getKey().ftcPose.x,
+//                    entry.getKey().ftcPose.y,
+//                    Math.toRadians(entry.getKey().ftcPose.yaw - 90)
+//            );
+//
+//            Pose2d robotPose = getRobotToTagPose2dAxes(tagPose, camToTag, entry.getValue());
+//
+//            x += robotPose.getX();
+//            y += robotPose.getY();
+//            yaw += robotPose.getTheta();
+//            num++;
         }
 
         return new Pose2d(x/num, y/num, yaw/num);
@@ -166,5 +167,9 @@ public class AprilTagLocalizer2d implements Localizer {
 
     public ArrayList<AprilTagDetection> getUsedTags() {
         return usedTags;
+    }
+
+    public void setStreamerEnabled(int id, boolean enabled) {
+        streamers.get(id).setStreamerEnabled(enabled);
     }
 }

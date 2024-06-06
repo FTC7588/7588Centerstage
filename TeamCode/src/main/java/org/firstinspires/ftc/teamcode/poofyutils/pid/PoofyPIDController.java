@@ -70,7 +70,9 @@ public class PoofyPIDController extends PoofyFeedForwardController {
     public double calculate(double measuredPosition) {
 
         double currentTimeStamp = (double) System.nanoTime() / 1E9;
-        if (lastTimeStamp == 0) lastTimeStamp = currentTimeStamp;
+        if (lastTimeStamp == 0) {
+            lastTimeStamp = currentTimeStamp;
+        }
         period = currentTimeStamp - lastTimeStamp;
         lastTimeStamp = currentTimeStamp;
 
@@ -244,6 +246,16 @@ public class PoofyPIDController extends PoofyFeedForwardController {
         this.kP = kP;
         this.kI = kI;
         this.kD = kD;
+    }
+
+    public void setCoefficients(PoofyPIDCoefficients coeffs) {
+        this.kP = coeffs.kP;
+        this.kI = coeffs.kI;
+        this.kD = coeffs.kD;
+        this.kV = coeffs.kV;
+        this.kA = coeffs.kA;
+        this.kS = coeffs.kS;
+        this.kF = coeffs.kF;
     }
 
     public double getPeriod() {

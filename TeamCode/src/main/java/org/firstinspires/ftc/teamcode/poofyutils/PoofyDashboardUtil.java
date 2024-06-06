@@ -36,6 +36,14 @@ public class PoofyDashboardUtil {
         resetStroke(canvas);
     }
 
+    public static void drawRobotPoseAlt(Canvas canvas, Pose2d pose) {
+        canvas.setStroke("#ffffff");
+        canvas.strokeCircle(pose.x, pose.y, ROBOT_SIZE/2);
+        Vector2d direction = new Vector2d(pose.x, pose.y).add(new Vector2d(ROBOT_SIZE/2, 0).rotateBy(pose.theta));
+        canvas.strokeLine(pose.x, pose.y, direction.getX(), direction.getY());
+        resetStroke(canvas);
+    }
+
     public static void drawPoint(Canvas canvas, Pose2d point) {
         canvas.setStroke("#000000");
         canvas.strokeCircle(point.x, point.y, 5);

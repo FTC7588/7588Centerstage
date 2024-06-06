@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,6 +15,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.rr.util.Encoder;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DrivetrainSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElevatorSubsystem;
@@ -23,9 +25,14 @@ import org.firstinspires.ftc.teamcode.poofyutils.geometry.EulerAngles;
 
 import java.util.List;
 
+@Config
 public class RobotHardware {
 
     public static boolean USING_IMU = true;
+    public static boolean USING_TAGS = true;
+    public static boolean SMART_INTAKE = false;
+    public static boolean SMART_ELEVATOR = true;
+    public static boolean USING_SENSORS = true;
 
     //drive
     public DcMotorEx fL, fR, rL, rR;
@@ -41,16 +48,23 @@ public class RobotHardware {
     //grabber
     public ServoImplEx grab1, grab2;
 
+    //drone
+    public ServoImplEx drone;
+
     //imu
     public IMU imu;
     public double rollOffset, pitchOffset, headingOffset;
 
     //cameras
     public CameraName C920;
+    public CameraName C930;
 
     //extra sensors
     public NormalizedColorSensor backCS;
     public NormalizedColorSensor frontCS;
+
+    public Encoder parallelEncoder;
+    public Encoder perpendicularEncoder;
 
     //angles
     public EulerAngles angles;
@@ -81,10 +95,6 @@ public class RobotHardware {
         }
 
         //hardware
-        if (USING_IMU) {
-            imu = hwMap.get(IMU.class, "imu");
-        }
-
         fL = hwMap.get(DcMotorEx.class, "fL");
         fR = hwMap.get(DcMotorEx.class, "fR");
         rL = hwMap.get(DcMotorEx.class, "rL");
@@ -106,16 +116,29 @@ public class RobotHardware {
         grab1 = hwMap.get(ServoImplEx.class, "grab1");
         grab2 = hwMap.get(ServoImplEx.class, "grab2");
 
-        C920 = hwMap.get(WebcamName.class, "Webcam 1");
+        drone = hwMap.get(ServoImplEx.class, "drone");
 
-        backCS = hwMap.get(NormalizedColorSensor.class, "back");
-        frontCS = hwMap.get(NormalizedColorSensor.class, "front");
+        C920 = hwMap.get(WebcamName.class, "Front Camera");
+        C930 = hwMap.get(WebcamName.class, "Rear Camera");
+
+
+
+        parallelEncoder = new Encoder(eleL);
+        perpendicularEncoder = new Encoder(fL);
 
         //imu
         if (USING_IMU) {
+            imu = hwMap.get(IMU.class, "imu");
+
             IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                     RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP));
             imu.initialize(parameters);
+
+            angles = new EulerAngles(
+                    imu.getRobotYawPitchRollAngles().getRoll(AngleUnit.RADIANS),
+                    imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.RADIANS),
+                    imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)
+            );
         }
 
         //drive
@@ -158,16 +181,13 @@ public class RobotHardware {
         //grabber
         grab2.setDirection(Servo.Direction.REVERSE);
 
-        backCS.setGain(2);
-        frontCS.setGain(2);
-
-        if (USING_IMU) {
-            angles = new EulerAngles(
-                    imu.getRobotYawPitchRollAngles().getRoll(AngleUnit.RADIANS),
-                    imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.RADIANS),
-                    imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)
-            );
+        if (USING_SENSORS) {
+            backCS = hwMap.get(NormalizedColorSensor.class, "back");
+            frontCS = hwMap.get(NormalizedColorSensor.class, "front");
+            backCS.setGain(2);
+            frontCS.setGain(2);
         }
+
     }
 
     public void clearBulkCache() {

@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.poofyutils.processors;
 import android.graphics.Canvas;
 
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
-import org.firstinspires.ftc.teamcode.poofyutils.enums.Alliance;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -25,15 +24,23 @@ public class PropProcessor implements VisionProcessor {
 
     private Scalar purpleColor = new Scalar(50,50,3);
 
-    public Scalar blueLower = new Scalar(82.2,60.9,133.2);
-    public Scalar blueUpper = new Scalar(111.9, 208.3, 255.0);
+    public Scalar blueLower = new Scalar(75.2,53.9,126.2);
+    public Scalar blueUpper = new Scalar(110.9, 207.3, 255.0);
 
-    public Scalar redLower = new Scalar(153, 140.3, 87.8);
-    public Scalar redUpper = new Scalar(208.3, 229.5, 255);
+    public Scalar redLower = new Scalar(150.1, 85, 84.8);
+    public Scalar redUpper = new Scalar(201.2, 232.5, 255);
 
-    public Rect leftROIBox = new Rect(110,265,30,25);
-    public Rect centerROIBox = new Rect(335, 265, 30, 25);
-    public Rect rightROIBox = new Rect(585, 265, 30, 25);
+    public Rect leftROIBox;
+    public Rect centerROIBox;
+    public Rect rightROIBox;
+
+    public Rect blueBD_redW_LeftROIBox = new Rect(115, 35, 30, 25);
+    public Rect blueBD_redWCenterROIBox = new Rect(395, 10, 30, 25);
+    public Rect blueBD_redWRightROIBox = new Rect(630, 20, 10, 25);
+
+    public Rect redBD_blueWLeftROIBox = new Rect(5,40,10,25);
+    public Rect redBD_BlueWCenterROIBox = new Rect(220, 30, 30, 25);
+    public Rect redBD_blueWRightROIBox = new Rect(480, 40, 30, 25);
 
     public Mat leftMat = new Mat();
     public Mat centerMat = new Mat();
@@ -42,32 +49,50 @@ public class PropProcessor implements VisionProcessor {
     public ArrayList<Mat> ROIs;
 
     public int spike;
+    public int pastSpike;
 
     public Alliance alliance;
 
     public boolean tuneBlue = false;
     public boolean tuneRed = false;
 
+    public ArrayList<Double> pastDetections;
+
+    public int zeroes, ones, twos, threes;
+
     public PropProcessor(Alliance alliance) {
         this.alliance = alliance;
     }
 
 //    public PropProcessor() {
-//        this.alliance = Alliance.RED;
+//        if (tuneBlue) {
+//            this.alliance = Alliance.BLUE_W;
+//        } else if (tuneRed) {
+//            this.alliance = Alliance.RED_W;
+//        } else {
+//            this.alliance = Alliance.BLUE_W;
+//        }
 //    }
 
 
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
         ROIs = new ArrayList<>();
+        pastDetections = new ArrayList<>(20);
     }
 
     @Override
     public Object processFrame(Mat input, long captureTimeNanos) {
 
+        spike = 0;
+
         if (tuneBlue) {
             Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2HSV);
             Core.inRange(input, blueLower, blueUpper, input);
+
+            leftROIBox = blueBD_redW_LeftROIBox;
+            centerROIBox = blueBD_redWCenterROIBox;
+            rightROIBox = blueBD_redWRightROIBox;
 
             //create ROIs
             leftMat = new Mat(input, leftROIBox);
@@ -77,23 +102,61 @@ public class PropProcessor implements VisionProcessor {
             Imgproc.cvtColor(input, input, Imgproc.COLOR_RGB2HSV);
             Core.inRange(input, redLower, redUpper, input);
 
+            leftROIBox = redBD_blueWLeftROIBox;
+            centerROIBox = redBD_BlueWCenterROIBox;
+            rightROIBox = redBD_blueWRightROIBox;
+
             //create ROIs
             leftMat = new Mat(input, leftROIBox);
             centerMat = new Mat(input, centerROIBox);
             rightMat = new Mat(input, rightROIBox);
-        } else if (alliance == Alliance.BLUE) {
+        } else if (alliance == Alliance.BLUE || alliance == Alliance.BLUE_BD) {
             //filter to blue
             Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
             Core.inRange(hsv, blueLower, blueUpper, blueThresh);
+
+            leftROIBox = blueBD_redW_LeftROIBox;
+            centerROIBox = blueBD_redWCenterROIBox;
+            rightROIBox = blueBD_redWRightROIBox;
 
             //create ROIs
             leftMat = new Mat(blueThresh, leftROIBox);
             centerMat = new Mat(blueThresh, centerROIBox);
             rightMat = new Mat(blueThresh, rightROIBox);
-        } else if (alliance == Alliance.RED) {
+        } else if (alliance == Alliance.BLUE_W) {
+            //filter to blue
+            Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
+            Core.inRange(hsv, blueLower, blueUpper, blueThresh);
+
+            leftROIBox = redBD_blueWLeftROIBox;
+            centerROIBox = redBD_BlueWCenterROIBox;
+            rightROIBox = redBD_blueWRightROIBox;
+
+            //create ROIs
+            leftMat = new Mat(blueThresh, leftROIBox);
+            centerMat = new Mat(blueThresh, centerROIBox);
+            rightMat = new Mat(blueThresh, rightROIBox);
+        } else if (alliance == Alliance.RED || alliance == Alliance.RED_BD) {
             //filter to red
             Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
             Core.inRange(hsv, redLower, redUpper, redThresh);
+
+            leftROIBox = redBD_blueWLeftROIBox;
+            centerROIBox = redBD_BlueWCenterROIBox;
+            rightROIBox = redBD_blueWRightROIBox;
+
+            //create ROIs
+            leftMat = new Mat(redThresh, leftROIBox);
+            centerMat = new Mat(redThresh, centerROIBox);
+            rightMat = new Mat(redThresh, rightROIBox);
+        } else if (alliance == Alliance.RED_W) {
+            //filter to red
+            Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
+            Core.inRange(hsv, redLower, redUpper, redThresh);
+
+            leftROIBox = blueBD_redW_LeftROIBox;
+            centerROIBox = blueBD_redWCenterROIBox;
+            rightROIBox = blueBD_redWRightROIBox;
 
             //create ROIs
             leftMat = new Mat(redThresh, leftROIBox);
@@ -211,6 +274,62 @@ public class PropProcessor implements VisionProcessor {
     }
 
     public int getSpike() {
-        return spike;
+        if (spike == 0 && (alliance == Alliance.BLUE_BD || alliance == Alliance.RED_W)) {
+            return 3;
+        } else if (spike == 0 && (alliance == Alliance.RED_BD || alliance == Alliance.BLUE_W)) {
+            return 1;
+        } else {
+            return spike;
+        }
+    }
+
+    public int getSpikePast() {
+//        pastDetections.add((double) spike);
+//        if (pastDetections.size() > 30) {
+//            pastDetections.remove(0);
+//        }
+//
+//        for (int i = 0; i < pastDetections.size(); i++) {
+//            double current = pastDetections.get(i);
+//            if (current == 0) {
+//                zeroes++;
+//            } else if (current == 1) {
+//                ones++;
+//            } else if (current == 2) {
+//                twos++;
+//            } else if (current == 3) {
+//                threes++;
+//            }
+//        }
+//
+//        double max = Math.max(Math.max(zeroes, ones), Math.max(twos, threes));
+//
+//        if (max == zeroes) {
+//            spike = 0;
+//        } else if (max == ones) {
+//            spike = 1;
+//        } else if (max == twos) {
+//            spike = 2;
+//        } else if (max == threes) {
+//            spike = 3;
+//        }
+//
+//        zeroes = ones = twos = threes = 0;
+
+//        if (spike == 0 && (alliance == Alliance.BLUE_BD || alliance == Alliance.RED_W)) {
+//            return 3;
+//        } else if (spike == 0 && (alliance == Alliance.RED_BD || alliance == Alliance.BLUE_W)) {
+//            return 1;
+//        } else {
+//            return spike;
+//        }
+        if (spike != 0) {
+            pastSpike = spike;
+        }
+
+        return pastSpike;
+
+
+
     }
 }
