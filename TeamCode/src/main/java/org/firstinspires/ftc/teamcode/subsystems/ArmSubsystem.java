@@ -38,75 +38,77 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void loop() {
-        if (true) {
-            switch (pivotRotatedState) {
-                case NORMAL:
-                    switch (pivotPositionState) {
-                        case UP:
-                            pivotPos = Constants.ARM_PIVOT_NORM_UP;
-                            break;
-                        case MID:
-                            pivotPos = ARM_PIVOT_NORM_DOWN;
-                            break;
-                        case LEFT:
-                            pivotPos = ARM_PIVOT_NORM_LEFT;
-                            break;
-                        case RIGHT:
-                            pivotPos = ARM_PIVOT_NORM_RIGHT;
-                            break;
-                    }
-                    break;
-                case ROTATED:
-                    switch (pivotPositionState) {
-                        case UP:
-                            pivotPos = ARM_PIVOT_NORM_UP;
-                            break;
-                        case MID:
-                            pivotPos = ARM_PIVOT_ROT_DOWN;
-                            break;
-                        case LEFT:
-                            pivotPos = ARM_PIVOT_ROT_LEFT;
-                            break;
-                        case RIGHT:
-                            pivotPos = ARM_PIVOT_ROT_RIGHT;
-                            break;
-                    }
-            }
-            switch (wristState) {
-                case IDLE:
-                    wristPos = POISED_WRIST;
-                    break;
-                case GRAB:
-                    wristPos = GRAB_WRIST;
-                    break;
-                case DEPOSIT:
-                    wristPos = ARM_WRIST_DEPOSIT;
-                    break;
-                case AUTO:
-                    wristPos = FLOOR_WRIST;
-                    break;
-            }
-
-            switch (shoulderState) {
-                case IDLE:
-                    shoulderPos = POISED_SHOULDER;
-                    break;
-                case GRAB:
-                    shoulderPos = GRAB_SHOULDER;
-                    break;
-                case DEPOSIT:
-                    shoulderPos = ARM_SHOULDER_DEPOSIT;
-                    break;
-                case AUTO:
-                    shoulderPos = FLOOR_SHOULDER;
-                    break;
-            }
+        //pivot logic
+        switch (pivotRotatedState) {
+            case NORMAL:
+                switch (pivotPositionState) {
+                    case UP:
+                        pivotPos = Constants.ARM_PIVOT_NORM_UP;
+                        break;
+                    case MID:
+                        pivotPos = ARM_PIVOT_NORM_DOWN;
+                        break;
+                    case LEFT:
+                        pivotPos = ARM_PIVOT_NORM_LEFT;
+                        break;
+                    case RIGHT:
+                        pivotPos = ARM_PIVOT_NORM_RIGHT;
+                        break;
+                }
+                break;
+            case ROTATED:
+                switch (pivotPositionState) {
+                    case UP:
+                        pivotPos = ARM_PIVOT_NORM_UP;
+                        break;
+                    case MID:
+                        pivotPos = ARM_PIVOT_ROT_DOWN;
+                        break;
+                    case LEFT:
+                        pivotPos = ARM_PIVOT_ROT_LEFT;
+                        break;
+                    case RIGHT:
+                        pivotPos = ARM_PIVOT_ROT_RIGHT;
+                        break;
+                }
         }
 
-//        if (shoulderPos == POISED_SHOULDER || shoulderPos == GRAB_SHOULDER) {
-//            pivotPositionState = PivotPositionState.UP;
-//            pivotRotatedState = PivotRotatedState.NORMAL;
-//        }
+        //pivot logic
+        switch (wristState) {
+            case IDLE:
+                wristPos = ARM_WRIST_IDLE;
+                break;
+            case GRAB:
+                wristPos = GRAB_WRIST;
+                break;
+            case DEPOSIT:
+                wristPos = ARM_WRIST_DEPOSIT;
+                break;
+            case AUTO:
+                wristPos = FLOOR_WRIST;
+                break;
+        }
+
+        //shoulder logic
+        switch (shoulderState) {
+            case IDLE:
+                shoulderPos = POISED_SHOULDER;
+                break;
+            case GRAB:
+                shoulderPos = GRAB_SHOULDER;
+                break;
+            case DEPOSIT:
+                shoulderPos = ARM_SHOULDER_DEPOSIT;
+                break;
+            case AUTO:
+                shoulderPos = FLOOR_SHOULDER;
+                break;
+        }
+
+        if (shoulderPos == POISED_SHOULDER || shoulderPos == GRAB_SHOULDER) {
+            pivotPositionState = PivotPositionState.UP;
+            pivotRotatedState = PivotRotatedState.NORMAL;
+        }
 
 
 
@@ -175,7 +177,8 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void setArmState(ArmState state) {
-        switch (state) {
+        armState = state;
+        switch (armState) {
             case IDLE:
                 wristState = WristState.IDLE;
                 shoulderState = ShoulderState.IDLE;
@@ -203,13 +206,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void toggleArmState() {
-        if (armState == ArmState.IDLE || armState == ArmState.GRAB) {
-            setArmState(ArmState.DEPOSIT);
-            setPivotStates(PivotRotatedState.NORMAL, PivotPositionState.MID);
-        } else {
-            setArmState(ArmState.IDLE);
-            setPivotStates(PivotRotatedState.NORMAL, PivotPositionState.UP);
-        }
+
     }
 
     public ShoulderState getShoulderState() {
