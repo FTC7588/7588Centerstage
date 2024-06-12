@@ -30,12 +30,15 @@ import org.firstinspires.ftc.teamcode.commands.arm.ArmIdle;
 import org.firstinspires.ftc.teamcode.commands.arm.ArmPoised;
 import org.firstinspires.ftc.teamcode.commands.arm.AutoArmBack;
 import org.firstinspires.ftc.teamcode.commands.arm.SetArmPositions;
+import org.firstinspires.ftc.teamcode.commands.arm.SetArmState;
 import org.firstinspires.ftc.teamcode.commands.arm.SetShoulderPosition;
+import org.firstinspires.ftc.teamcode.commands.arm.ToggleArmStates;
 import org.firstinspires.ftc.teamcode.commands.drive.PIDToPoint;
 import org.firstinspires.ftc.teamcode.commands.drive.PIDToPointSpeed;
 import org.firstinspires.ftc.teamcode.commands.elevator.LowerElevator;
 import org.firstinspires.ftc.teamcode.commands.elevator.SetElevatorPowerForTime;
 import org.firstinspires.ftc.teamcode.commands.grabber.SetGrabberPosition;
+import org.firstinspires.ftc.teamcode.commands.grabber.SetGrabberStates;
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeFromStack;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeAngle;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakePower;
@@ -47,6 +50,7 @@ import org.firstinspires.ftc.teamcode.poofyutils.geometry.Pose2d;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.Alliance;
 import org.firstinspires.ftc.teamcode.poofyutils.processors.PropProcessor;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.GrabberSubsystem;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.Locale;
@@ -129,22 +133,10 @@ public class WBlueTest extends BaseOpMode {
         time = new ElapsedTime();
 
         new SequentialCommandGroup(
-                new SetArmPositions(
-                        armSS,
-                        GRAB_SHOULDER,
-                        GRAB_WRIST,
-                        ARM_PIVOT_MID
-                ),
-                new InstantCommand(() -> {
-                    armSS.pivotRotatedState = ArmSubsystem.PivotRotatedState.NORMAL;
-                    armSS.pivotPositionState = ArmSubsystem.PivotPositionState.UP;
-                }),
-//                new SetShoulderPosition(armSS, ARM_SHOULDER_IDLE),
-//                new WaitCommand(100),
-                new SetShoulderPosition(armSS, GRAB_SHOULDER)
+                new SetArmState(armSS, ArmSubsystem.ArmState.IDLE),
+                new SetGrabberStates(grabSS, GrabberSubsystem.GrabberState.CLOSED)
         ).schedule();
-        grabberLeftOpen.schedule();
-        grabberRightOpen.schedule();
+
         new SetIntakeAngle(intakeSS, INT_TWO).schedule();
     }
 
@@ -283,9 +275,9 @@ public class WBlueTest extends BaseOpMode {
                 new ParallelCommandGroup(
                         new PIDToPoint(driveSS, crossFieldPose, 5, defaultHeadingTol),
                         new SequentialCommandGroup(
-                                new ArmPoised(armSS),
+                                new SetArmState(armSS, ArmSubsystem.ArmState.GRAB),
                                 new WaitCommand(200),
-                                new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED),
+                                new SetGrabberStates(grabSS, GrabberSubsystem.GrabberState.OPEN),
                                 new SetIntakePower(intakeSS, 1),
                                 new WaitCommand(400),
                                 new SetIntakePower(intakeSS, 0)
@@ -294,14 +286,14 @@ public class WBlueTest extends BaseOpMode {
 
                 new ParallelCommandGroup(
                         new PIDToPointSpeed(driveSS, backdropAlignPose1, defaultPosTol, defaultHeadingTol, 0.95),
-                        new AutoArmBack(armSS),
+                        new ToggleArmStates(armSS),
                         new WaitCommand(100),
                         pivot,
                         new SetElevatorPowerForTime(eleSS, -1, 200)
                 ),
 
                 backdrop1.withTimeout(400),
-                grabbersOpen,
+                new SetGrabberStates(grabSS, GrabberSubsystem.GrabberState.CLOSED),
 
                 new PIDToPoint(driveSS, backdropAlignPose1, defaultPosTol, defaultHeadingTol),
 
@@ -309,7 +301,7 @@ public class WBlueTest extends BaseOpMode {
                         new PIDToPointSpeed(driveSS, crossFieldPose, 5, defaultPosTol, 0.95),
                         new SequentialCommandGroup(
                                 new WaitCommand(100),
-                                new ArmIdle(armSS),
+                                new ToggleArmStates(armSS),
                                 new LowerElevator(eleSS),
                                 new InstantCommand(() -> driveSS.setDwPose(new Pose2d(driveSS.getDwPose().x + xOffset, driveSS.getDwPose().y + yOffset, driveSS.getDwPose().theta)))
                         )
@@ -325,11 +317,11 @@ public class WBlueTest extends BaseOpMode {
                 new ParallelCommandGroup(
                         new PIDToPoint(driveSS, crossFieldPose, 5, defaultHeadingTol),
                         new SequentialCommandGroup(
-                                new ArmPoised(armSS),
+                                new SetArmState(armSS, ArmSubsystem.ArmState.GRAB),
                                 new WaitCommand(200),
-                                new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED),
+                                new SetGrabberStates(grabSS, GrabberSubsystem.GrabberState.OPEN),
                                 new SetIntakePower(intakeSS, 1),
-                                new WaitCommand(200),
+                                new WaitCommand(400),
                                 new SetIntakePower(intakeSS, 0)
                         )
                 ),
@@ -340,7 +332,7 @@ public class WBlueTest extends BaseOpMode {
                         new SequentialCommandGroup(
                                 new SetIntakePower(intakeSS, 0),
                                 new WaitCommand(250),
-                                new AutoArmBack(armSS),
+                                new ToggleArmStates(armSS),
                                 new WaitCommand(300),
                                 new SetElevatorPowerForTime(eleSS, -1, 400)
                         )
@@ -348,7 +340,7 @@ public class WBlueTest extends BaseOpMode {
 
                 //shtuff
                 new PIDToPoint(driveSS, backdrop2Pose, 1, 5).withTimeout(400),
-                grabbersOpen,
+                new SetGrabberStates(grabSS, GrabberSubsystem.GrabberState.CLOSED),
 //                new PIDToPoint(driveSS, backdropAlignPose2, 2, 5),
 
                 //cycle 3
@@ -356,7 +348,7 @@ public class WBlueTest extends BaseOpMode {
                         new PIDToPoint(driveSS, crossFieldPose, 5, defaultPosTol),
                         new SequentialCommandGroup(
                                 new WaitCommand(100),
-                                new ArmIdle(armSS),
+                                new ToggleArmStates(armSS),
                                 new LowerElevator(eleSS),
                                 new InstantCommand(() -> driveSS.setDwPose(new Pose2d(driveSS.getDwPose().x + xOffset, driveSS.getDwPose().y + yOffset, driveSS.getDwPose().theta)))
                         )
@@ -371,9 +363,9 @@ public class WBlueTest extends BaseOpMode {
                 new ParallelCommandGroup(
                         new PIDToPoint(driveSS, crossFieldPose, 5, defaultHeadingTol),
                         new SequentialCommandGroup(
-                                new ArmPoised(armSS),
+                                new SetArmState(armSS, ArmSubsystem.ArmState.GRAB),
                                 new WaitCommand(200),
-                                new SetGrabberPosition(grabSS, GRABBER_ONE_CLOSED, GRABBER_TWO_CLOSED),
+                                new SetGrabberStates(grabSS, GrabberSubsystem.GrabberState.OPEN),
                                 new SetIntakePower(intakeSS, 1),
                                 new WaitCommand(400),
                                 new SetIntakePower(intakeSS, 0)
@@ -387,19 +379,19 @@ public class WBlueTest extends BaseOpMode {
                                 new ParallelCommandGroup(
                                         new PIDToPoint(driveSS, parkPose, defaultPosTol, defaultHeadingTol),
                                         new SequentialCommandGroup(
-                                                new SetIntakePower(intakeSS, 0),
-                                                new WaitCommand(250),
-                                                new SetElevatorPowerForTime(eleSS, -1, 300),
-                                                new WaitCommand(100),
-                                                new AutoArmBack(armSS),
-                                                new WaitCommand(700)
+                                                new SetArmState(armSS, ArmSubsystem.ArmState.GRAB),
+                                                new WaitCommand(200),
+                                                new SetGrabberStates(grabSS, GrabberSubsystem.GrabberState.CLOSED),
+                                                new SetIntakePower(intakeSS, 1),
+                                                new WaitCommand(400),
+                                                new SetIntakePower(intakeSS, 0)
                                         )
                                 ),
 
                                 //shtuff
-                                new SetGrabberPosition(grabSS, GRABBER_ONE_OPEN, GRABBER_TWO_OPEN),
+                                new SetGrabberStates(grabSS, GrabberSubsystem.GrabberState.OPEN),
                                 new WaitCommand(100),
-                                new ArmIdle(armSS),
+                                new SetArmState(armSS, ArmSubsystem.ArmState.IDLE),
                                 new LowerElevator(eleSS)
                         ),
                         new PIDToPoint(driveSS, parkPose, defaultPosTol, defaultHeadingTol),

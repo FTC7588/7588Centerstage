@@ -57,8 +57,8 @@ public class AutoConstantsState {
 //        public static Pose2d SPIKE_1 = new Pose2d(-39, 52, Math.toRadians(-90));
 //        public static Pose2d SPIKE_1_BACK = new Pose2d(-34.5, 32, Math.toRadians(0));
 
-        public static Pose2d SPIKE_2_PREP = new Pose2d(-36, 35, Math.toRadians(-90));
-        public static Pose2d SPIKE_2 = new Pose2d(-36, 35, Math.toRadians(-90));
+        public static Pose2d SPIKE_2_PREP = new Pose2d(-36, 33, Math.toRadians(-90));
+        public static Pose2d SPIKE_2 = new Pose2d(-36, 33, Math.toRadians(-90));
         public static Pose2d SPIKE_2_BACK = new Pose2d(-50, 42, Math.toRadians(-90));
 
         public static Pose2d SPIKE_3_PREP = new Pose2d(-39, 38, Math.toRadians(-135));
@@ -75,15 +75,48 @@ public class AutoConstantsState {
 
         public static Pose2d INTERMEDIAN = new Pose2d(30, 10.5, Math.toRadians(180));
 
-        public static Pose2d BD_1 = new Pose2d(53, 38.5, Math.toRadians(180));
-        public static Pose2d BD_2 = new Pose2d(53, 31.5, Math.toRadians(180));
-        public static Pose2d BD_3 = new Pose2d(53, 29, Math.toRadians(180));
+        public static Pose2d BD_1 = new Pose2d(50, 38.5, Math.toRadians(180));
+        public static Pose2d BD_2 = new Pose2d(50, 31.5, Math.toRadians(180));
+        public static Pose2d BD_3 = new Pose2d(50, 29, Math.toRadians(180));
 
         public static Pose2d BD_1_OFF = new Pose2d(BD_1.x - 4, BD_1.y + 0.5, BD_1.theta);
         public static Pose2d BD_2_OFF = new Pose2d(BD_2.x - 4, BD_2.y + 0.5, BD_2.theta);
         public static Pose2d BD_3_OFF = new Pose2d(BD_3.x - 4, BD_3.y + 0.5, BD_3.theta);
 
         public static Pose2d PARK = new Pose2d(48, 16, Math.toRadians(180));
+    }
+
+    @Config
+    public static class BlueWWall {
+        public static Pose2d START = new Pose2d(-39.5, 63, Math.toRadians(-90));
+
+        public static Pose2d SPIKE_1_PREP = new Pose2d(-39, 52, Math.toRadians(-90));
+        public static Pose2d SPIKE_1 = new Pose2d(-34.5, 32, Math.toRadians(0));
+        public static Pose2d SPIKE_1_BACK = new Pose2d(-45, 35, Math.toRadians(-90));
+
+        public static Pose2d SPIKE_2_PREP = new Pose2d(-36, 34, Math.toRadians(-90));
+        public static Pose2d SPIKE_2 = new Pose2d(-36, 34, Math.toRadians(-90));
+        public static Pose2d SPIKE_2_BACK = new Pose2d(-50, 42, Math.toRadians(-90));
+
+        public static Pose2d SPIKE_3_PREP = new Pose2d(-39, 38, Math.toRadians(-135));
+        public static Pose2d SPIKE_3 = new Pose2d(-39, 38, Math.toRadians(-135));
+        public static Pose2d SPIKE_3_BACK = new Pose2d(-34, 24, Math.toRadians(180));
+
+        public static Pose2d BD_1 = new Pose2d(54, 41, Math.toRadians(180));
+        public static Pose2d BD_2 = new Pose2d(54, 36, Math.toRadians(180));
+        public static Pose2d BD_3 = new Pose2d(54, 31, Math.toRadians(180));
+
+        public static Pose2d BD_1_OFF = new Pose2d(BD_1.x - 5, BD_1.y + 0.5, BD_1.theta);
+        public static Pose2d BD_2_OFF = new Pose2d(BD_2.x - 5, BD_2.y + 0.5, BD_2.theta);
+        public static Pose2d BD_3_OFF = new Pose2d(BD_3.x - 5, BD_3.y + 0.5, BD_3.theta);
+
+        public static Pose2d CROSS_FIELD_BD = new Pose2d(20, 59, Math.toRadians(180));
+        public static Pose2d CROSS_FIELD_W = new Pose2d(-46, 59, Math.toRadians(180));
+
+        public static Pose2d STACK_ALIGNED = new Pose2d(-54, 36, Math.toRadians(180));
+        public static Pose2d STACK = new Pose2d(-59, 36, Math.toRadians(180));
+
+        public static Pose2d PARK = new Pose2d(48, 56, Math.toRadians(180));
     }
 
     @Config

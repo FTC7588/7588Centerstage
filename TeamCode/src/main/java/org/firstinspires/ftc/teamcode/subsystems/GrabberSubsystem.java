@@ -12,7 +12,7 @@ public class GrabberSubsystem extends SubsystemBase {
     private double leftPos = Constants.GRABBER_ONE_OPEN;
     private double rightPos = Constants.GRABBER_TWO_OPEN;
 
-    private enum GrabberState {
+    public enum GrabberState {
         OPEN,
         CLOSED
     }
@@ -99,6 +99,19 @@ public class GrabberSubsystem extends SubsystemBase {
             leftGrabberState = GrabberState.CLOSED;
             rightGrabberState = GrabberState.CLOSED;
         }
+    }
+
+    public void setLeftGrabberState(GrabberState state) {
+        leftGrabberState = state;
+    }
+
+    public void setRightGrabberState(GrabberState state) {
+        rightGrabberState = state;
+    }
+
+    public void setGrabberState(GrabberState state) {
+        setLeftGrabberState(state);
+        setRightGrabberState(state);
     }
 
     public boolean isClosed() {

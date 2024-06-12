@@ -101,7 +101,7 @@ public class ArmSubsystem extends SubsystemBase {
                 shoulderPos = ARM_SHOULDER_DEPOSIT;
                 break;
             case AUTO:
-                shoulderPos = FLOOR_SHOULDER;
+                shoulderPos = ARM_AUTO;
                 break;
         }
 

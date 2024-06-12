@@ -94,7 +94,7 @@ public class DriveScrimmage extends BaseOpMode {
         //launch drone
         gp1(DPAD_RIGHT, 2).whenActive(droneRelease).whenInactive(droneHold);
 
-        robotCentric.schedule();
+        fieldCentric.schedule();
         intakeDown.schedule();
         setArmIdle.schedule();
     }
